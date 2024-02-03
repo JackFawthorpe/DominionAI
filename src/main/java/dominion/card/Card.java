@@ -1,4 +1,4 @@
-package dominion.core.card;
+package dominion.card;
 
 import dominion.core.player.Player;
 

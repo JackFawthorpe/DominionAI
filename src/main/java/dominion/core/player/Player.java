@@ -1,6 +1,6 @@
 package dominion.core.player;
 
-import dominion.core.card.Card;
+import dominion.card.Card;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +9,42 @@ import java.util.List;
  * Entity class for the data relating to a player
  */
 public class Player {
-    private String name;
-    private int money;
-    private int actions;
-    private int buys;
 
-    private ArrayList<Card> toDraw;
-    private ArrayList<Card> hand;
+    private final String name;
+    private final int money;
+    private final int actions;
+    private final int buys;
 
-    private ArrayList<Card> discardPile;
+    private final ArrayList<Card> toDraw;
+    private final ArrayList<Card> hand;
+
+    private final ArrayList<Card> discardPile;
+
+    public Player(String name) {
+        this.name = name;
+        this.money = 0;
+        this.actions = 0;
+        this.buys = 0;
+        toDraw = new ArrayList<>();
+        hand = new ArrayList<>();
+        discardPile = new ArrayList<>();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Player player
+                && player.name.equals(this.name);
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
     public String getName() {
         return name;

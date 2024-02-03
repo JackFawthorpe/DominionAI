@@ -1,7 +1,9 @@
 package dominion.core.rfa;
 
 import dominion.core.player.Player;
-import dominion.core.player.PlayerController;
+import dominion.core.player.controller.PlayerController;
+import dominion.core.rfa.request.PlayerActionRequest;
+import dominion.core.rfa.response.PlayerActionResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,8 +20,13 @@ public class RequestForActionRouter {
 
     private final HashMap<Player, PlayerController> routes;
 
+    private RequestForActionRouter() {
+        this.routes = new HashMap<>();
+    }
+
     /**
      * Singleton implementation of the RequestForActionRouter class
+     *
      * @return The singleton of RequestForActionRouter
      */
     public static RequestForActionRouter getInstance() {
@@ -32,8 +39,9 @@ public class RequestForActionRouter {
 
     /**
      * Registers a new handler to the routing. This must occur before the route
+     *
      * @param playerController The implementation responsible for handling a players actions
-     * @param player The player the handler will be responsible for
+     * @param player           The player the handler will be responsible for
      */
     public void addHandler(PlayerController playerController, Player player) {
         logger.info("Adding handler for player {}", player.getName());
@@ -43,11 +51,12 @@ public class RequestForActionRouter {
     /**
      * Requests that a player performs a given action
      * If the player isn't registered already then this will return null
+     *
      * @param playerActionRequest The action to perform
-     * @param player The player that will perform the action
      * @return The response of the action
      */
-    public PlayerActionRequestResponse requestAction(PlayerActionRequest playerActionRequest, Player player) {
+    public PlayerActionResponse requestAction(PlayerActionRequest playerActionRequest) {
+        Player player = playerActionRequest.getPlayer();
         PlayerController playerController = routes.get(player);
         if (playerController == null) {
             logger.error("Attempted to request action from player without handler {}", player.getName());
@@ -55,9 +64,5 @@ public class RequestForActionRouter {
         }
         logger.info("Routing action to player {}", player.getName());
         return playerController.handleAction(playerActionRequest);
-    }
-
-    private RequestForActionRouter() {
-        this.routes = new HashMap<>();
     }
 }

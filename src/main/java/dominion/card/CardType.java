@@ -1,11 +1,11 @@
-package dominion.core.rfa;
+package dominion.card;
 
-public enum PlayerActionRequestCode {
-    CHOOSE_ACTION_REQUEST("Choose an action");
+public enum CardType {
+    ACTION("Action");
 
     private final String displayName;
 
-    PlayerActionRequestCode(String displayName) {
+    CardType(String displayName) {
         this.displayName = displayName;
     }
 

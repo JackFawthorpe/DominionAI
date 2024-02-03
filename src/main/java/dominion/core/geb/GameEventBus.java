@@ -16,6 +16,14 @@ public class GameEventBus {
     private static GameEventBus instance;
 
     private final HashMap<GameEventCode, ArrayList<GameEventListener>> listeners;
+
+    private GameEventBus() {
+        this.listeners = new HashMap<>();
+        for (GameEventCode code : GameEventCode.values()) {
+            this.listeners.put(code, new ArrayList<>());
+        }
+    }
+
     public static GameEventBus getInstance() {
         if (instance == null) {
             logger.info("Instantiating game event bus");
@@ -27,7 +35,8 @@ public class GameEventBus {
     /**
      * Registers the listener to the event code that is being listened to,
      * If there is no listeners for the given event yet, then it will instantiate the list for the event
-     * @param listener The listener to append to the event
+     *
+     * @param listener  The listener to append to the event
      * @param eventCode The code of the event to listen to
      */
     public void addListener(GameEventListener listener, GameEventCode eventCode) {
@@ -39,6 +48,7 @@ public class GameEventBus {
 
     /**
      * Propagates the event to each of the listeners for the given event code
+     *
      * @param event The event to propagate
      */
     public void fireEvent(GameEvent event) {
@@ -46,15 +56,8 @@ public class GameEventBus {
 
         logger.info("Firing event {} at {} listeners", event.getCode(), codedEventListeners.size());
 
-        for (GameEventListener listener: codedEventListeners) {
+        for (GameEventListener listener : codedEventListeners) {
             listener.handleEvent(event);
-        }
-    }
-
-    private GameEventBus() {
-        this.listeners = new HashMap<>();
-        for (GameEventCode code : GameEventCode.values()) {
-            this.listeners.put(code, new ArrayList<>());
         }
     }
 }
