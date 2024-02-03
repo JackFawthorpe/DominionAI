@@ -13,6 +13,10 @@ public abstract class Card {
     private Player owner;
     private String name;
 
+    private int cost;
+
+    private CardType cardType;
+
     /**
      * Base card
      */
@@ -24,32 +28,43 @@ public abstract class Card {
         this.name = "Default Name";
     }
 
+    public void playCard() {
+        owner.updateTurnResources(actions, buys, money);
+        playCardHook();
+    }
+
+    protected void playCardHook() {
+        // To be overridden primarily by action cards
+    }
+
     // Builder methods to be used in implementations of the Card class
 
-    protected Card withActions(int actions) {
+    protected void withActions(int actions) {
         this.actions = actions;
-        return this;
     }
 
-    protected Card withBuys(int buys) {
+    protected void withBuys(int buys) {
         this.buys = buys;
-        return this;
-    }
-    protected Card withMoney(int money) {
-        this.money = money;
-        return this;
-    }
-    protected Card withVictoryPoints(int victoryPoints) {
-        this.victoryPoints = victoryPoints;
-        return this;
-    }
-    protected Card withName(String withName) {
-        this.name = withName;
-        return this;
     }
 
-    public void setOwner(Player player) {
-        this.owner = player;
+    protected void withMoney(int money) {
+        this.money = money;
+    }
+
+    protected void withVictoryPoints(int victoryPoints) {
+        this.victoryPoints = victoryPoints;
+    }
+
+    protected void withName(String name) {
+        this.name = name;
+    }
+
+    protected void withCost(int cost) {
+        this.cost = cost;
+    }
+
+    protected void withCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 
     public int getActions() {
@@ -72,7 +87,19 @@ public abstract class Card {
         return owner;
     }
 
+    public void setOwner(Player player) {
+        this.owner = player;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public CardType getCardType() {
+        return cardType;
     }
 }

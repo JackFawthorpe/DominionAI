@@ -1,7 +1,10 @@
 package dominion.card;
 
 public enum CardType {
-    ACTION("Action");
+    ACTION("Action"),
+    TREASURE("Treasure"),
+    VICTORY("Victory"),
+    CURSE("Curse");
 
     private final String displayName;
 

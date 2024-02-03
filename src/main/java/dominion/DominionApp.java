@@ -1,4 +1,4 @@
-package dominion.core;
+package dominion;
 
 
 import dominion.core.initialisation.DefaultConfigurationManager;

@@ -1,9 +1,10 @@
 package dominion.core.player.controller;
 
+import dominion.card.Card;
 import dominion.core.player.Player;
 import dominion.core.rfa.RequestForActionRouter;
 import dominion.core.rfa.request.PlayerActionRequest;
-import dominion.core.rfa.response.ChooseActionResponse;
+import dominion.core.rfa.response.PlayActionCardResponse;
 import dominion.core.rfa.response.PlayerActionResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,20 +34,30 @@ public abstract class PlayerController {
      * @param playerActionRequest The request for the player to fulfill
      * @return The response generated for the action
      */
-    public PlayerActionResponse handleAction(PlayerActionRequest playerActionRequest) {
+    public PlayerActionResponse<?> handleAction(PlayerActionRequest playerActionRequest) {
 
         return switch (playerActionRequest.getCode()) {
-            case CHOOSE_ACTION_REQUEST -> handleChooseAction(playerActionRequest.getArguments());
+            case PLAY_ACTION_CARD -> handlePlayActionCard();
         };
     }
 
-    public PlayerActionResponse handleChooseAction(Object... args) {
+    /**
+     * Handles the process of calling the controller to pick a card to play and proceeds to play the card
+     *
+     * @return The action response to send back to RFA, null represents no card played otherwise, card played
+     */
+    public PlayActionCardResponse handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-
-        return chooseActionHook();
+        Card card = chooseActionHook();
+        if (card == null) return new PlayActionCardResponse(null);
+        card.playCard();
+        return new PlayActionCardResponse(card);
     }
 
-    private PlayerActionResponse chooseActionHook(Object... args) {
-        return new ChooseActionResponse(null);
-    }
+    /**
+     * Default Choose Action Handling,
+     *
+     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     */
+    protected abstract Card chooseActionHook();
 }

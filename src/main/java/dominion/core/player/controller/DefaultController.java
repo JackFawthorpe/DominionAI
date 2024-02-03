@@ -1,10 +1,9 @@
 package dominion.core.player.controller;
 
+import dominion.card.Card;
+import dominion.card.CardType;
 import dominion.core.player.Player;
 
-/**
- * Placeholder controller for characters that always takes the simplest action at any given moment
- */
 public class DefaultController extends PlayerController {
 
     /**
@@ -14,5 +13,19 @@ public class DefaultController extends PlayerController {
      */
     public DefaultController(Player player) {
         super(player);
+    }
+
+    /**
+     * Default Choose Action Handling,
+     *
+     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     */
+    protected Card chooseActionHook() {
+        for (Card card : player.getHand()) {
+            if (card.getCardType() == CardType.ACTION) {
+                return card;
+            }
+        }
+        return null;
     }
 }

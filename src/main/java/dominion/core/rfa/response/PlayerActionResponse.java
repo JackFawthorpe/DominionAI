@@ -1,5 +1,6 @@
 package dominion.core.rfa.response;
 
-public interface PlayerActionResponse {
+public interface PlayerActionResponse<T> {
 
+    T getResult();
 }

@@ -11,14 +11,12 @@ import java.util.List;
 public class Player {
 
     private final String name;
-    private final int money;
-    private final int actions;
-    private final int buys;
-
     private final ArrayList<Card> toDraw;
     private final ArrayList<Card> hand;
-
     private final ArrayList<Card> discardPile;
+    private int money;
+    private int actions;
+    private int buys;
 
     public Player(String name) {
         this.name = name;
@@ -28,6 +26,12 @@ public class Player {
         toDraw = new ArrayList<>();
         hand = new ArrayList<>();
         discardPile = new ArrayList<>();
+    }
+
+    public void updateTurnResources(int actions, int buys, int money) {
+        this.actions += actions;
+        this.buys += buys;
+        this.money += money;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package dominion.core.rfa;
 
 public enum PlayerActionRequestCode {
-    CHOOSE_ACTION_REQUEST("Choose an action");
+    PLAY_ACTION_CARD("Play an action");
 
     private final String displayName;
 

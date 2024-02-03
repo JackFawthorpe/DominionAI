@@ -9,6 +9,6 @@ import dominion.core.rfa.PlayerActionRequestCode;
 public class ChooseActionRequest extends PlayerActionRequest {
 
     public ChooseActionRequest(Player player) {
-        super(PlayerActionRequestCode.CHOOSE_ACTION_REQUEST, player, null);
+        super(PlayerActionRequestCode.PLAY_ACTION_CARD, player, null);
     }
 }
