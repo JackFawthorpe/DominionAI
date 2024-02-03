@@ -28,11 +28,20 @@ public abstract class Card {
         this.name = "Default Name";
     }
 
+    /**
+     * Activates the abilities of the card on the owner of the card.
+     * At its simplest this represents updating the players turn resources,
+     * for cards with more complicated abilities they are able to hook in within the child classes
+     * through the use of the {@link #playCardHook()}}
+     */
     public void playCard() {
         owner.updateTurnResources(actions, buys, money);
         playCardHook();
     }
 
+    /**
+     * Empty Hook for child classes to override with custom implementation of taking an action
+     */
     protected void playCardHook() {
         // To be overridden primarily by action cards
     }

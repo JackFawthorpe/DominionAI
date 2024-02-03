@@ -7,6 +7,11 @@ public interface GameEventListener {
 
     String getIdentifier();
 
+    /**
+     * Function that will be triggered whenever an event is fired
+     *
+     * @param event The event to process
+     */
     void handleEvent(GameEvent event);
 
 }

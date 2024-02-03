@@ -24,6 +24,11 @@ public class GameEventBus {
         }
     }
 
+    /**
+     * Singleton implementation for GameEventBus
+     *
+     * @return The singleton of the GameEventBus
+     */
     public static GameEventBus getInstance() {
         if (instance == null) {
             logger.info("Instantiating game event bus");

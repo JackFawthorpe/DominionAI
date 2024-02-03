@@ -2,6 +2,9 @@ package dominion.core.initialisation;
 
 import java.util.List;
 
+/**
+ * POJO for the Configuration required to set up the game
+ */
 public class GameConfiguration {
     int playerCount;
     List<String> kingdomCards;

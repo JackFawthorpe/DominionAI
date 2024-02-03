@@ -4,6 +4,9 @@ import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.player.Player;
 
+/**
+ * Placeholder controller for the actions that a player can take on their turn
+ */
 public class DefaultController extends PlayerController {
 
     /**

@@ -1,8 +1,6 @@
 package dominion.state;
 
 import dominion.core.player.Player;
-import dominion.core.rfa.request.ChooseActionRequest;
-import dominion.core.rfa.request.PlayerActionRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +19,11 @@ public class TurnManager {
     private List<Player> players;
     private int currentPlayerIndex;
 
+    /**
+     * Singleton implementation of TurnManager
+     *
+     * @return Singleton of turn manager
+     */
     public static TurnManager getInstance() {
         if (instance == null) {
             logger.info("Instantiating the Turn Manager");
@@ -29,15 +32,7 @@ public class TurnManager {
         return instance;
     }
 
-    public void setPlayers(List<Player> players) {
-        logger.info("Setting players");
-        this.players = players;
-        currentPlayerIndex = 0;
-    }
-
     public void startGame() {
         logger.info("Starting game");
-        PlayerActionRequest testMove = new ChooseActionRequest(players.get(currentPlayerIndex));
-        testMove.execute();
     }
 }

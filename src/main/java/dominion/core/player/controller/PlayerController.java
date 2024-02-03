@@ -2,10 +2,9 @@ package dominion.core.player.controller;
 
 import dominion.card.Card;
 import dominion.core.player.Player;
+import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
-import dominion.core.rfa.request.PlayerActionRequest;
-import dominion.core.rfa.response.PlayActionCardResponse;
-import dominion.core.rfa.response.PlayerActionResponse;
+import dominion.core.rfa.request.PlayActionRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,14 +30,12 @@ public abstract class PlayerController {
     /**
      * Handles incoming requests for the player
      *
-     * @param playerActionRequest The request for the player to fulfill
-     * @return The response generated for the action
+     * @param controllerActionRequest The request for the player to fulfill
      */
-    public PlayerActionResponse<?> handleAction(PlayerActionRequest playerActionRequest) {
-
-        return switch (playerActionRequest.getCode()) {
-            case PLAY_ACTION_CARD -> handlePlayActionCard();
-        };
+    public void handleAction(ControllerActionRequest<?> controllerActionRequest) {
+        if (controllerActionRequest instanceof PlayActionRequest request) {
+            request.setResponse(handlePlayActionCard());
+        }
     }
 
     /**
@@ -46,12 +43,12 @@ public abstract class PlayerController {
      *
      * @return The action response to send back to RFA, null represents no card played otherwise, card played
      */
-    public PlayActionCardResponse handlePlayActionCard() {
+    public Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
         Card card = chooseActionHook();
-        if (card == null) return new PlayActionCardResponse(null);
+        if (card == null) return null;
         card.playCard();
-        return new PlayActionCardResponse(card);
+        return card;
     }
 
     /**

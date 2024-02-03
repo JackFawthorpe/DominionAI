@@ -28,6 +28,13 @@ public class Player {
         discardPile = new ArrayList<>();
     }
 
+    /**
+     * Updates the players core turn resources
+     *
+     * @param actions The amount to increment actions
+     * @param buys    The amount to increment buys
+     * @param money   The amount to increment money
+     */
     public void updateTurnResources(int actions, int buys, int money) {
         this.actions += actions;
         this.buys += buys;

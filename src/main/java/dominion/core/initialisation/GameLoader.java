@@ -2,17 +2,25 @@ package dominion.core.initialisation;
 
 import dominion.core.player.Player;
 import dominion.core.player.controller.DefaultController;
-import dominion.state.TurnManager;
+import dominion.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * Class responsible for taking the configuration and setting the game up
+ */
 public class GameLoader {
 
     private static final Logger logger = LogManager.getLogger(GameLoader.class);
     private GameConfiguration configuration;
 
+    /**
+     * Takes the configuration and runs the required setup to start the game
+     *
+     * @param configuration The configuration to load
+     */
     public void loadGame(GameConfiguration configuration) {
         this.configuration = configuration;
         loadPlayers();
@@ -22,6 +30,9 @@ public class GameLoader {
         }
     }
 
+    /**
+     * Generates the players
+     */
     public void loadPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < configuration.getPlayerCount(); i++) {
@@ -29,11 +40,14 @@ public class GameLoader {
             players.add(player);
             new DefaultController(player);
         }
-        TurnManager.getInstance().setPlayers(players);
+        RoundRobinManager.getInstance().setPlayers(players);
     }
 
+    /**
+     * Starts the game
+     */
     public void startGame() {
-        TurnManager.getInstance().startGame();
+        RoundRobinManager.getInstance().startGame();
     }
 
 }

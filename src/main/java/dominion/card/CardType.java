@@ -1,5 +1,8 @@
 package dominion.card;
 
+/**
+ * Enum to represent the different types of cards in the game
+ */
 public enum CardType {
     ACTION("Action"),
     TREASURE("Treasure"),

@@ -2,8 +2,6 @@ package dominion.core.rfa;
 
 import dominion.core.player.Player;
 import dominion.core.player.controller.PlayerController;
-import dominion.core.rfa.request.PlayerActionRequest;
-import dominion.core.rfa.response.PlayerActionResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,16 +51,15 @@ public class RequestForActionRouter {
      * If the player isn't registered already then this will return null
      *
      * @param playerActionRequest The action to perform
-     * @return The response of the action
      */
-    public PlayerActionResponse requestAction(PlayerActionRequest playerActionRequest) {
+    public void requestAction(ControllerActionRequest<?> playerActionRequest) {
         Player player = playerActionRequest.getPlayer();
         PlayerController playerController = routes.get(player);
         if (playerController == null) {
             logger.error("Attempted to request action from player without handler {}", player.getName());
-            return null;
+            return;
         }
         logger.info("Routing action to player {}", player.getName());
-        return playerController.handleAction(playerActionRequest);
+        playerController.handleAction(playerActionRequest);
     }
 }
