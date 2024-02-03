@@ -1,0 +1,7 @@
+12:19:37.836 [main] INFO  App - Info log message
+12:19:37.839 [main] ERROR App - Error log message
+12:19:59.264 [main] INFO  App - Info log message
+12:19:59.267 [main] ERROR App - Error log message
+12:20:12.062 [main] DEBUG App - Debug log message
+12:20:12.065 [main] INFO  App - Info log message
+12:20:12.065 [main] ERROR App - Error log message
