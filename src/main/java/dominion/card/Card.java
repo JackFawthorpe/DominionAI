@@ -92,23 +92,35 @@ public abstract class Card {
         return victoryPoints;
     }
 
-    public Player getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player player) {
-        this.owner = player;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public int getCost() {
         return cost;
     }
 
     public CardType getCardType() {
         return cardType;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Card card
+                && card.getName().equals(this.name)
+                && card.getOwner().equals(this.owner);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Player player) {
+        this.owner = player;
     }
 }

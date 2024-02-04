@@ -1,6 +1,8 @@
 package dominion.core.player;
 
 import dominion.card.Card;
+import dominion.card.supply.Copper;
+import dominion.card.supply.Estate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,75 +16,35 @@ import java.util.List;
 public class PlayerDeck {
 
     private static final Logger logger = LogManager.getLogger(PlayerDeck.class);
-
+    /**
+     * The players hand
+     */
+    private final List<Card> hand;
+    /**
+     * Cards that aren't yet in the discard pile but have been played
+     */
+    private final List<Card> played;
     /**
      * The cards that are next in line to be drawn
      */
     private List<Card> draw;
-
-    /**
-     * The players hand
-     */
-    private List<Card> hand;
-
-    /**
-     * Cards that aren't yet in the discard pile but have been played
-     */
-    private List<Card> played;
-
     /**
      * Cards that are in the discard pile
      */
     private List<Card> discard;
 
-    public PlayerDeck() {
-        this.draw = new ArrayList<>();
-        this.hand = new ArrayList<>();
-        this.played = new ArrayList<>();
-        this.discard = new ArrayList<>();
-    }
-
-    public List<Card> getDraw() {
-        return draw;
-    }
-
-    public void setDraw(List<Card> draw) {
-        this.draw = draw;
-    }
-
-    public List<Card> getHand() {
-        return hand;
-    }
-
-    public void setHand(List<Card> hand) {
-        this.hand = hand;
-    }
-
-    public List<Card> getDiscard() {
-        return discard;
-    }
-
-    public void setDiscard(List<Card> discard) {
-        this.discard = discard;
-    }
-
-    public List<Card> getPlayed() {
-        return played;
-    }
-
-    public void setPlayed(List<Card> played) {
-        this.played = played;
-    }
-
-    /**
-     * Removes all the cards from play and in hand and places them into the discard pile
-     * It then draws 5 cards
-     */
-    public void cleanUp() {
-        discard.addAll(played);
-        discard.addAll(hand);
-        played.clear();
-        hand.clear();
+    public PlayerDeck(Player player) {
+        draw = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            draw.add(new Copper(player));
+        }
+        for (int i = 0; i < 3; i++) {
+            draw.add(new Estate(player));
+        }
+        Collections.shuffle(draw);
+        hand = new ArrayList<>();
+        played = new ArrayList<>();
+        discard = new ArrayList<>();
         draw(5);
     }
 
@@ -113,5 +75,45 @@ public class PlayerDeck {
         draw = discard;
         Collections.shuffle(draw);
         discard = new ArrayList<>();
+    }
+
+    public List<Card> getDraw() {
+        return Collections.unmodifiableList(draw);
+    }
+
+    public List<Card> getHand() {
+        return Collections.unmodifiableList(hand);
+    }
+
+    public List<Card> getDiscard() {
+        return Collections.unmodifiableList(discard);
+    }
+
+    public List<Card> getPlayed() {
+        return Collections.unmodifiableList(played);
+    }
+
+    /**
+     * Removes all the cards from play and in hand and places them into the discard pile
+     * It then draws 5 cards
+     */
+    public void cleanUp() {
+        discard.addAll(played);
+        discard.addAll(hand);
+        played.clear();
+        hand.clear();
+        draw(5);
+    }
+
+    /**
+     * Handles the moving of cards from the hand to the played pile
+     *
+     * @param card The card that is played
+     * @return true if the operation was successful
+     */
+    public boolean playCard(Card card) {
+        boolean removed = hand.remove(card);
+        played.add(card);
+        return removed;
     }
 }

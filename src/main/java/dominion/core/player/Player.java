@@ -16,7 +16,7 @@ public class Player {
         this.money = 0;
         this.actions = 0;
         this.buys = 0;
-        this.deck = new PlayerDeck();
+        this.deck = new PlayerDeck(this);
     }
 
     /**

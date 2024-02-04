@@ -55,15 +55,18 @@ public abstract class PlayerController {
         Card card = chooseActionHook();
         if (card == null) return null;
         card.playCard();
-        if (!deck.getHand().remove(card)) {
+        if (!deck.playCard(card)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), card.getName());
+            throw new IllegalStateException("Illegal move detected. Exiting game");
         } else {
             logger.info("Player {} played the card {}", player.getName(), card.getName());
         }
-        deck.getPlayed().add(card);
         return card;
     }
 
+    /**
+     * End of turn function for the players hand being reset for their next turn
+     */
     private void handleDeckCleanup() {
         logger.info("Cleaning up deck of player {}", player.getName());
         deck.cleanUp();
