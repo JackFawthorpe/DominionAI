@@ -9,6 +9,6 @@ import dominion.core.rfa.ControllerActionRequest;
  */
 public class PlayActionRequest extends ControllerActionRequest<Card> {
     public PlayActionRequest(Player player) {
-        super(player, true);
+        super(player, false);
     }
 }

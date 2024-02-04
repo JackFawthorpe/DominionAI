@@ -2,6 +2,7 @@ package dominion.core.state;
 
 import dominion.card.Card;
 import dominion.core.player.Player;
+import dominion.core.rfa.request.CleanupRequest;
 import dominion.core.rfa.request.PlayActionRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +40,7 @@ public class TurnManager {
         handleResetTurnInventory(player);
         handleActionPhase(player);
         handleBuyPhase(player);
-        handleCollectPhase(player);
+        handleCleanupPhase(player);
     }
 
     /**
@@ -77,8 +78,9 @@ public class TurnManager {
     }
 
 
-    private void handleCollectPhase(Player player) {
-        logger.info("Starting collect phase for player {}", player.getName());
-
+    private void handleCleanupPhase(Player player) {
+        logger.info("Starting clean up phase for player {}", player.getName());
+        CleanupRequest request = new CleanupRequest(player);
+        request.execute();
     }
 }

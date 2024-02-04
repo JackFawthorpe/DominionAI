@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 
 /**
- * Responsible for passing the actions requested of players to the correct player
+ * Responsible for passing actions from systems within the game to the PlayerController responsible for executing the action
  */
 public class RequestForActionRouter {
 

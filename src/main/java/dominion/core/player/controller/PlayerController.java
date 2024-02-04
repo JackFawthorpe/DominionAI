@@ -5,6 +5,7 @@ import dominion.core.player.Player;
 import dominion.core.player.PlayerDeck;
 import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
+import dominion.core.rfa.request.CleanupRequest;
 import dominion.core.rfa.request.PlayActionRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,9 @@ public abstract class PlayerController {
 
     private static final Logger logger = LogManager.getLogger(PlayerController.class);
 
-    Player player;
+    protected final Player player;
+
+    protected final PlayerDeck deck;
 
     /**
      * Registers the player for within the RequestForActionRouter to receive actions for the player
@@ -25,6 +28,7 @@ public abstract class PlayerController {
      */
     protected PlayerController(Player player) {
         this.player = player;
+        this.deck = player.getDeck();
         RequestForActionRouter.getInstance().addHandler(this, player);
     }
 
@@ -36,6 +40,8 @@ public abstract class PlayerController {
     public void handleAction(ControllerActionRequest<?> controllerActionRequest) {
         if (controllerActionRequest instanceof PlayActionRequest request) {
             request.setResponse(handlePlayActionCard());
+        } else if (controllerActionRequest instanceof CleanupRequest) {
+            handleDeckCleanup();
         }
     }
 
@@ -44,12 +50,11 @@ public abstract class PlayerController {
      *
      * @return The action response to send back to RFA, null represents no card played otherwise, card played
      */
-    public Card handlePlayActionCard() {
+    private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
         Card card = chooseActionHook();
         if (card == null) return null;
         card.playCard();
-        PlayerDeck deck = player.getDeck();
         if (!deck.getHand().remove(card)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), card.getName());
         } else {
@@ -57,6 +62,11 @@ public abstract class PlayerController {
         }
         deck.getPlayed().add(card);
         return card;
+    }
+
+    private void handleDeckCleanup() {
+        logger.info("Cleaning up deck of player {}", player.getName());
+        deck.cleanUp();
     }
 
     /**

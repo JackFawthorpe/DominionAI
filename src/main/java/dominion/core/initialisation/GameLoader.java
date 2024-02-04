@@ -2,6 +2,8 @@ package dominion.core.initialisation;
 
 import dominion.card.Card;
 import dominion.card.base.Festival;
+import dominion.card.supply.Copper;
+import dominion.card.supply.Estate;
 import dominion.core.player.Player;
 import dominion.core.player.PlayerDeck;
 import dominion.core.player.controller.DefaultController;
@@ -58,7 +60,15 @@ public class GameLoader {
         for (int i = 0; i < 3; i++) {
             cards.add(new Festival(player));
         }
+        for (int i = 0; i < 2; i++) {
+            cards.add(new Copper(player));
+        }
         deck.setHand(cards);
+        cards = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            cards.add(new Estate(player));
+        }
+        deck.setDraw(cards);
     }
 
     /**

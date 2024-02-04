@@ -13,17 +13,17 @@ public abstract class ControllerActionRequest<T> {
 
     T response;
 
-    boolean optional;
+    boolean required;
 
     /**
      * Overridden constructor for a request
      *
      * @param player The player the request will be sent to
      */
-    protected ControllerActionRequest(Player player, boolean optional) {
+    protected ControllerActionRequest(Player player, boolean required) {
         this.player = player;
         this.response = null;
-        this.optional = optional;
+        this.required = required;
     }
 
     /**
