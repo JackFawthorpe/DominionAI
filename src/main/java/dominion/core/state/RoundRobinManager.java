@@ -1,4 +1,4 @@
-package dominion.state;
+package dominion.core.state;
 
 import dominion.core.player.Player;
 import org.apache.logging.log4j.LogManager;
@@ -10,28 +10,37 @@ import java.util.List;
  * Class responsible for handling the transition of state between the different parts of a players turn
  * as well as the turns themselves
  */
-public class TurnManager {
+public class RoundRobinManager {
 
-    private static final Logger logger = LogManager.getLogger(TurnManager.class);
+    private static final Logger logger = LogManager.getLogger(RoundRobinManager.class);
 
-    private static TurnManager instance;
+    private static RoundRobinManager instance;
 
     private List<Player> players;
     private int currentPlayerIndex;
 
     /**
-     * Singleton implementation of TurnManager
+     * Singleton Implementation of RoundRobinManager
      *
-     * @return Singleton of turn manager
+     * @return The singleton
      */
-    public static TurnManager getInstance() {
+    public static RoundRobinManager getInstance() {
         if (instance == null) {
             logger.info("Instantiating the Turn Manager");
-            instance = new TurnManager();
+            instance = new RoundRobinManager();
         }
         return instance;
     }
 
+    public void setPlayers(List<Player> players) {
+        logger.info("Setting players");
+        this.players = players;
+        currentPlayerIndex = 0;
+    }
+
+    /**
+     * Entry point for the game starting
+     */
     public void startGame() {
         logger.info("Starting game");
     }
