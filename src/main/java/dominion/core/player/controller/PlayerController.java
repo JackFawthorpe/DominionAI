@@ -2,6 +2,7 @@ package dominion.core.player.controller;
 
 import dominion.card.Card;
 import dominion.core.player.Player;
+import dominion.core.player.PlayerDeck;
 import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
 import dominion.core.rfa.request.PlayActionRequest;
@@ -48,6 +49,13 @@ public abstract class PlayerController {
         Card card = chooseActionHook();
         if (card == null) return null;
         card.playCard();
+        PlayerDeck deck = player.getDeck();
+        if (!deck.getHand().remove(card)) {
+            logger.error("Player {} played {} when they did not have it within their hand", player.getName(), card.getName());
+        } else {
+            logger.info("Player {} played the card {}", player.getName(), card.getName());
+        }
+        deck.getPlayed().add(card);
         return card;
     }
 

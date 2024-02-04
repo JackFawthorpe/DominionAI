@@ -1,19 +1,12 @@
 package dominion.core.player;
 
-import dominion.card.Card;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Entity class for the data relating to a player
  */
 public class Player {
 
     private final String name;
-    private final ArrayList<Card> toDraw;
-    private final ArrayList<Card> hand;
-    private final ArrayList<Card> discardPile;
+    private final PlayerDeck deck;
     private int money;
     private int actions;
     private int buys;
@@ -23,9 +16,7 @@ public class Player {
         this.money = 0;
         this.actions = 0;
         this.buys = 0;
-        toDraw = new ArrayList<>();
-        hand = new ArrayList<>();
-        discardPile = new ArrayList<>();
+        this.deck = new PlayerDeck();
     }
 
     /**
@@ -39,6 +30,15 @@ public class Player {
         this.actions += actions;
         this.buys += buys;
         this.money += money;
+    }
+
+    /**
+     * Resets the players turn resources to what they start with each turn
+     */
+    public void resetTurnResources() {
+        this.actions = 1;
+        this.buys = 1;
+        this.money = 0;
     }
 
     @Override
@@ -73,15 +73,7 @@ public class Player {
         return buys;
     }
 
-    public List<Card> getToDraw() {
-        return toDraw;
-    }
-
-    public List<Card> getHand() {
-        return hand;
-    }
-
-    public List<Card> getDiscardPile() {
-        return discardPile;
+    public PlayerDeck getDeck() {
+        return deck;
     }
 }

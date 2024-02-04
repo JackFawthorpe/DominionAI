@@ -2,6 +2,7 @@ package dominion.card.supply;
 
 import dominion.card.Card;
 import dominion.card.CardType;
+import dominion.core.player.Player;
 
 /**
  * Card from Game
@@ -10,7 +11,8 @@ import dominion.card.CardType;
  */
 public class Silver extends Card {
 
-    public Silver() {
+    public Silver(Player player) {
+        setOwner(player);
         withMoney(2);
         withCost(3);
         withCardType(CardType.TREASURE);

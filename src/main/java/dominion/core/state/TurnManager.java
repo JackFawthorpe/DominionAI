@@ -35,6 +35,7 @@ public class TurnManager {
      * @param player The player to take a turn
      */
     public void playTurn(Player player) {
+        logger.info("Starting {}'s turn", player.getName());
         handleResetTurnInventory(player);
         handleActionPhase(player);
         handleBuyPhase(player);
@@ -49,6 +50,7 @@ public class TurnManager {
      */
     private void handleResetTurnInventory(Player player) {
         logger.info("Resetting player {}'s turn inventory", player.getName());
+        player.resetTurnResources();
     }
 
     /**

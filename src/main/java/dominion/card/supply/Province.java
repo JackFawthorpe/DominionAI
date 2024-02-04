@@ -2,6 +2,7 @@ package dominion.card.supply;
 
 import dominion.card.Card;
 import dominion.card.CardType;
+import dominion.core.player.Player;
 
 /**
  * Card from Game
@@ -10,7 +11,8 @@ import dominion.card.CardType;
  */
 public class Province extends Card {
 
-    public Province() {
+    public Province(Player player) {
+        setOwner(player);
         withCost(8);
         withVictoryPoints(6);
         withCardType(CardType.VICTORY);

@@ -1,6 +1,9 @@
 package dominion.core.initialisation;
 
+import dominion.card.Card;
+import dominion.card.base.Festival;
 import dominion.core.player.Player;
+import dominion.core.player.PlayerDeck;
 import dominion.core.player.controller.DefaultController;
 import dominion.core.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;
@@ -33,21 +36,40 @@ public class GameLoader {
     /**
      * Generates the players
      */
-    public void loadPlayers() {
+    private void loadPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < configuration.getPlayerCount(); i++) {
             Player player = new Player("Player " + (i + 1));
             players.add(player);
+            initializeDeck(player);
             new DefaultController(player);
         }
         RoundRobinManager.getInstance().setPlayers(players);
     }
 
     /**
+     * Sets up the deck of each player for the start of game
+     *
+     * @param player The player to initialize
+     */
+    private void initializeDeck(Player player) {
+        PlayerDeck deck = player.getDeck();
+        ArrayList<Card> cards = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            cards.add(new Festival(player));
+        }
+        deck.setHand(cards);
+    }
+
+    /**
      * Starts the game
      */
     public void startGame() {
-        RoundRobinManager.getInstance().startGame();
+        try {
+            RoundRobinManager.getInstance().startGame();
+        } catch (Exception e) {
+            logger.error("An error occurred whilst playing the game: {}", e.getMessage());
+        }
     }
 
 }
