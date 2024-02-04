@@ -10,6 +10,8 @@ import dominion.core.rfa.request.PlayActionRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 /**
  * Represents the object that will control the player etc. AI, CLI player etc
  */
@@ -37,7 +39,7 @@ public abstract class PlayerController {
      *
      * @param controllerActionRequest The request for the player to fulfill
      */
-    public void handleAction(ControllerActionRequest<?> controllerActionRequest) {
+    public final void handleAction(ControllerActionRequest<?> controllerActionRequest) {
         if (controllerActionRequest instanceof PlayActionRequest request) {
             request.setResponse(handlePlayActionCard());
         } else if (controllerActionRequest instanceof CleanupRequest) {
@@ -52,16 +54,17 @@ public abstract class PlayerController {
      */
     private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-        Card card = chooseActionHook();
-        if (card == null) return null;
-        card.playCard();
-        if (!deck.playCard(card)) {
-            logger.error("Player {} played {} when they did not have it within their hand", player.getName(), card.getName());
+
+        Card chosenCard = playActionCardHook(deck.getHandActionCards());
+        if (chosenCard == null) return null;
+        chosenCard.playCard();
+        if (!deck.playCard(chosenCard)) {
+            logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
             throw new IllegalStateException("Illegal move detected. Exiting game");
         } else {
-            logger.info("Player {} played the card {}", player.getName(), card.getName());
+            logger.info("Player {} played the card {}", player.getName(), chosenCard.getName());
         }
-        return card;
+        return chosenCard;
     }
 
     /**
@@ -72,10 +75,13 @@ public abstract class PlayerController {
         deck.cleanUp();
     }
 
+
+    /// API Interface : These methods are to be extended for each controller of a player
+
     /**
      * Default Choose Action Handling,
      *
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
-    protected abstract Card chooseActionHook();
+    protected abstract Card playActionCardHook(List<Card> actionCardsInHand);
 }

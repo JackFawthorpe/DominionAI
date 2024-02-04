@@ -1,6 +1,7 @@
 package dominion.core.player;
 
 import dominion.card.Card;
+import dominion.card.CardType;
 import dominion.card.supply.Copper;
 import dominion.card.supply.Estate;
 import org.apache.logging.log4j.LogManager;
@@ -115,5 +116,16 @@ public class PlayerDeck {
         boolean removed = hand.remove(card);
         played.add(card);
         return removed;
+    }
+
+    /**
+     * Finds all the cards in the players hand that are actions
+     *
+     * @return An unmodifiable list of the action cards in the players hand
+     */
+    public List<Card> getHandActionCards() {
+        return hand.stream()
+                .filter(card -> card.getCardType() == CardType.ACTION)
+                .toList();
     }
 }

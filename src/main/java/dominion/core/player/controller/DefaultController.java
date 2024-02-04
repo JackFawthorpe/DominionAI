@@ -1,8 +1,9 @@
 package dominion.core.player.controller;
 
 import dominion.card.Card;
-import dominion.card.CardType;
 import dominion.core.player.Player;
+
+import java.util.List;
 
 /**
  * Placeholder controller for the actions that a player can take on their turn
@@ -23,12 +24,7 @@ public class DefaultController extends PlayerController {
      *
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
-    protected Card chooseActionHook() {
-        for (Card card : deck.getHand()) {
-            if (card.getCardType() == CardType.ACTION) {
-                return card;
-            }
-        }
-        return null;
+    protected Card playActionCardHook(List<Card> actionCardsInHand) {
+        return actionCardsInHand.size() != 0 ? actionCardsInHand.get(0) : null;
     }
 }
