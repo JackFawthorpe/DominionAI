@@ -57,4 +57,8 @@ public class RoundRobinManager {
     public int getTurnCount() {
         return turnCount;
     }
+
+    public int getPlayerCount() {
+        return players.size();
+    }
 }

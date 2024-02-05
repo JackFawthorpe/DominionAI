@@ -1,6 +1,7 @@
 package dominion.core.player.controller;
 
 import dominion.card.Card;
+import dominion.core.exception.IllegalMoveException;
 import dominion.core.player.Player;
 import dominion.core.player.PlayerDeck;
 import dominion.core.rfa.ControllerActionRequest;
@@ -60,7 +61,7 @@ public abstract class PlayerController {
         chosenCard.playCard();
         if (!deck.playCard(chosenCard)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
-            throw new IllegalStateException("Illegal move detected. Exiting game");
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
             logger.info("Player {} played the card {}", player.getName(), chosenCard.getName());
         }

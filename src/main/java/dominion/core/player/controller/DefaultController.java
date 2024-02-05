@@ -25,6 +25,6 @@ public class DefaultController extends PlayerController {
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
     protected Card playActionCardHook(List<Card> actionCardsInHand) {
-        return actionCardsInHand.size() != 0 ? actionCardsInHand.get(0) : null;
+        return actionCardsInHand.isEmpty() ? actionCardsInHand.get(0) : null;
     }
 }

@@ -5,7 +5,7 @@ import dominion.core.player.Player;
 /**
  * Abstract class to represent the common functionality of each card
  */
-public abstract class Card {
+public abstract class Card implements Cloneable {
     private int actions;
     private int buys;
     private int money;
@@ -48,32 +48,12 @@ public abstract class Card {
 
     // Builder methods to be used in implementations of the Card class
 
-    protected void withActions(int actions) {
-        this.actions = actions;
-    }
-
-    protected void withBuys(int buys) {
-        this.buys = buys;
-    }
-
-    protected void withMoney(int money) {
-        this.money = money;
-    }
-
     protected void withVictoryPoints(int victoryPoints) {
         this.victoryPoints = victoryPoints;
     }
 
     protected void withName(String name) {
         this.name = name;
-    }
-
-    protected void withCost(int cost) {
-        this.cost = cost;
-    }
-
-    protected void withCardType(CardType cardType) {
-        this.cardType = cardType;
     }
 
     public int getActions() {
@@ -122,5 +102,42 @@ public abstract class Card {
 
     public void setOwner(Player player) {
         this.owner = player;
+    }
+
+    @Override
+    public Card clone() {
+        try {
+            Card clone = (Card) super.clone();
+            clone.setOwner(null);
+            clone.withActions(this.actions);
+            clone.withBuys(this.buys);
+            clone.withBuys(this.buys);
+            clone.withMoney(this.money);
+            clone.withCost(this.cost);
+            clone.withCardType(this.cardType);
+            return clone;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to clone card. This shouldn't happen");
+        }
+    }
+
+    protected void withActions(int actions) {
+        this.actions = actions;
+    }
+
+    protected void withBuys(int buys) {
+        this.buys = buys;
+    }
+
+    protected void withMoney(int money) {
+        this.money = money;
+    }
+
+    protected void withCost(int cost) {
+        this.cost = cost;
+    }
+
+    protected void withCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 }

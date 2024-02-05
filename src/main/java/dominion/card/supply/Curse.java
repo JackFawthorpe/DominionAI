@@ -18,5 +18,4 @@ public class Curse extends Card {
         withCardType(CardType.CURSE);
         withName("Curse");
     }
-
 }
