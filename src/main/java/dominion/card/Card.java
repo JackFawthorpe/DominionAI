@@ -1,6 +1,6 @@
 package dominion.card;
 
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 
 /**
  * Abstract class to represent the common functionality of each card

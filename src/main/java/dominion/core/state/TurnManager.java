@@ -1,7 +1,8 @@
 package dominion.core.state;
 
 import dominion.card.Card;
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
+import dominion.core.rfa.request.BuyCardRequest;
 import dominion.core.rfa.request.CleanupRequest;
 import dominion.core.rfa.request.PlayActionRequest;
 import org.apache.logging.log4j.LogManager;
@@ -71,13 +72,30 @@ public class TurnManager {
         }
     }
 
-
+    /**
+     * Handles the buy phase of the turn.
+     * The player is asked if they want to purchase a card until they run out of buys {@link Player#getBuys()}
+     * or they refuse to buy, {@link BuyCardRequest#getResponse()} will be null
+     *
+     * @param player The player to send buy requests to
+     */
     private void handleBuyPhase(Player player) {
         logger.info("Starting buy phase for player {}", player.getName());
-
+        boolean canBuy = player.getBuys() > 0;
+        while (canBuy) {
+            BuyCardRequest request = new BuyCardRequest(player);
+            Card card = request.execute().getResponse();
+            canBuy = player.getBuys() > 0 && card != null;
+        }
     }
 
-
+    /**
+     * Handles the clean-up phase of the player's turn
+     * This includes discarding the hand and played cards as well as drawing 5 new cards for their
+     * next turn.
+     *
+     * @param player The player to perform the action against
+     */
     private void handleCleanupPhase(Player player) {
         logger.info("Starting clean up phase for player {}", player.getName());
         CleanupRequest request = new CleanupRequest(player);

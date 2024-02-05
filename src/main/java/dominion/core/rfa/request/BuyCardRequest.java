@@ -5,10 +5,11 @@ import dominion.core.player.Entity.Player;
 import dominion.core.rfa.ControllerActionRequest;
 
 /**
- * Requests the player to pick and play an action card
+ * Represents requesting the player to buy a card
  */
-public class PlayActionRequest extends ControllerActionRequest<Card> {
-    public PlayActionRequest(Player player) {
+public class BuyCardRequest extends ControllerActionRequest<Card> {
+
+    public BuyCardRequest(Player player) {
         super(player, false);
     }
 }

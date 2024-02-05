@@ -1,6 +1,6 @@
 package dominion.core.rfa.request;
 
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 import dominion.core.rfa.ControllerActionRequest;
 
 public class CleanupRequest extends ControllerActionRequest<Void> {

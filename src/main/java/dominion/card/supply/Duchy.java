@@ -2,7 +2,7 @@ package dominion.card.supply;
 
 import dominion.card.Card;
 import dominion.card.CardType;
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 
 
 /**

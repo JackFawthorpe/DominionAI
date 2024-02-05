@@ -1,6 +1,6 @@
 package dominion.core.rfa;
 
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 
 /**
  * Represents the request and response of the system towards a PlayerController completing an action

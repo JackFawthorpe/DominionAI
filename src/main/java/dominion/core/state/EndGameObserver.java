@@ -25,6 +25,6 @@ public class EndGameObserver {
     }
 
     public boolean isGameFinished() {
-        return gameFinished || RoundRobinManager.getInstance().getTurnCount() > 50;
+        return gameFinished || RoundRobinManager.getInstance().getTurnCount() > 10;
     }
 }

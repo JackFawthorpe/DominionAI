@@ -1,6 +1,6 @@
 package dominion.core.state;
 
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

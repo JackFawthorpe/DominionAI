@@ -2,7 +2,7 @@ package dominion.card.supply;
 
 import dominion.card.Card;
 import dominion.card.CardType;
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 
 /**
  * Card from Game
@@ -13,8 +13,8 @@ public class Copper extends Card {
 
     public Copper(Player player) {
         setOwner(player);
-        withMoney(2);
-        withCost(3);
+        withMoney(1);
+        withCost(0);
         withCardType(CardType.TREASURE);
         withName("Copper");
     }

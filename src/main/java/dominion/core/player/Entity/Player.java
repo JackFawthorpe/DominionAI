@@ -1,4 +1,7 @@
-package dominion.core.player;
+package dominion.core.player.Entity;
+
+import dominion.card.Card;
+import dominion.card.CardType;
 
 /**
  * Entity class for the data relating to a player
@@ -38,7 +41,20 @@ public class Player {
     public void resetTurnResources() {
         this.actions = 1;
         this.buys = 1;
-        this.money = 0;
+        this.money = getMoneyInHand();
+    }
+
+    /**
+     * Calculates the amount of money that a player has at the start of the turn
+     * (Sums the values of all the treasure cards) in hand.
+     *
+     * @return The value of the treasure in hand
+     */
+    private int getMoneyInHand() {
+        return deck.getHand().stream()
+                .filter(card -> card.getCardType() == CardType.TREASURE)
+                .map(Card::getMoney)
+                .reduce(0, Integer::sum);
     }
 
     @Override

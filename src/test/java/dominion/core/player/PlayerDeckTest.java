@@ -3,6 +3,7 @@ package dominion.core.player;
 import dominion.card.Card;
 import dominion.card.supply.Copper;
 import dominion.card.supply.Province;
+import dominion.core.player.Entity.PlayerDeck;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

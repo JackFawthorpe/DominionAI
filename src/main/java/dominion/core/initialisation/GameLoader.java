@@ -1,6 +1,6 @@
 package dominion.core.initialisation;
 
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.DefaultController;
 import dominion.core.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;

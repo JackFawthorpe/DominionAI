@@ -1,4 +1,4 @@
-package dominion.core.player;
+package dominion.core.player.Entity;
 
 import dominion.card.Card;
 import dominion.card.CardType;
@@ -17,14 +17,17 @@ import java.util.List;
 public class PlayerDeck {
 
     private static final Logger logger = LogManager.getLogger(PlayerDeck.class);
+
     /**
      * The players hand
      */
     private final List<Card> hand;
+
     /**
      * Cards that aren't yet in the discard pile but have been played
      */
     private final List<Card> played;
+    private final Player owner;
     /**
      * The cards that are next in line to be drawn
      */
@@ -34,13 +37,14 @@ public class PlayerDeck {
      */
     private List<Card> discard;
 
-    public PlayerDeck(Player player) {
+    public PlayerDeck(Player owner) {
+        this.owner = owner;
         draw = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
-            draw.add(new Copper(player));
+            draw.add(new Copper(owner));
         }
         for (int i = 0; i < 3; i++) {
-            draw.add(new Estate(player));
+            draw.add(new Estate(owner));
         }
         Collections.shuffle(draw);
         hand = new ArrayList<>();
@@ -127,5 +131,21 @@ public class PlayerDeck {
         return hand.stream()
                 .filter(card -> card.getCardType() == CardType.ACTION)
                 .toList();
+    }
+
+    /**
+     * Adds a card to the players deck at the given position
+     *
+     * @param card     The card to add to the deck
+     * @param position The position in the deck for the card to reside
+     */
+    public void addCard(Card card, DeckPosition position) {
+        card.setOwner(owner);
+        switch (position) {
+            case DRAW -> draw.add(0, card);
+            case HAND -> hand.add(card);
+            case PLAYED -> played.add(card);
+            case DISCARD -> discard.add(card);
+        }
     }
 }

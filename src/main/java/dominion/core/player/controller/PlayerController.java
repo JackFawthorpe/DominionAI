@@ -2,12 +2,15 @@ package dominion.core.player.controller;
 
 import dominion.card.Card;
 import dominion.core.exception.IllegalMoveException;
-import dominion.core.player.Player;
-import dominion.core.player.PlayerDeck;
+import dominion.core.player.Entity.DeckPosition;
+import dominion.core.player.Entity.Player;
+import dominion.core.player.Entity.PlayerDeck;
 import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
+import dominion.core.rfa.request.BuyCardRequest;
 import dominion.core.rfa.request.CleanupRequest;
 import dominion.core.rfa.request.PlayActionRequest;
+import dominion.core.state.KingdomManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,6 +46,8 @@ public abstract class PlayerController {
     public final void handleAction(ControllerActionRequest<?> controllerActionRequest) {
         if (controllerActionRequest instanceof PlayActionRequest request) {
             request.setResponse(handlePlayActionCard());
+        } else if (controllerActionRequest instanceof BuyCardRequest request) {
+            request.setResponse(handleBuyCard());
         } else if (controllerActionRequest instanceof CleanupRequest) {
             handleDeckCleanup();
         }
@@ -57,15 +62,37 @@ public abstract class PlayerController {
         logger.info("Player {} received request to choose an action card", player.getName());
 
         Card chosenCard = playActionCardHook(deck.getHandActionCards());
-        if (chosenCard == null) return null;
+        if (chosenCard == null) {
+            logger.info("Player {} chose to not play a card", player.getName());
+            return null;
+        }
         chosenCard.playCard();
         if (!deck.playCard(chosenCard)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
             logger.info("Player {} played the card {}", player.getName(), chosenCard.getName());
+            player.updateTurnResources(-1, 0, 0);
         }
         return chosenCard;
+    }
+
+    /**
+     * Processes a buy request, it first fetches the cards available to the player then prompts the implementation to
+     * pick one of those cards and then adds it to the players deck
+     *
+     * @return The card which the player purchased
+     */
+    private Card handleBuyCard() {
+        logger.info("Player {} received request to buy a card", player.getName());
+        KingdomManager kingdomManager = KingdomManager.getInstance();
+        List<Card> buyOptions = kingdomManager.getAvailableCards(player.getMoney());
+        Card card = buyCardHook(buyOptions);
+        logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
+        kingdomManager.removeCard(card);
+        deck.addCard(card, DeckPosition.DISCARD);
+        player.updateTurnResources(0, -1, -card.getCost());
+        return card;
     }
 
     /**
@@ -80,9 +107,18 @@ public abstract class PlayerController {
     /// API Interface : These methods are to be extended for each controller of a player
 
     /**
-     * Default Choose Action Handling,
+     * Hook to allow the player to choose which action they want to do
      *
-     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
+     * @return The card the player wants to play
      */
     protected abstract Card playActionCardHook(List<Card> actionCardsInHand);
+
+    /**
+     * Hook to allow for the player to choose which card they want to buy
+     *
+     * @param buyOptions The cards that the player can currently buy
+     * @return The card the player wants to buy
+     */
+    protected abstract Card buyCardHook(List<Card> buyOptions);
 }

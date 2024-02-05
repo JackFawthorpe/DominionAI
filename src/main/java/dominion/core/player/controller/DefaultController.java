@@ -1,7 +1,7 @@
 package dominion.core.player.controller;
 
 import dominion.card.Card;
-import dominion.core.player.Player;
+import dominion.core.player.Entity.Player;
 
 import java.util.List;
 
@@ -24,7 +24,18 @@ public class DefaultController extends PlayerController {
      *
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
+    @Override
     protected Card playActionCardHook(List<Card> actionCardsInHand) {
-        return actionCardsInHand.isEmpty() ? actionCardsInHand.get(0) : null;
+        return actionCardsInHand.isEmpty() ? null : actionCardsInHand.get(0);
+    }
+
+    /**
+     * Default Purchasing behaviour (This will return the first card within the list
+     *
+     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     */
+    @Override
+    protected Card buyCardHook(List<Card> buyOptions) {
+        return buyOptions.isEmpty() ? null : buyOptions.get(0);
     }
 }
