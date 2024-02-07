@@ -9,6 +9,7 @@ import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
 import dominion.core.rfa.request.BuyCardRequest;
 import dominion.core.rfa.request.CleanupRequest;
+import dominion.core.rfa.request.DiscardFromHandRequest;
 import dominion.core.rfa.request.PlayActionRequest;
 import dominion.core.state.KingdomManager;
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +51,8 @@ public abstract class PlayerController {
             request.setResponse(handleBuyCard());
         } else if (controllerActionRequest instanceof CleanupRequest) {
             handleDeckCleanup();
+        } else if (controllerActionRequest instanceof DiscardFromHandRequest request) {
+            request.setResponse(handleDiscardFromHand(request));
         }
     }
 
@@ -103,6 +106,24 @@ public abstract class PlayerController {
         deck.cleanUp();
     }
 
+    /**
+     * Processes a discard request, it first fetches the cards available to the player then prompts the implementation to
+     * pick one of those cards and then adds it to the players deck
+     *
+     * @return The card which the player purchased
+     */
+    private Card handleDiscardFromHand(DiscardFromHandRequest request) {
+        logger.info("Player {} received a request to discard a card", player.getName());
+        List<Card> discardOptions = player.getDeck().getHand();
+        Card card = discardFromHandHook(discardOptions, request.isRequired());
+        if (card == null && request.isRequired() && !discardOptions.isEmpty()) {
+            logger.error("Player {} failed to discard a card when it was both required and possible", player.getName());
+            throw new IllegalMoveException("Illegal move detected, exiting game");
+        }
+        logger.info("Player {} has chosen to discard {}", player.getName(), card.getName());
+        return card;
+    }
+
 
     /// API Interface : These methods are to be extended for each controller of a player
 
@@ -121,4 +142,12 @@ public abstract class PlayerController {
      * @return The card the player wants to buy
      */
     protected abstract Card buyCardHook(List<Card> buyOptions);
+
+    /**
+     * Hook to allow for the player to choose which card they want to discard from their hand
+     *
+     * @param discardOptions The cards in their hand
+     * @return The card the player wants to discard
+     */
+    protected abstract Card discardFromHandHook(List<Card> discardOptions, boolean isRequired);
 }

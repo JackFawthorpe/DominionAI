@@ -9,11 +9,9 @@ import dominion.core.player.Entity.Player;
  */
 public abstract class ControllerActionRequest<T> {
 
-    Player player;
-
-    T response;
-
-    boolean required;
+    private final Player player;
+    private final boolean required;
+    private T response;
 
     /**
      * Overridden constructor for a request
@@ -46,4 +44,7 @@ public abstract class ControllerActionRequest<T> {
         this.response = response;
     }
 
+    public boolean isRequired() {
+        return required;
+    }
 }
