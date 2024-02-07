@@ -7,10 +7,7 @@ import dominion.core.player.Entity.Player;
 import dominion.core.player.Entity.PlayerDeck;
 import dominion.core.rfa.ControllerActionRequest;
 import dominion.core.rfa.RequestForActionRouter;
-import dominion.core.rfa.request.BuyCardRequest;
-import dominion.core.rfa.request.CleanupRequest;
-import dominion.core.rfa.request.DiscardFromHandRequest;
-import dominion.core.rfa.request.PlayActionRequest;
+import dominion.core.rfa.request.*;
 import dominion.core.state.KingdomManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,6 +50,8 @@ public abstract class PlayerController {
             handleDeckCleanup();
         } else if (controllerActionRequest instanceof DiscardFromHandRequest request) {
             request.setResponse(handleDiscardFromHand(request));
+        } else if (controllerActionRequest instanceof DrawCardRequest request) {
+            handleDrawCard(request.getDrawCount());
         }
     }
 
@@ -119,9 +118,21 @@ public abstract class PlayerController {
         if (card == null && request.isRequired() && !discardOptions.isEmpty()) {
             logger.error("Player {} failed to discard a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
+        } else if (card == null) {
+            logger.info("Player {} chose not to discard a card", player.getName());
+        } else {
+            deck.moveCard(card, DeckPosition.HAND, DeckPosition.DISCARD);
+            logger.info("Player {} has chosen to discard {}", player.getName(), card.getName());
         }
-        logger.info("Player {} has chosen to discard {}", player.getName(), card.getName());
         return card;
+    }
+
+    /**
+     * Processes a draw card request
+     */
+    private void handleDrawCard(int drawCount) {
+        logger.info("Player {} is drawing {} cards", player.getName(), drawCount);
+        deck.draw(drawCount);
     }
 
 

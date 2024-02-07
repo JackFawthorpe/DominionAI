@@ -141,11 +141,33 @@ public class PlayerDeck {
      */
     public void addCard(Card card, DeckPosition position) {
         card.setOwner(owner);
-        switch (position) {
-            case DRAW -> draw.add(0, card);
-            case HAND -> hand.add(card);
-            case PLAYED -> played.add(card);
-            case DISCARD -> discard.add(card);
-        }
+        mapPosition(position).add(0, card);
+    }
+
+    /**
+     * Maps the enum describing deck position to the lists that they represent
+     *
+     * @param position The position to map
+     * @return The list of cards that is represented by the enum
+     */
+    private List<Card> mapPosition(DeckPosition position) {
+        return switch (position) {
+            case DRAW -> this.draw;
+            case HAND -> this.hand;
+            case PLAYED -> this.played;
+            case DISCARD -> this.discard;
+        };
+    }
+
+    /**
+     * Takes a card that is in the from pile of cards and puts it into the to pile
+     *
+     * @param card The card to move
+     * @param from The pile to remove the card from
+     * @param to   The pile to put the card in
+     */
+    public void moveCard(Card card, DeckPosition from, DeckPosition to) {
+        mapPosition(from).remove(card);
+        mapPosition(to).add(card);
     }
 }

@@ -92,4 +92,13 @@ public class Player {
     public PlayerDeck getDeck() {
         return deck;
     }
+
+    /**
+     * Checks whether the player has any cards in their hand
+     *
+     * @return true if they have any cards in their hand
+     */
+    public boolean isHandEmpty() {
+        return deck.getHand().isEmpty();
+    }
 }

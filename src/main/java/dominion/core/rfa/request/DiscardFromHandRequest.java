@@ -14,7 +14,7 @@ public class DiscardFromHandRequest extends ControllerActionRequest<Card> {
      * @param player   The player the request will be sent to
      * @param required Specifies if the discard action is optional for the player
      */
-    protected DiscardFromHandRequest(Player player, boolean required) {
+    public DiscardFromHandRequest(Player player, boolean required) {
         super(player, required);
     }
 }

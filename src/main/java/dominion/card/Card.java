@@ -6,11 +6,11 @@ import dominion.core.player.Entity.Player;
  * Abstract class to represent the common functionality of each card
  */
 public abstract class Card implements Cloneable {
+    protected Player owner;
     private int actions;
     private int buys;
     private int money;
     private int victoryPoints;
-    private Player owner;
     private String name;
 
     private int cost;

@@ -1,5 +1,6 @@
 package dominion.card;
 
+import dominion.card.base.Cellar;
 import dominion.card.supply.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -103,6 +104,21 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(-1, card.getVictoryPoints());
         Assertions.assertEquals(CardType.CURSE, card.getCardType());
+        Assertions.assertEquals(mockPlayer, card.getOwner());
+    }
+
+    @Test
+    void cellarTest() {
+
+        Card card = new Cellar(mockPlayer);
+
+        Assertions.assertEquals("Cellar", card.getName());
+        Assertions.assertEquals(2, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(1, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertEquals(CardType.ACTION, card.getCardType());
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 }
