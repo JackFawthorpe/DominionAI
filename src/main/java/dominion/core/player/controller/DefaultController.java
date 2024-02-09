@@ -54,6 +54,17 @@ public class DefaultController extends PlayerController {
     }
 
     /**
+     * Default gain card behaviour (This will gain a random card)
+     *
+     * @param gainOptions The cards the play has to choose from
+     * @return The card to gain
+     */
+    @Override
+    protected Card gainCardHook(List<Card> gainOptions) {
+        return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
+    }
+
+    /**
      * Gets a random card from the list
      *
      * @param cards The cards to get from

@@ -52,6 +52,8 @@ public abstract class PlayerController {
             request.setResponse(handleDiscardFromHand(request));
         } else if (controllerActionRequest instanceof DrawCardRequest request) {
             handleDrawCard(request.getDrawCount());
+        } else if (controllerActionRequest instanceof GainCardRequest request) {
+            request.setResponse(handleGainCardRequest(request));
         }
     }
 
@@ -129,10 +131,32 @@ public abstract class PlayerController {
 
     /**
      * Processes a draw card request
+     *
+     * @param drawCount The amount of cards the player needs to draw
      */
     private void handleDrawCard(int drawCount) {
         logger.info("Player {} is drawing {} cards", player.getName(), drawCount);
         deck.draw(drawCount);
+    }
+
+    /**
+     * Processes a gain card request
+     *
+     * @param request The request to execute
+     */
+    private Card handleGainCardRequest(GainCardRequest request) {
+        logger.info("Player {} received a request to gain a card", player.getName());
+        Card cardToGain = gainCardHook(request.getGainOptions());
+        if (request.isRequired() && cardToGain == null && !(request.getGainOptions().isEmpty())) {
+            logger.error("Player {} failed to gain a card when it was both required and possible", player.getName());
+            throw new IllegalMoveException("Illegal move detected, exiting game");
+        } else if (cardToGain == null) {
+            logger.info("Player {} chose not to gain a card", player.getName());
+        } else {
+            KingdomManager.getInstance().removeCard(cardToGain);
+            deck.addCard(cardToGain, request.getGainPosition());
+        }
+        return cardToGain;
     }
 
 
@@ -161,4 +185,12 @@ public abstract class PlayerController {
      * @return The card the player wants to discard
      */
     protected abstract Card discardFromHandHook(List<Card> discardOptions, boolean isRequired);
+
+    /**
+     * Hook to allow for the player to choose which card they want to gain
+     *
+     * @param gainOptions The cards the play has to choose from
+     * @return The card that the player chooses to gain
+     */
+    protected abstract Card gainCardHook(List<Card> gainOptions);
 }
