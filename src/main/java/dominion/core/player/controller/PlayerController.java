@@ -72,11 +72,13 @@ public abstract class PlayerController {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
         }
-        chosenCard.playCard();
         if (!deck.playCard(chosenCard)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
+            // Plays card after moving, when resolving effects,
+            // the played card is treated as though its in the played pile, not the deck
+            chosenCard.playCard();
             logger.info("Player {} played the card {}", player.getName(), chosenCard.getName());
             player.updateTurnResources(-1, 0, 0);
         }
