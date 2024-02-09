@@ -1,9 +1,6 @@
 package dominion.card;
 
-import dominion.card.base.Cellar;
-import dominion.card.base.Market;
-import dominion.card.base.Mine;
-import dominion.card.base.Remodel;
+import dominion.card.base.*;
 import dominion.card.supply.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -165,6 +162,21 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getMoney());
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getOwner());
+    }
+
+    @Test
+    void villageTest() {
+
+        Card card = new Village(mockPlayer);
+
+        Assertions.assertEquals("Village", card.getName());
+        Assertions.assertEquals(3, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(2, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getOwner());
