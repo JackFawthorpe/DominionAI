@@ -1,6 +1,7 @@
 package dominion.core.state;
 
 import dominion.card.Card;
+import dominion.card.CardSpecification;
 import dominion.card.base.*;
 import dominion.card.supply.*;
 import dominion.core.exception.IllegalMoveException;
@@ -92,12 +93,26 @@ public class KingdomManager {
     }
 
     /**
+     * Returns all the cards that match the given specification and are still available to buy / gain
+     *
+     * @param cardSpecification The specification to test against
+     * @return The list of cards that match the specification
+     */
+    public List<Card> getAvailableCards(CardSpecification cardSpecification) {
+        return cardSpecification.filterCards(cardReferences.stream()
+                .filter(card -> supply.get(card.getName()) > 0)
+                .map(Card::clone)
+                .toList());
+    }
+
+    /**
      * Collates each of the cards that can currently be purchased with the amount of money provided.
      *
      * @param money The amount of money that the player has to buy a card. Null represents the intention that they can
      *              get any card they want
      * @return A list of cards cloned from the references that they can currently afford
      */
+    @Deprecated
     public List<Card> getAvailableCards(Integer money) {
         logger.info("Fetching available cards from the supply for the cost of {}", money);
         return cardReferences.stream()

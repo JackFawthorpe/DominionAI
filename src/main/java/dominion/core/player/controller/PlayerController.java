@@ -54,6 +54,8 @@ public abstract class PlayerController {
             handleDrawCard(request.getDrawCount());
         } else if (controllerActionRequest instanceof GainCardRequest request) {
             request.setResponse(handleGainCardRequest(request));
+        } else if (controllerActionRequest instanceof TrashCardRequest request) {
+            request.setResponse(handleTrashCard(request));
         }
     }
 
@@ -146,19 +148,42 @@ public abstract class PlayerController {
      */
     private Card handleGainCardRequest(GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
-        Card cardToGain = gainCardHook(request.getGainOptions());
-        if (request.isRequired() && cardToGain == null && !(request.getGainOptions().isEmpty())) {
+        List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
+        Card card = gainCardHook(gainOptions);
+        if (request.isRequired() && card == null && !(gainOptions.isEmpty())) {
             logger.error("Player {} failed to gain a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
-        } else if (cardToGain == null) {
+        } else if (card == null) {
             logger.info("Player {} chose not to gain a card", player.getName());
         } else {
-            KingdomManager.getInstance().removeCard(cardToGain);
-            deck.addCard(cardToGain, request.getGainPosition());
+            KingdomManager.getInstance().removeCard(card);
+            deck.addCard(card, request.getGainPosition());
         }
-        return cardToGain;
+        return card;
     }
 
+    /**
+     * Processes a trash card request
+     *
+     * @param request The trash card request
+     * @return The card that the player chose to trash
+     */
+    private Card handleTrashCard(TrashCardRequest request) {
+        logger.info("Player {} received a request to trash a card", player.getName());
+        List<Card> cardsInPosition = deck.getCardsInPosition(request.getDeckPosition());
+        List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
+        Card card = trashCardHook(trashOptions, request.isRequired());
+        if (request.isRequired() && card == null && !trashOptions.isEmpty()) {
+            logger.error("Player {} failed to trash a card when it was both required and possible", player.getName());
+            throw new IllegalMoveException("Illegal move detected, exiting game");
+        } else if (card == null) {
+            logger.info("Player {} chose not to trash a card", player.getName());
+        } else if (!deck.trashCard(card, request.getDeckPosition())) {
+            logger.error("Player {} tried to remove {} which was not an option", player.getName(), card.getName());
+            throw new IllegalMoveException("Illegal move detected, exiting game");
+        }
+        return card;
+    }
 
     /// API Interface : These methods are to be extended for each controller of a player
 
@@ -193,4 +218,13 @@ public abstract class PlayerController {
      * @return The card that the player chooses to gain
      */
     protected abstract Card gainCardHook(List<Card> gainOptions);
+
+    /**
+     * Hook to allow for the player to choose which card they want to trash
+     *
+     * @param trashOptions The cards the play has to choose from
+     * @param isRequired   Tells the player if they have to trash or if its optional
+     * @return The card that the player chooses to gain
+     */
+    protected abstract Card trashCardHook(List<Card> trashOptions, boolean isRequired);
 }

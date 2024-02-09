@@ -82,6 +82,31 @@ public class PlayerDeck {
         discard = new ArrayList<>();
     }
 
+    /**
+     * Gives public access to getting the cards within a position of the hand
+     *
+     * @param position The position of cards to return
+     * @return The cards in said position
+     */
+    public List<Card> getCardsInPosition(DeckPosition position) {
+        return mapPosition(position);
+    }
+
+    /**
+     * Maps the enum describing deck position to the lists that they represent
+     *
+     * @param position The position to map
+     * @return The list of cards that is represented by the enum
+     */
+    private List<Card> mapPosition(DeckPosition position) {
+        return switch (position) {
+            case DRAW -> this.draw;
+            case HAND -> this.hand;
+            case PLAYED -> this.played;
+            case DISCARD -> this.discard;
+        };
+    }
+
     public List<Card> getDraw() {
         return Collections.unmodifiableList(draw);
     }
@@ -145,21 +170,6 @@ public class PlayerDeck {
     }
 
     /**
-     * Maps the enum describing deck position to the lists that they represent
-     *
-     * @param position The position to map
-     * @return The list of cards that is represented by the enum
-     */
-    private List<Card> mapPosition(DeckPosition position) {
-        return switch (position) {
-            case DRAW -> this.draw;
-            case HAND -> this.hand;
-            case PLAYED -> this.played;
-            case DISCARD -> this.discard;
-        };
-    }
-
-    /**
      * Takes a card that is in the from pile of cards and puts it into the to pile
      *
      * @param card The card to move
@@ -169,5 +179,16 @@ public class PlayerDeck {
     public void moveCard(Card card, DeckPosition from, DeckPosition to) {
         mapPosition(from).remove(card);
         mapPosition(to).add(card);
+    }
+
+    /**
+     * Removes a card from the list of cards at the given position
+     *
+     * @param toRemove The card to remove
+     * @param position The position to remove it from
+     * @return If the removal of the card was successful
+     */
+    public boolean trashCard(Card toRemove, DeckPosition position) {
+        return mapPosition(position).remove(toRemove);
     }
 }

@@ -64,6 +64,11 @@ public class DefaultController extends PlayerController {
         return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
     }
 
+    @Override
+    protected Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
+        return trashOptions.isEmpty() || !isRequired ? null : getRandomCard(trashOptions);
+    }
+
     /**
      * Gets a random card from the list
      *
