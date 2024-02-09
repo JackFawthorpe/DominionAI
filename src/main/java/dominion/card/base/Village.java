@@ -15,7 +15,7 @@ public class Village extends Card {
     public Village(Player player) {
         withActions(2);
         withCost(3);
-        setOwner(player);
+        setPlayer(player);
         withCardType(CardType.ACTION);
         withName("Village");
     }
@@ -25,7 +25,7 @@ public class Village extends Card {
      */
     @Override
     protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(owner, 1);
+        DrawCardRequest request = new DrawCardRequest(player, 1);
         request.execute();
     }
 }

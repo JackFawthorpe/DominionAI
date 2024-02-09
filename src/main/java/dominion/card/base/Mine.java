@@ -17,7 +17,7 @@ public class Mine extends Card {
     public Mine(Player player) {
         withCost(5);
         withCardType(CardType.ACTION);
-        setOwner(player);
+        setPlayer(player);
         withName("Mine");
     }
 
@@ -28,7 +28,7 @@ public class Mine extends Card {
     @Override
     protected void playCardHook() {
         CardSpecification trashable = new CardSpecification().withType(CardType.TREASURE);
-        TrashCardRequest trashCardRequest = new TrashCardRequest(owner, false, trashable, DeckPosition.HAND);
+        TrashCardRequest trashCardRequest = new TrashCardRequest(player, false, trashable, DeckPosition.HAND);
         Card trashed = trashCardRequest.execute().getResponse();
         if (trashed == null) {
             return;
@@ -36,7 +36,7 @@ public class Mine extends Card {
         CardSpecification gainable = new CardSpecification()
                 .withMaxCost(trashed.getCost() + 3)
                 .withType(CardType.TREASURE);
-        GainCardRequest gainCardRequest = new GainCardRequest(owner, gainable, DeckPosition.HAND);
+        GainCardRequest gainCardRequest = new GainCardRequest(player, gainable, DeckPosition.HAND);
         gainCardRequest.execute();
     }
 }

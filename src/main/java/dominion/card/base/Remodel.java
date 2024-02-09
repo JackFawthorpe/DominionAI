@@ -18,7 +18,7 @@ public class Remodel extends Card {
     public Remodel(Player player) {
         withCost(4);
         withCardType(CardType.ACTION);
-        setOwner(player);
+        setPlayer(player);
         withName("Remodel");
     }
 
@@ -27,12 +27,12 @@ public class Remodel extends Card {
      */
     @Override
     protected void playCardHook() {
-        TrashCardRequest trashCardRequest = new TrashCardRequest(owner, true, new CardSpecification(), DeckPosition.HAND);
+        TrashCardRequest trashCardRequest = new TrashCardRequest(player, true, new CardSpecification(), DeckPosition.HAND);
         Card card = trashCardRequest.execute().getResponse();
         if (card == null) {
             return;
         }
-        GainCardRequest gainCardRequest = new GainCardRequest(owner, new CardSpecification().withMaxCost(card.getCost() + 2), DeckPosition.DISCARD);
+        GainCardRequest gainCardRequest = new GainCardRequest(player, new CardSpecification().withMaxCost(card.getCost() + 2), DeckPosition.DISCARD);
         gainCardRequest.execute();
     }
 }

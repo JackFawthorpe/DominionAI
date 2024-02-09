@@ -17,7 +17,7 @@ public class Workshop extends Card {
     public Workshop(Player player) {
         withCost(3);
         withCardType(CardType.ACTION);
-        setOwner(player);
+        setPlayer(player);
         withName("Workshop");
     }
 
@@ -26,7 +26,7 @@ public class Workshop extends Card {
      */
     @Override
     protected void playCardHook() {
-        GainCardRequest request = new GainCardRequest(owner, new CardSpecification().withMaxCost(4), DeckPosition.DISCARD);
+        GainCardRequest request = new GainCardRequest(player, new CardSpecification().withMaxCost(4), DeckPosition.DISCARD);
         request.execute();
     }
 }

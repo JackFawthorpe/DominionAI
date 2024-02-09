@@ -14,7 +14,7 @@ import dominion.core.rfa.request.DrawCardRequest;
 public class Cellar extends Card {
 
     public Cellar(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withName("Cellar");
         withCost(2);
         withActions(1);
@@ -27,20 +27,20 @@ public class Cellar extends Card {
      */
     @Override
     protected void playCardHook() {
-        boolean canDiscard = !owner.isHandEmpty();
+        boolean canDiscard = !player.isHandEmpty();
         int discardCount = 0;
         while (canDiscard) {
-            DiscardFromHandRequest request = new DiscardFromHandRequest(owner, false);
+            DiscardFromHandRequest request = new DiscardFromHandRequest(player, false);
             boolean discardedCard = request.getResponse() != null;
             if (discardedCard) {
                 discardCount++;
             } else {
                 canDiscard = false;
             }
-            canDiscard = canDiscard && !owner.isHandEmpty();
+            canDiscard = canDiscard && !player.isHandEmpty();
         }
 
-        DrawCardRequest request = new DrawCardRequest(owner, discardCount);
+        DrawCardRequest request = new DrawCardRequest(player, discardCount);
         request.execute();
     }
 }

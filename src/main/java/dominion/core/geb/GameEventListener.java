@@ -14,4 +14,9 @@ public interface GameEventListener<T extends GameEvent> {
      */
     void handleEvent(T event);
 
+    /**
+     * @return Returns a string representation of the listener that is listening in
+     */
+    String getIdentifier();
+
 }

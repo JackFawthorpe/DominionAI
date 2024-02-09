@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Province extends Card {
 
     public Province(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withCost(8);
         withVictoryPoints(6);
         withCardType(CardType.VICTORY);

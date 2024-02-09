@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Copper extends Card {
 
     public Copper(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withMoney(1);
         withCost(0);
         withCardType(CardType.TREASURE);

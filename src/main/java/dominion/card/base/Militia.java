@@ -14,7 +14,7 @@ public class Militia extends Card {
     public Militia(Player player) {
         withMoney(2);
         withCost(4);
-        setOwner(player);
+        setPlayer(player);
         withName("Militia");
         withCardType(CardType.ACTION);
     }

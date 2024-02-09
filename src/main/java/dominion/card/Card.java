@@ -1,5 +1,7 @@
 package dominion.card;
 
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.PlayCardEvent;
 import dominion.core.player.Entity.Player;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
  * Abstract class to represent the common functionality of each card
  */
 public abstract class Card implements Cloneable {
-    protected Player owner;
+    protected Player player;
     private List<CardType> cardType;
     private int actions;
     private int buys;
@@ -37,8 +39,9 @@ public abstract class Card implements Cloneable {
      * through the use of the {@link #playCardHook()}}
      */
     public void playCard() {
-        owner.updateTurnResources(actions, buys, money);
+        player.updateTurnResources(actions, buys, money);
         playCardHook();
+        GameEventBus.getInstance().notifyListeners(new PlayCardEvent(this));
     }
 
     /**
@@ -95,26 +98,26 @@ public abstract class Card implements Cloneable {
     public boolean equals(Object other) {
         return other instanceof Card card
                 && card.getName().equals(this.name)
-                && card.getOwner().equals(this.owner);
+                && card.getPlayer().equals(this.player);
     }
 
     public String getName() {
         return name;
     }
 
-    public Player getOwner() {
-        return owner;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setOwner(Player player) {
-        this.owner = player;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
     public Card clone() {
         try {
             Card clone = (Card) super.clone();
-            clone.setOwner(null);
+            clone.setPlayer(null);
             clone.withActions(this.actions);
             clone.withBuys(this.buys);
             clone.withBuys(this.buys);

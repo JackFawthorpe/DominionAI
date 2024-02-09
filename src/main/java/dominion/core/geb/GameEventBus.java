@@ -45,6 +45,7 @@ public class GameEventBus {
      * @param <T>        The type of event that is being listened to
      */
     public <T extends GameEvent> void addListener(Class<T> eventClass, GameEventListener<T> listener) {
+        logger.info("Adding listener to {} with the identifier {}", eventClass, listener.getIdentifier());
         List<GameEventListener> listeners = listenersMap.computeIfAbsent(eventClass, k -> new ArrayList<>());
         listeners.add(listener);
     }
@@ -57,10 +58,12 @@ public class GameEventBus {
      * @param <T>        The type of the event
      */
     public <T extends GameEvent> void removeListener(Class<T> eventClass, GameEventListener<T> listener) {
+        logger.info("Removing listener to {} with the identifier {}", eventClass, listener.getIdentifier());
         listenersMap.getOrDefault(eventClass, new ArrayList<>()).remove(listener);
     }
 
     public <T extends GameEvent> void notifyListeners(T event) {
+        logger.info("Event of type {} has hit the event bus", event.getClass());
         Class<? extends GameEvent> eventClass = event.getClass();
         List<GameEventListener> listeners = listenersMap.get(eventClass);
         if (listeners != null) {

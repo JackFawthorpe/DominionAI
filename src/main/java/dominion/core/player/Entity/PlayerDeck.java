@@ -153,7 +153,7 @@ public class PlayerDeck {
      * @param position The position in the deck for the card to reside
      */
     public void addCard(Card card, DeckPosition position) {
-        card.setOwner(owner);
+        card.setPlayer(owner);
         mapPosition(position).add(0, card);
     }
 

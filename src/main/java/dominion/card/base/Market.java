@@ -18,7 +18,7 @@ public class Market extends Card {
         withMoney(1);
         withCost(5);
         withCardType(CardType.ACTION);
-        setOwner(player);
+        setPlayer(player);
         withName("Market");
     }
 
@@ -27,7 +27,7 @@ public class Market extends Card {
      */
     @Override
     protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(owner, 1);
+        DrawCardRequest request = new DrawCardRequest(player, 1);
         request.execute();
     }
 }

@@ -11,7 +11,7 @@ import dominion.core.player.Entity.Player;
 public class Moat extends Card {
 
     public Moat(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withName("Moat");
     }
 }

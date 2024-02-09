@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Festival extends Card {
 
     public Festival(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withActions(2);
         withBuys(1);
         withMoney(2);

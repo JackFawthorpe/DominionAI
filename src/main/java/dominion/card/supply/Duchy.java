@@ -13,7 +13,7 @@ import dominion.core.player.Entity.Player;
 public class Duchy extends Card {
 
     public Duchy(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withCost(5);
         withVictoryPoints(3);
         withCardType(CardType.VICTORY);

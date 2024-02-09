@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Silver extends Card {
 
     public Silver(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withMoney(2);
         withCost(3);
         withCardType(CardType.TREASURE);

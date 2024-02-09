@@ -6,13 +6,21 @@ import dominion.core.player.Entity.Player;
 /**
  * Event to represent the playing of a card
  */
-public class PlayCardEvent {
+public class PlayCardEvent implements GameEvent {
 
     private final Player player;
     private final Card card;
 
     public PlayCardEvent(Card card) {
-        this.player = card.getOwner();
+        this.player = card.getPlayer();
         this.card = card;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Card getCard() {
+        return card;
     }
 }

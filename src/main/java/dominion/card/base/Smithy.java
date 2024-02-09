@@ -17,7 +17,7 @@ public class Smithy extends Card {
     private static final Logger logger = LogManager.getLogger(Smithy.class);
 
     public Smithy(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withName("Smithy");
         withCost(4);
         withCardType(CardType.ACTION);
@@ -25,7 +25,7 @@ public class Smithy extends Card {
 
     @Override
     protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(owner, 3);
+        DrawCardRequest request = new DrawCardRequest(player, 3);
         request.execute();
     }
 }

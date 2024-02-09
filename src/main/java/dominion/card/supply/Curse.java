@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Curse extends Card {
 
     public Curse(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withCost(0);
         withVictoryPoints(-1);
         withCardType(CardType.CURSE);

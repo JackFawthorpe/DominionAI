@@ -12,7 +12,7 @@ import dominion.core.player.Entity.Player;
 public class Estate extends Card {
 
     public Estate(Player player) {
-        setOwner(player);
+        setPlayer(player);
         withCost(2);
         withVictoryPoints(1);
         withCardType(CardType.VICTORY);
