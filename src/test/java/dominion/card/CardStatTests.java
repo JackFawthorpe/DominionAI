@@ -181,4 +181,34 @@ class CardStatTests extends TestSuite {
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
+
+    @Test
+    void smithyTest() {
+
+        Card card = new Smithy(mockPlayer);
+
+        Assertions.assertEquals("Smithy", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getOwner());
+    }
+
+    @Test
+    void workshopTest() {
+
+        Card card = new Workshop(mockPlayer);
+
+        Assertions.assertEquals("Workshop", card.getName());
+        Assertions.assertEquals(3, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getOwner());
+    }
 }

@@ -60,6 +60,7 @@ public class PlayerDeck {
      * replace the draw pile
      */
     public void draw(int count) {
+        count = Math.min(count, draw.size() + discard.size());
         int firstDraw = Math.min(count, draw.size());
         hand.addAll(draw.subList(0, firstDraw));
         draw.removeAll(draw.subList(0, firstDraw));

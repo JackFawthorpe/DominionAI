@@ -78,8 +78,8 @@ public abstract class PlayerController {
         } else {
             // Plays card after moving, when resolving effects,
             // the played card is treated as though its in the played pile, not the deck
+            logger.info("Player {} is playing the card {}", player.getName(), chosenCard.getName());
             chosenCard.playCard();
-            logger.info("Player {} played the card {}", player.getName(), chosenCard.getName());
             player.updateTurnResources(-1, 0, 0);
         }
         return chosenCard;

@@ -50,6 +50,7 @@ public class GameLoader {
         try {
             RoundRobinManager.getInstance().startGame();
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("An error occurred whilst playing the game: {}", e.getMessage());
         }
     }
