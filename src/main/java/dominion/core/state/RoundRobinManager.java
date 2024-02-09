@@ -47,6 +47,10 @@ public class RoundRobinManager {
             TurnManager.getInstance().playTurn(players.get(currentPlayerIndex));
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         }
+        logger.warn("Game has finished. Results are as follows");
+        for (Player player : players) {
+            logger.warn("Player {} scored {}", player.getName(), player.getPoints());
+        }
     }
 
     public int getTurnCount() {

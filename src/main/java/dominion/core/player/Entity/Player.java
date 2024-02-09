@@ -1,5 +1,7 @@
 package dominion.core.player.Entity;
 
+import dominion.card.Card;
+
 /**
  * Entity class for the data relating to a player
  */
@@ -84,5 +86,16 @@ public class Player {
      */
     public boolean isHandEmpty() {
         return deck.getHand().isEmpty();
+    }
+
+    /**
+     * Gets the total amount of points the player has
+     *
+     * @return The number of victory points in the deck
+     */
+    public int getPoints() {
+        return deck.getAllCards().stream()
+                .map(Card::getVictoryPoints)
+                .reduce(Integer::sum).orElse(0);
     }
 }

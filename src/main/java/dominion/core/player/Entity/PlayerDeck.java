@@ -188,4 +188,18 @@ public class PlayerDeck {
     public boolean trashCard(Card toRemove, DeckPosition position) {
         return mapPosition(position).remove(toRemove);
     }
+
+    /**
+     * Collates all the cards in the players deck
+     *
+     * @return All the players cards
+     */
+    public List<Card> getAllCards() {
+        List<Card> cards = new ArrayList<>();
+        cards.addAll(draw);
+        cards.addAll(hand);
+        cards.addAll(played);
+        cards.addAll(discard);
+        return cards;
+    }
 }
