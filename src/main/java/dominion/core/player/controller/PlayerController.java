@@ -1,6 +1,8 @@
 package dominion.core.player.controller;
 
 import dominion.card.Card;
+import dominion.card.CardSpecification;
+import dominion.card.CardType;
 import dominion.core.exception.IllegalMoveException;
 import dominion.core.player.Entity.DeckPosition;
 import dominion.core.player.Entity.Player;
@@ -66,13 +68,12 @@ public abstract class PlayerController {
      */
     private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-
-        Card chosenCard = playActionCardHook(deck.getHandActionCards());
+        Card chosenCard = playActionCardHook(deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
         if (chosenCard == null) {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
         }
-        if (!deck.playCard(chosenCard)) {
+        if (!deck.moveCard(chosenCard, DeckPosition.HAND, DeckPosition.PLAYED)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
@@ -92,9 +93,10 @@ public abstract class PlayerController {
      * @return The card which the player purchased
      */
     private Card handleBuyCard() {
+        updateMoney();
         logger.info("Player {} received request to buy a card", player.getName());
         KingdomManager kingdomManager = KingdomManager.getInstance();
-        List<Card> buyOptions = kingdomManager.getAvailableCards(player.getMoney());
+        List<Card> buyOptions = kingdomManager.getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
         Card card = buyCardHook(buyOptions);
         logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
         kingdomManager.removeCard(card);
@@ -126,8 +128,10 @@ public abstract class PlayerController {
             throw new IllegalMoveException("Illegal move detected, exiting game");
         } else if (card == null) {
             logger.info("Player {} chose not to discard a card", player.getName());
+        } else if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.DISCARD)) {
+            logger.error("Attempted to discard {} from players hand but it wasn't in their hand", player.getName());
+            throw new IllegalMoveException("Illegal move detected, exitting game");
         } else {
-            deck.moveCard(card, DeckPosition.HAND, DeckPosition.DISCARD);
             logger.info("Player {} has chosen to discard {}", player.getName(), card.getName());
         }
         return card;
@@ -172,7 +176,7 @@ public abstract class PlayerController {
      */
     private Card handleTrashCard(TrashCardRequest request) {
         logger.info("Player {} received a request to trash a card", player.getName());
-        List<Card> cardsInPosition = deck.getCardsInPosition(request.getDeckPosition());
+        List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
         Card card = trashCardHook(trashOptions, request.isRequired());
         if (request.isRequired() && card == null && !trashOptions.isEmpty()) {
@@ -187,8 +191,6 @@ public abstract class PlayerController {
         return card;
     }
 
-    /// API Interface : These methods are to be extended for each controller of a player
-
     /**
      * Hook to allow the player to choose which action they want to do
      *
@@ -196,6 +198,24 @@ public abstract class PlayerController {
      * @return The card the player wants to play
      */
     protected abstract Card playActionCardHook(List<Card> actionCardsInHand);
+
+    /// API Interface : These methods are to be extended for each controller of a player
+
+    /**
+     * Handles playing the money in the player's hand
+     */
+    private void updateMoney() {
+        logger.info("Player {} is playing their treasure cards", player.getName());
+        List<Card> inHandTreasures = deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.TREASURE));
+        for (Card card : inHandTreasures) {
+            if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.PLAYED)) {
+                logger.error("Attempted to play money card that wasn't in hand");
+                throw new RuntimeException("This shouldn't happen");
+            }
+            card.playCard();
+        }
+
+    }
 
     /**
      * Hook to allow for the player to choose which card they want to buy

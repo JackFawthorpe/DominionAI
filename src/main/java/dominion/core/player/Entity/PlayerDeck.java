@@ -1,7 +1,7 @@
 package dominion.core.player.Entity;
 
 import dominion.card.Card;
-import dominion.card.CardType;
+import dominion.card.CardSpecification;
 import dominion.card.supply.Copper;
 import dominion.card.supply.Estate;
 import org.apache.logging.log4j.LogManager;
@@ -89,7 +89,7 @@ public class PlayerDeck {
      * @param position The position of cards to return
      * @return The cards in said position
      */
-    public List<Card> getCardsInPosition(DeckPosition position) {
+    public List<Card> getCards(DeckPosition position) {
         return mapPosition(position);
     }
 
@@ -106,6 +106,16 @@ public class PlayerDeck {
             case PLAYED -> this.played;
             case DISCARD -> this.discard;
         };
+    }
+
+    /**
+     * Gives public access to getting the cards within a position of the hand
+     *
+     * @param position The position of cards to return
+     * @return The cards in said position
+     */
+    public List<Card> getCards(DeckPosition position, CardSpecification cardSpecification) {
+        return cardSpecification.filterCards(mapPosition(position));
     }
 
     public List<Card> getDraw() {
@@ -137,30 +147,6 @@ public class PlayerDeck {
     }
 
     /**
-     * Handles the moving of cards from the hand to the played pile
-     *
-     * @param card The card that is played
-     * @return true if the operation was successful
-     */
-    public boolean playCard(Card card) {
-        boolean removed = hand.remove(card);
-        played.add(card);
-        return removed;
-    }
-
-    /**
-     * Finds all the cards in the players hand that are actions
-     *
-     * @return An unmodifiable list of the action cards in the players hand
-     */
-    @Deprecated
-    public List<Card> getHandActionCards() {
-        return hand.stream()
-                .filter(card -> card.isType(CardType.ACTION))
-                .toList();
-    }
-
-    /**
      * Adds a card to the players deck at the given position
      *
      * @param card     The card to add to the deck
@@ -178,9 +164,9 @@ public class PlayerDeck {
      * @param from The pile to remove the card from
      * @param to   The pile to put the card in
      */
-    public void moveCard(Card card, DeckPosition from, DeckPosition to) {
-        mapPosition(from).remove(card);
+    public boolean moveCard(Card card, DeckPosition from, DeckPosition to) {
         mapPosition(to).add(card);
+        return mapPosition(from).remove(card);
     }
 
     /**

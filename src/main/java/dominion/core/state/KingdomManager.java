@@ -106,23 +106,6 @@ public class KingdomManager {
     }
 
     /**
-     * Collates each of the cards that can currently be purchased with the amount of money provided.
-     *
-     * @param money The amount of money that the player has to buy a card. Null represents the intention that they can
-     *              get any card they want
-     * @return A list of cards cloned from the references that they can currently afford
-     */
-    @Deprecated
-    public List<Card> getAvailableCards(Integer money) {
-        logger.info("Fetching available cards from the supply for the cost of {}", money);
-        return cardReferences.stream()
-                .filter(card -> money == null || card.getCost() <= money)
-                .filter(card -> supply.get(card.getName()) > 0)
-                .map(Card::clone)
-                .toList();
-    }
-
-    /**
      * Removes a card of the given type from the supply
      *
      * @param card the card to be taken from the supply
