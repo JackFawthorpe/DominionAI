@@ -4,6 +4,9 @@ import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.supply.Copper;
 import dominion.card.supply.Estate;
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.CardDiscardedEvent;
+import dominion.core.geb.event.CardDrawnEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,37 +63,43 @@ public class PlayerDeck {
      * replace the draw pile
      */
     public void draw(int count) {
-        count = Math.min(count, draw.size() + discard.size());
-        int firstDraw = Math.min(count, draw.size());
-        hand.addAll(draw.subList(0, firstDraw));
-        draw.removeAll(draw.subList(0, firstDraw));
-        count -= firstDraw;
-        if (count == 0) {
-            return;
+        while (count != 0) {
+            if (draw.isEmpty()) {
+                draw = discard;
+                Collections.shuffle(draw);
+                discard = new ArrayList<>();
+                if (draw.isEmpty()) {
+                    return;
+                }
+            }
+            moveCard(draw.get(0), DeckPosition.DRAW, DeckPosition.HAND);
+            count--;
         }
-        newDraw();
-        hand.addAll(draw.subList(0, count));
-        draw.removeAll(draw.subList(0, count));
     }
 
     /**
-     * Responsible for shifting the cards from the discard pile, shuffling them and placing them into the draw pile
-     */
-    private void newDraw() {
-        logger.info("Shuffling discard into draw pile");
-        draw = discard;
-        Collections.shuffle(draw);
-        discard = new ArrayList<>();
-    }
-
-    /**
-     * Gives public access to getting the cards within a position of the hand
+     * Takes a card that is in the from pile of cards and puts it into the to pile
      *
-     * @param position The position of cards to return
-     * @return The cards in said position
+     * @param card The card to move
+     * @param from The pile to remove the card from
+     * @param to   The pile to put the card in
      */
-    public List<Card> getCards(DeckPosition position) {
-        return mapPosition(position);
+    public boolean moveCard(Card card, DeckPosition from, DeckPosition to) {
+        if (from == to) {
+            logger.error("Attempting to move card in place in position {}", from);
+            throw new RuntimeException("This shouldn't happen");
+        }
+
+        if (to == DeckPosition.DISCARD) {
+            CardDiscardedEvent event = new CardDiscardedEvent(card);
+            GameEventBus.getInstance().notifyListeners(event);
+        } else if (to == DeckPosition.HAND) {
+            CardDrawnEvent event = new CardDrawnEvent(card);
+            GameEventBus.getInstance().notifyListeners(event);
+        }
+
+        mapPosition(to).add(card);
+        return mapPosition(from).remove(card);
     }
 
     /**
@@ -106,6 +115,16 @@ public class PlayerDeck {
             case PLAYED -> this.played;
             case DISCARD -> this.discard;
         };
+    }
+
+    /**
+     * Gives public access to getting the cards within a position of the hand
+     *
+     * @param position The position of cards to return
+     * @return The cards in said position
+     */
+    public List<Card> getCards(DeckPosition position) {
+        return mapPosition(position);
     }
 
     /**
@@ -139,10 +158,12 @@ public class PlayerDeck {
      * It then draws 5 cards
      */
     public void cleanUp() {
-        discard.addAll(played);
-        discard.addAll(hand);
-        played.clear();
-        hand.clear();
+        while (played.size() != 0) {
+            moveCard(played.get(0), DeckPosition.PLAYED, DeckPosition.DISCARD);
+        }
+        while (hand.size() != 0) {
+            moveCard(hand.get(0), DeckPosition.HAND, DeckPosition.DISCARD);
+        }
         draw(5);
     }
 
@@ -155,18 +176,6 @@ public class PlayerDeck {
     public void addCard(Card card, DeckPosition position) {
         card.setPlayer(owner);
         mapPosition(position).add(0, card);
-    }
-
-    /**
-     * Takes a card that is in the from pile of cards and puts it into the to pile
-     *
-     * @param card The card to move
-     * @param from The pile to remove the card from
-     * @param to   The pile to put the card in
-     */
-    public boolean moveCard(Card card, DeckPosition from, DeckPosition to) {
-        mapPosition(to).add(card);
-        return mapPosition(from).remove(card);
     }
 
     /**

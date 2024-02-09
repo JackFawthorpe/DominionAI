@@ -11,6 +11,7 @@ public abstract class ControllerActionRequest<T> {
 
     private final Player player;
     private final boolean required;
+    private boolean isAttack;
     private T response;
 
     /**
@@ -22,6 +23,7 @@ public abstract class ControllerActionRequest<T> {
         this.player = player;
         this.response = null;
         this.required = required;
+        this.isAttack = false;
     }
 
     /**
@@ -46,5 +48,16 @@ public abstract class ControllerActionRequest<T> {
 
     public boolean isRequired() {
         return required;
+    }
+
+    public boolean isAttack() {
+        return isAttack;
+    }
+
+    /**
+     * Method to signal that the action derives from an attack
+     */
+    public void asAttack() {
+        isAttack = true;
     }
 }

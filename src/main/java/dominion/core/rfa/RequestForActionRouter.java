@@ -1,5 +1,7 @@
 package dominion.core.rfa;
 
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.AttackReactionEvent;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerController;
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +62,17 @@ public class RequestForActionRouter {
             return;
         }
         logger.info("Routing action to player {}", player.getName());
+
+        if (playerActionRequest.isAttack()) {
+            AttackReactionEvent reactionEvent = new AttackReactionEvent(playerActionRequest.getPlayer());
+            GameEventBus.getInstance().notifyListeners(reactionEvent);
+            boolean continueAttack = reactionEvent.isToContinue();
+            if (!continueAttack) {
+                logger.info("Attack action against {} was blocked", player.getName());
+                return;
+            }
+        }
+
         playerController.handleAction(playerActionRequest);
     }
 }

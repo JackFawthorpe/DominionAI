@@ -144,7 +144,7 @@ class CardStatTests extends TestSuite {
 
         Assertions.assertEquals("Market", card.getName());
         Assertions.assertEquals(5, card.getCost());
-        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(1, card.getMoney());
         Assertions.assertEquals(1, card.getBuys());
         Assertions.assertEquals(1, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
@@ -224,6 +224,38 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(1, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+    }
+
+    @Test
+    void militiaTest() {
+
+        Card card = new Militia(mockPlayer);
+
+        Assertions.assertEquals("Militia", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(2, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertTrue(card.isType(CardType.ATTACK));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+    }
+
+    @Test
+    void moatTest() {
+
+        Card card = new Moat(mockPlayer);
+
+        Assertions.assertEquals("Moat", card.getName());
+        Assertions.assertEquals(2, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertTrue(card.isType(CardType.REACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
     }
 }

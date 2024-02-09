@@ -7,7 +7,9 @@ public enum CardType {
     ACTION("Action"),
     TREASURE("Treasure"),
     VICTORY("Victory"),
-    CURSE("Curse");
+    CURSE("Curse"),
+    REACTION("Reaction"),
+    ATTACK("Attack");
 
     private final String displayName;
 
