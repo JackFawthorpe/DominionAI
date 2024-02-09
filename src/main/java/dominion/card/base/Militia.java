@@ -1,6 +1,7 @@
 package dominion.card.base;
 
 import dominion.card.Card;
+import dominion.card.CardType;
 import dominion.core.player.Entity.Player;
 
 /**
@@ -11,7 +12,10 @@ import dominion.core.player.Entity.Player;
 public class Militia extends Card {
 
     public Militia(Player player) {
+        withMoney(2);
+        withCost(4);
         setOwner(player);
         withName("Militia");
+        withCardType(CardType.ACTION);
     }
 }

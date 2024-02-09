@@ -2,20 +2,21 @@ package dominion.card;
 
 import dominion.core.player.Entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Abstract class to represent the common functionality of each card
  */
 public abstract class Card implements Cloneable {
     protected Player owner;
+    private List<CardType> cardType;
     private int actions;
     private int buys;
     private int money;
     private int victoryPoints;
     private String name;
-
     private int cost;
-
-    private CardType cardType;
 
     /**
      * Base card
@@ -26,6 +27,7 @@ public abstract class Card implements Cloneable {
         this.money = 0;
         this.victoryPoints = 0;
         this.name = "Default Name";
+        this.cardType = new ArrayList<>();
     }
 
     /**
@@ -76,8 +78,12 @@ public abstract class Card implements Cloneable {
         return cost;
     }
 
-    public CardType getCardType() {
+    public List<CardType> getCardType() {
         return cardType;
+    }
+
+    public boolean isType(CardType cardType) {
+        return this.cardType.contains(cardType);
     }
 
     @Override
@@ -114,7 +120,7 @@ public abstract class Card implements Cloneable {
             clone.withBuys(this.buys);
             clone.withMoney(this.money);
             clone.withCost(this.cost);
-            clone.withCardType(this.cardType);
+            clone.withCardType(new ArrayList<>(this.cardType));
             return clone;
         } catch (Exception e) {
             throw new RuntimeException("Failed to clone card. This shouldn't happen");
@@ -137,7 +143,21 @@ public abstract class Card implements Cloneable {
         this.cost = cost;
     }
 
-    protected void withCardType(CardType cardType) {
+    /**
+     * Removes the current List of card type and replaces them with the new list
+     *
+     * @param cardType The list of card types to apply to the card
+     */
+    protected void withCardType(List<CardType> cardType) {
         this.cardType = cardType;
+    }
+
+    /**
+     * Adds the card type to the list of types of the card
+     *
+     * @param cardType The type to add
+     */
+    protected void withCardType(CardType cardType) {
+        this.cardType.add(cardType);
     }
 }

@@ -33,11 +33,6 @@ public class RoundRobinManager {
         return instance;
     }
 
-    public void setPlayers(List<Player> players) {
-        logger.info("Setting players");
-        this.players = players;
-    }
-
     /**
      * Entry point for the game starting
      */
@@ -60,5 +55,14 @@ public class RoundRobinManager {
 
     public int getPlayerCount() {
         return players.size();
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        logger.info("Setting players");
+        this.players = players;
     }
 }

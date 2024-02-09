@@ -152,9 +152,10 @@ public class PlayerDeck {
      *
      * @return An unmodifiable list of the action cards in the players hand
      */
+    @Deprecated
     public List<Card> getHandActionCards() {
         return hand.stream()
-                .filter(card -> card.getCardType() == CardType.ACTION)
+                .filter(card -> card.isType(CardType.ACTION))
                 .toList();
     }
 

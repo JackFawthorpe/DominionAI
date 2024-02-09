@@ -64,7 +64,7 @@ public class CardSpecification {
      * @return this
      */
     public CardSpecification withType(CardType cardType) {
-        filters.add(card -> card.getCardType() == cardType);
+        filters.add(card -> card.isType(cardType));
         return this;
     }
 }

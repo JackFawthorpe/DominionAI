@@ -52,7 +52,7 @@ public class Player {
      */
     private int getMoneyInHand() {
         return deck.getHand().stream()
-                .filter(card -> card.getCardType() == CardType.TREASURE)
+                .filter(card -> card.isType(CardType.TREASURE))
                 .map(Card::getMoney)
                 .reduce(0, Integer::sum);
     }

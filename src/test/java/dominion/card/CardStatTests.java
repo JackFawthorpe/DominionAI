@@ -19,7 +19,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.TREASURE, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -33,7 +33,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.TREASURE, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -47,7 +47,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.TREASURE, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -61,7 +61,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(6, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.VICTORY, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -75,7 +75,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(3, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.VICTORY, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -89,7 +89,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(1, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.VICTORY, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -104,7 +104,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(-1, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.CURSE, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.CURSE));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -119,7 +119,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(1, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.ACTION, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 
@@ -134,7 +134,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getBuys());
         Assertions.assertEquals(0, card.getActions());
         Assertions.assertEquals(0, card.getVictoryPoints());
-        Assertions.assertEquals(CardType.ACTION, card.getCardType());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getOwner());
     }
 }
