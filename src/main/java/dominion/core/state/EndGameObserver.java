@@ -4,6 +4,7 @@ import dominion.card.supply.Province;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
 import dominion.core.geb.event.SupplyPileDepletedEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class responsible for the monitoring of the end of the game
@@ -33,6 +34,11 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
         return instance;
     }
 
+    public static void reset() {
+        GameEventBus.getInstance().removeListener(SupplyPileDepletedEvent.class, instance);
+        instance = new EndGameObserver();
+    }
+
     public boolean isGameFinished() {
         return gameFinished;
     }
@@ -44,7 +50,7 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
      * @param event The Supply Depletion event
      */
     @Override
-    public void handleEvent(SupplyPileDepletedEvent event) {
+    public void handleEvent(@NotNull SupplyPileDepletedEvent event) {
         this.depletionCounter++;
         gameFinished = depletionCounter >= 3 || event.getDepletedCard() instanceof Province;
     }
