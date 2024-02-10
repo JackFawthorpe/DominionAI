@@ -42,12 +42,12 @@ public class KingdomManager {
     private void initSupply() {
         supply = new HashMap<>();
         supply.put("Copper", 60 - 7 * RoundRobinManager.getInstance().getPlayerCount());
+        supply.put("Curse", (RoundRobinManager.getInstance().getPlayerCount() - 1) * 10);
         supply.put("Silver", 40);
         supply.put("Gold", 30);
         supply.put("Estate", 24);
         supply.put("Duchy", 12);
         supply.put("Province", 12);
-        supply.put("Curse", 30);
         supply.put("Cellar", 10);
         supply.put("Market", 10);
         supply.put("Merchant", 10);
@@ -123,6 +123,15 @@ public class KingdomManager {
         if (cardCount - 1 == 0) {
             GameEventBus.getInstance().notifyListeners(new SupplyPileDepletedEvent(card));
         }
+    }
+
+    /**
+     * Returns the amount of supply piles that have ran out since the start of the game
+     *
+     * @return The count
+     */
+    public int getDepletedSupplyPileCount() {
+        return (int) cardReferences.stream().filter(card -> supply.get(card.getName()) == 0).count();
     }
 
 }

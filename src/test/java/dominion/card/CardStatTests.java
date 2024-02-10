@@ -378,4 +378,36 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(mockPlayer, card.getPlayer());
         Assertions.assertEquals(2, card.getDrawCount());
     }
+
+    @Test
+    void throneRoomTest() {
+
+        Card card = new ThroneRoom(mockPlayer);
+
+        Assertions.assertEquals("Throne Room", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
+
+    @Test
+    void poacherTest() {
+
+        Card card = new Poacher(mockPlayer);
+
+        Assertions.assertEquals("Poacher", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(1, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(1, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(1, card.getDrawCount());
+    }
 }
