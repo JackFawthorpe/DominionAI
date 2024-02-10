@@ -3,7 +3,6 @@ package dominion.card.base;
 import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.player.Entity.Player;
-import dominion.core.rfa.request.DrawCardRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,11 +20,6 @@ public class Smithy extends Card {
         withName("Smithy");
         withCost(4);
         withCardType(CardType.ACTION);
-    }
-
-    @Override
-    protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(player, 3);
-        request.execute();
+        withSimpleDraw(3);
     }
 }

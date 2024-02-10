@@ -3,7 +3,6 @@ package dominion.card.base;
 import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.player.Entity.Player;
-import dominion.core.rfa.request.DrawCardRequest;
 
 /**
  * Card from Game
@@ -18,14 +17,6 @@ public class Village extends Card {
         setPlayer(player);
         withCardType(CardType.ACTION);
         withName("Village");
-    }
-
-    /**
-     * Draw card
-     */
-    @Override
-    protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(player, 1);
-        request.execute();
+        withSimpleDraw(1);
     }
 }

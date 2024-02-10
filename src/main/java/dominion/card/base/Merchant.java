@@ -24,6 +24,7 @@ public class Merchant extends Card implements GameEventListener<GameEvent> {
     public Merchant(Player player) {
         withCost(3);
         withActions(1);
+        withSimpleDraw(1);
         withCardType(CardType.ACTION);
         setPlayer(player);
         withName("Merchant");

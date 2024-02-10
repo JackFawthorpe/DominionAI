@@ -8,7 +8,6 @@ import dominion.core.geb.event.CardDiscardedEvent;
 import dominion.core.geb.event.CardDrawnEvent;
 import dominion.core.geb.event.GameEvent;
 import dominion.core.player.Entity.Player;
-import dominion.core.rfa.request.DrawCardRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,12 +28,7 @@ public class Moat extends Card implements GameEventListener<GameEvent> {
         withCardType(CardType.REACTION);
         setPlayer(player);
         withName("Moat");
-    }
-
-    @Override
-    protected void playCardHook() {
-        DrawCardRequest request = new DrawCardRequest(player, 2);
-        request.execute();
+        withSimpleDraw(2);
     }
 
     @Override

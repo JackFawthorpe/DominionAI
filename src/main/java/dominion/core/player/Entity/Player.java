@@ -2,6 +2,8 @@ package dominion.core.player.Entity;
 
 import dominion.card.Card;
 
+import java.util.List;
+
 /**
  * Entity class for the data relating to a player
  */
@@ -97,5 +99,14 @@ public class Player {
         return deck.getAllCards().stream()
                 .map(Card::getVictoryPoints)
                 .reduce(Integer::sum).orElse(0);
+    }
+
+    /**
+     * Accessor method for getting all the cards belonging to a player
+     *
+     * @return The list of cards in the players deck
+     */
+    public List<Card> getCards() {
+        return deck.getAllCards();
     }
 }

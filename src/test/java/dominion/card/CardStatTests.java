@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import testing.utilities.TestSuite;
 
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+
 class CardStatTests extends TestSuite {
 
     @Test
@@ -20,6 +24,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -34,6 +39,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -48,6 +54,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.TREASURE));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -62,6 +69,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(6, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -76,6 +84,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(3, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -90,6 +99,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(1, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.VICTORY));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -105,6 +115,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(-1, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.CURSE));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -120,6 +131,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -135,6 +147,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -150,6 +163,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(1, card.getDrawCount());
     }
 
     @Test
@@ -165,6 +179,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -180,6 +195,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(1, card.getDrawCount());
     }
 
     @Test
@@ -195,6 +211,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(3, card.getDrawCount());
     }
 
     @Test
@@ -210,6 +227,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -225,6 +243,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(0, card.getVictoryPoints());
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(1, card.getDrawCount());
     }
 
     @Test
@@ -241,6 +260,7 @@ class CardStatTests extends TestSuite {
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertTrue(card.isType(CardType.ATTACK));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
     }
 
     @Test
@@ -257,5 +277,105 @@ class CardStatTests extends TestSuite {
         Assertions.assertTrue(card.isType(CardType.ACTION));
         Assertions.assertTrue(card.isType(CardType.REACTION));
         Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(2, card.getDrawCount());
+    }
+
+    @Test
+    void chapelTest() {
+
+        Card card = new Chapel(mockPlayer);
+
+        Assertions.assertEquals("Chapel", card.getName());
+        Assertions.assertEquals(2, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
+
+    @Test
+    void gardenTest() {
+
+        Card card = new Gardens(mockPlayer);
+
+        when(mockPlayer.getCards()).thenReturn(List.of());
+
+        Assertions.assertEquals("Gardens", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.VICTORY));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
+
+    @Test
+    void moneylenderTest() {
+
+        Card card = new Moneylender(mockPlayer);
+
+        Assertions.assertEquals("Moneylender", card.getName());
+        Assertions.assertEquals(4, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
+
+    @Test
+    void festivalTest() {
+
+        Card card = new Festival(mockPlayer);
+
+        Assertions.assertEquals("Festival", card.getName());
+        Assertions.assertEquals(5, card.getCost());
+        Assertions.assertEquals(2, card.getMoney());
+        Assertions.assertEquals(1, card.getBuys());
+        Assertions.assertEquals(2, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
+
+    @Test
+    void laboratoryTest() {
+
+        Card card = new Laboratory(mockPlayer);
+
+        Assertions.assertEquals("Laboratory", card.getName());
+        Assertions.assertEquals(5, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(1, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(2, card.getDrawCount());
+    }
+
+    @Test
+    void witchTest() {
+
+        Card card = new Witch(mockPlayer);
+
+        Assertions.assertEquals("Witch", card.getName());
+        Assertions.assertEquals(5, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertTrue(card.isType(CardType.ATTACK));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(2, card.getDrawCount());
     }
 }

@@ -67,4 +67,16 @@ public class CardSpecification {
         filters.add(card -> card.isType(cardType));
         return this;
     }
+
+    /**
+     * Adds a filter to force the card to be a certain card in the game
+     *
+     * @param cardClass The class of card to test against
+     * @param <T>       The class of the card
+     * @return this
+     */
+    public <T extends Card> CardSpecification withCard(Class<T> cardClass) {
+        filters.add(card -> card.getClass() == cardClass);
+        return this;
+    }
 }

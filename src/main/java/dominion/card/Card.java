@@ -3,6 +3,7 @@ package dominion.card;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.event.PlayCardEvent;
 import dominion.core.player.Entity.Player;
+import dominion.core.rfa.request.DrawCardRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public abstract class Card implements Cloneable {
     private String name;
     private int cost;
 
+    private int drawCount;
+
     /**
      * Base card
      */
@@ -28,6 +31,7 @@ public abstract class Card implements Cloneable {
         this.buys = 0;
         this.money = 0;
         this.victoryPoints = 0;
+        this.drawCount = 0;
         this.name = "Default Name";
         this.cardType = new ArrayList<>();
     }
@@ -40,6 +44,10 @@ public abstract class Card implements Cloneable {
      */
     public void playCard() {
         player.updateTurnResources(actions, buys, money);
+        if (drawCount != 0) {
+            DrawCardRequest drawCardRequest = new DrawCardRequest(player, drawCount);
+            drawCardRequest.execute();
+        }
         playCardHook();
         GameEventBus.getInstance().notifyListeners(new PlayCardEvent(this));
     }
@@ -155,6 +163,10 @@ public abstract class Card implements Cloneable {
         this.cardType = cardType;
     }
 
+    public int getDrawCount() {
+        return drawCount;
+    }
+
     /**
      * Adds the card type to the list of types of the card
      *
@@ -162,5 +174,9 @@ public abstract class Card implements Cloneable {
      */
     protected void withCardType(CardType cardType) {
         this.cardType.add(cardType);
+    }
+
+    protected void withSimpleDraw(int drawCount) {
+        this.drawCount = drawCount;
     }
 }
