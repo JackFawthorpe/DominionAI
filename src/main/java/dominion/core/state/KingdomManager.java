@@ -5,6 +5,8 @@ import dominion.card.CardSpecification;
 import dominion.card.base.*;
 import dominion.card.supply.*;
 import dominion.core.exception.IllegalMoveException;
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.SupplyPileDepletedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -117,6 +119,10 @@ public class KingdomManager {
             throw new IllegalMoveException("Attempted to remove a card that is not in the supply");
         }
         supply.put(card.getName(), cardCount - 1);
+        // If pile is depleted fire event
+        if (cardCount - 1 == 0) {
+            GameEventBus.getInstance().notifyListeners(new SupplyPileDepletedEvent(card));
+        }
     }
 
 }

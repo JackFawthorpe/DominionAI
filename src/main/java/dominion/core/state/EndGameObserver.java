@@ -1,15 +1,24 @@
 package dominion.core.state;
 
+import dominion.card.supply.Province;
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.GameEventListener;
+import dominion.core.geb.event.SupplyPileDepletedEvent;
+
 /**
  * Class responsible for the monitoring of the end of the game
  */
-public class EndGameObserver {
+public class EndGameObserver implements GameEventListener<SupplyPileDepletedEvent> {
 
     private static EndGameObserver instance;
-    private final boolean gameFinished;
+    private boolean gameFinished;
+
+    private int depletionCounter;
 
     private EndGameObserver() {
         this.gameFinished = false;
+        this.depletionCounter = 0;
+        GameEventBus.getInstance().addListener(SupplyPileDepletedEvent.class, this);
     }
 
     /**
@@ -25,6 +34,23 @@ public class EndGameObserver {
     }
 
     public boolean isGameFinished() {
-        return gameFinished || RoundRobinManager.getInstance().getTurnCount() > 10;
+        return gameFinished;
+    }
+
+    /**
+     * Updates the gameFinished boolean
+     * The game is over if 3 supply piles deplete or all provinces are bought
+     *
+     * @param event The Supply Depletion event
+     */
+    @Override
+    public void handleEvent(SupplyPileDepletedEvent event) {
+        this.depletionCounter++;
+        gameFinished = depletionCounter >= 3 || event.getDepletedCard() instanceof Province;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return "Game End Observer";
     }
 }
