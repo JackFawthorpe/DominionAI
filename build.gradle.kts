@@ -13,6 +13,7 @@ dependencies {
     // Logging dependency
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation("org.apache.logging.log4j:log4j-core:2.22.1")
+    implementation("org.jetbrains:annotations:24.0.0")
 
     // Testing dependencies
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

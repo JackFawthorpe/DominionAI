@@ -3,12 +3,14 @@ package testing.utilities;
 import dominion.core.geb.GameEventBus;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.Entity.PlayerDeck;
+import dominion.core.player.controller.PlayerController;
 import dominion.core.rfa.RequestForActionRouter;
+import dominion.core.rfa.request.DrawCardRequest;
 import dominion.core.state.EndGameObserver;
 import dominion.core.state.KingdomManager;
 import dominion.core.state.RoundRobinManager;
 import dominion.core.state.TurnManager;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockedStatic;
 
@@ -25,21 +27,47 @@ public class TestSuite {
     public Player mockPlayer;
     public PlayerDeck mockPlayerDeck;
 
-    @BeforeAll
-    static void setupSingletonMocks() {
+    public PlayerController mockPlayerController;
 
-        MockedStatic<GameEventBus> gameEventBusMockedStatic = mockStatic(GameEventBus.class);
+    public DrawCardRequest mockDrawCardRequest;
+
+    public MockedStatic<GameEventBus> gameEventBusMockedStatic;
+    public MockedStatic<RequestForActionRouter> requestForActionRouterMockedStatic;
+    public MockedStatic<EndGameObserver> endGameObserverMockedStatic;
+    public MockedStatic<KingdomManager> kingdomManagerMockedStatic;
+    public MockedStatic<RoundRobinManager> roundRobinManagerMockedStatic;
+    public MockedStatic<TurnManager> turnManagerMockedStatic;
+
+    @BeforeEach
+    void setupSingletonMocks() {
+        gameEventBusMockedStatic = mockStatic(GameEventBus.class);
         gameEventBusMockedStatic.when(GameEventBus::getInstance).thenReturn(mockGameEventBus);
-        MockedStatic<RequestForActionRouter> requestForActionRouterMockedStatic = mockStatic(RequestForActionRouter.class);
+        requestForActionRouterMockedStatic = mockStatic(RequestForActionRouter.class);
         requestForActionRouterMockedStatic.when(RequestForActionRouter::getInstance).thenReturn(mockRequestForActionRouter);
-        MockedStatic<EndGameObserver> endGameObserverMockedStatic = mockStatic(EndGameObserver.class);
+        endGameObserverMockedStatic = mockStatic(EndGameObserver.class);
         endGameObserverMockedStatic.when(EndGameObserver::getInstance).thenReturn(mockEndGameObserver);
-        MockedStatic<KingdomManager> kingdomManagerMockedStatic = mockStatic(KingdomManager.class);
+        kingdomManagerMockedStatic = mockStatic(KingdomManager.class);
         kingdomManagerMockedStatic.when(KingdomManager::getInstance).thenReturn(mockKingdomManager);
-        MockedStatic<RoundRobinManager> roundRobinManagerMockedStatic = mockStatic(RoundRobinManager.class);
+        roundRobinManagerMockedStatic = mockStatic(RoundRobinManager.class);
         roundRobinManagerMockedStatic.when(RoundRobinManager::getInstance).thenReturn(mockRoundRobinManager);
-        MockedStatic<TurnManager> turnManagerMockedStatic = mockStatic(TurnManager.class);
+        turnManagerMockedStatic = mockStatic(TurnManager.class);
         turnManagerMockedStatic.when(TurnManager::getInstance).thenReturn(mockTurnManager);
+    }
+
+    @AfterEach
+    void tearDown() {
+        closeMock(gameEventBusMockedStatic);
+        closeMock(requestForActionRouterMockedStatic);
+        closeMock(endGameObserverMockedStatic);
+        closeMock(kingdomManagerMockedStatic);
+        closeMock(roundRobinManagerMockedStatic);
+        closeMock(turnManagerMockedStatic);
+    }
+
+    private void closeMock(MockedStatic<?> mock) {
+        if (mock != null && !mock.isClosed()) {
+            mock.close();
+        }
     }
 
     @BeforeEach
@@ -50,10 +78,17 @@ public class TestSuite {
         mockKingdomManager = mock(KingdomManager.class);
         mockRoundRobinManager = mock(RoundRobinManager.class);
         mockTurnManager = mock(TurnManager.class);
+
         mockPlayer = mock(Player.class);
         mockPlayerDeck = mock(PlayerDeck.class);
+        mockPlayerController = mock(PlayerController.class);
+        mockDrawCardRequest = mock(DrawCardRequest.class);
 
         when(mockPlayer.getDeck()).thenReturn(mockPlayerDeck);
+
+        when(mockDrawCardRequest.getPlayer()).thenReturn(mockPlayer);
+        when(mockDrawCardRequest.getDrawCount()).thenReturn(1);
+        when(mockDrawCardRequest.isAttack()).thenReturn(false);
     }
 
 }

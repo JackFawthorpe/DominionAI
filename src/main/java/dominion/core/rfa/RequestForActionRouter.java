@@ -6,6 +6,7 @@ import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -43,7 +44,7 @@ public class RequestForActionRouter {
      * @param playerController The implementation responsible for handling a players actions
      * @param player           The player the handler will be responsible for
      */
-    public void addHandler(PlayerController playerController, Player player) {
+    public void addHandler(@NotNull PlayerController playerController, @NotNull Player player) {
         logger.info("Adding handler for player {}", player.getName());
         routes.put(player, playerController);
     }
@@ -54,7 +55,7 @@ public class RequestForActionRouter {
      *
      * @param playerActionRequest The action to perform
      */
-    public void requestAction(ControllerActionRequest<?> playerActionRequest) {
+    public void requestAction(@NotNull ControllerActionRequest<?> playerActionRequest) {
         Player player = playerActionRequest.getPlayer();
         PlayerController playerController = routes.get(player);
         if (playerController == null) {
