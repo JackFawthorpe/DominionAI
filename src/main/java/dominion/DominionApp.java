@@ -7,6 +7,7 @@ import dominion.core.initialisation.GameConfigurationManager;
 import dominion.core.initialisation.GameLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import statistics.StatisticsApp;
 
 /**
  * Entry point for the game
@@ -35,6 +36,9 @@ public class DominionApp {
     public void initialiseGame() {
         GameConfigurationManager manager = new DefaultConfigurationManager(new GameConfiguration());
         manager.initialiseGame();
+        if (manager.getConfiguration().isStatisticsEnabled()) {
+            StatisticsApp.getInstance().enable();
+        }
         GameLoader gameLoader = new GameLoader();
         gameLoader.loadGame(manager.getConfiguration());
         gameLoader.startGame();

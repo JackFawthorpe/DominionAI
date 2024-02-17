@@ -6,8 +6,9 @@ import java.util.List;
  * POJO for the Configuration required to set up the game
  */
 public class GameConfiguration {
-    int playerCount;
-    List<String> kingdomCards;
+    private int playerCount;
+    private List<String> kingdomCards;
+    private boolean statisticsEnabled;
 
     public int getPlayerCount() {
         return playerCount;
@@ -25,4 +26,11 @@ public class GameConfiguration {
         this.kingdomCards = cards;
     }
 
+    public boolean isStatisticsEnabled() {
+        return statisticsEnabled;
+    }
+
+    public void setStatisticsEnabled(boolean statisticsEnabled) {
+        this.statisticsEnabled = statisticsEnabled;
+    }
 }

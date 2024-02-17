@@ -1,5 +1,7 @@
 package dominion.core.state;
 
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.SimulationCompleteEvent;
 import dominion.core.player.Entity.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,6 +53,7 @@ public class RoundRobinManager {
         for (Player player : players) {
             logger.warn("Player {} scored {}", player.getName(), player.getPoints());
         }
+        GameEventBus.getInstance().notifyListeners(new SimulationCompleteEvent());
     }
 
     public int getTurnCount() {
