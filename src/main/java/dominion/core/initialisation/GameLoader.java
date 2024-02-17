@@ -2,6 +2,8 @@ package dominion.core.initialisation;
 
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.DefaultController;
+import dominion.core.player.controller.PlayerController;
+import dominion.core.player.controller.ThoughtfulBuyerController;
 import dominion.core.state.ResetManager;
 import dominion.core.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +41,7 @@ public class GameLoader {
         for (int i = 0; i < configuration.getPlayerCount(); i++) {
             Player player = new Player("Player " + (i + 1));
             players.add(player);
-            new DefaultController(player);
+            PlayerController controller = i == 0 ? new ThoughtfulBuyerController(player) : new DefaultController(player);
         }
         RoundRobinManager.getInstance().setPlayers(players);
     }
