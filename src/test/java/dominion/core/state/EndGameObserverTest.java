@@ -21,7 +21,7 @@ class EndGameObserverTest extends TestSuite {
     @BeforeEach
     void removeRFARMock() {
         endGameObserverMockedStatic.close();
-        EndGameObserver.reset();
+        EndGameObserver.gameReset();
         endGameObserver = EndGameObserver.getInstance();
     }
 

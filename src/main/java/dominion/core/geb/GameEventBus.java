@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Bus to handle the propagation of all events that occur within a game to the listeners that care about them
@@ -22,6 +23,13 @@ public class GameEventBus {
 
     private GameEventBus() {
         this.listenersMap = new HashMap<>();
+    }
+
+    public static void gameReset() {
+        getInstance().listenersMap.replaceAll((event, listeners) ->
+                listeners.stream().filter(listener -> listener.getScope() == ListenScope.SIMULATION)
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
     }
 
     /**

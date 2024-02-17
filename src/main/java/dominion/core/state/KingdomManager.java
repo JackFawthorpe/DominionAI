@@ -30,7 +30,6 @@ public class KingdomManager {
     private KingdomManager() {
         initSupply();
         initCardReferences();
-
     }
 
     /**
@@ -85,6 +84,10 @@ public class KingdomManager {
         cardReferences.add(new Smithy(null));
         cardReferences.add(new Village(null));
         cardReferences.add(new Workshop(null));
+    }
+
+    public static void gameReset() {
+        instance = new KingdomManager();
     }
 
     public static KingdomManager getInstance() {

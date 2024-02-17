@@ -3,6 +3,7 @@ package dominion.card.base;
 import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.geb.GameEventListener;
+import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.AttackReactionEvent;
 import dominion.core.geb.event.CardDiscardedEvent;
 import dominion.core.geb.event.CardDrawnEvent;
@@ -51,5 +52,10 @@ public class Moat extends Card implements GameEventListener<GameEvent> {
     @Override
     public String getIdentifier() {
         return String.format("Player %s's moat card", player.getName());
+    }
+    
+    @Override
+    public ListenScope getScope() {
+        return ListenScope.GAME;
     }
 }

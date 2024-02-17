@@ -3,6 +3,7 @@ package dominion.core.state;
 import dominion.card.supply.Province;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
+import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.SupplyPileDepletedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +23,11 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
         GameEventBus.getInstance().addListener(SupplyPileDepletedEvent.class, this);
     }
 
+    public static void gameReset() {
+        getInstance().depletionCounter = 0;
+        getInstance().gameFinished = false;
+    }
+
     /**
      * Singleton implementation of EndGameObserver
      *
@@ -32,11 +38,6 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
             instance = new EndGameObserver();
         }
         return instance;
-    }
-
-    public static void reset() {
-        GameEventBus.getInstance().removeListener(SupplyPileDepletedEvent.class, instance);
-        instance = new EndGameObserver();
     }
 
     public boolean isGameFinished() {
@@ -58,5 +59,11 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
     @Override
     public String getIdentifier() {
         return "Game End Observer";
+    }
+
+
+    @Override
+    public ListenScope getScope() {
+        return ListenScope.SIMULATION;
     }
 }

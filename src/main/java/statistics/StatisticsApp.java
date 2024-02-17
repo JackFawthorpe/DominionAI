@@ -2,6 +2,7 @@ package statistics;
 
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
+import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.SimulationCompleteEvent;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import statistics.collectors.WinDatasetCollector;
 
 import java.util.Objects;
 
@@ -32,6 +34,7 @@ public class StatisticsApp extends Application implements GameEventListener<Simu
      */
     public void enable() {
         GameEventBus.getInstance().addListener(SimulationCompleteEvent.class, this);
+        WinDatasetCollector.getInstance().enable();
     }
 
     @Override
@@ -46,6 +49,11 @@ public class StatisticsApp extends Application implements GameEventListener<Simu
     }
 
     @Override
+    public ListenScope getScope() {
+        return ListenScope.SIMULATION;
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/statistics/Statistics.fxml")));
@@ -55,6 +63,5 @@ public class StatisticsApp extends Application implements GameEventListener<Simu
         primaryStage.setScene(new Scene(root, 1600, 900));
         primaryStage.show();
     }
-
 
 }

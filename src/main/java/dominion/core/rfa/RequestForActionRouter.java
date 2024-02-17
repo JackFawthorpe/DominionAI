@@ -25,6 +25,10 @@ public class RequestForActionRouter {
         this.routes = new HashMap<>();
     }
 
+    public static void gameReset() {
+        instance = new RequestForActionRouter();
+    }
+
     /**
      * Singleton implementation of the RequestForActionRouter class
      *

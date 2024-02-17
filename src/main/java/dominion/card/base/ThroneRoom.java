@@ -4,6 +4,7 @@ import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
+import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.PlayCardEvent;
 import dominion.core.player.Entity.Player;
 
@@ -38,5 +39,10 @@ public class ThroneRoom extends Card implements GameEventListener<PlayCardEvent>
     @Override
     public String getIdentifier() {
         return String.format("Player %s's played Throne Room", player.getName());
+    }
+    
+    @Override
+    public ListenScope getScope() {
+        return ListenScope.GAME;
     }
 }

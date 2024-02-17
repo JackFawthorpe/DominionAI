@@ -2,6 +2,7 @@ package dominion.core.initialisation;
 
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.DefaultController;
+import dominion.core.state.ResetManager;
 import dominion.core.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +50,7 @@ public class GameLoader {
     public void startGame() {
         try {
             RoundRobinManager.getInstance().startGame();
+            ResetManager.resetGame();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("An error occurred whilst playing the game: {}", e.getMessage());

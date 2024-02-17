@@ -19,4 +19,11 @@ public interface GameEventListener<T extends GameEvent> {
      */
     String getIdentifier();
 
+    /**
+     * The level of persistence for the listener
+     *
+     * @return The scope
+     */
+    ListenScope getScope();
+
 }

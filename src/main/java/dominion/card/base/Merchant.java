@@ -4,6 +4,7 @@ import dominion.card.Card;
 import dominion.card.CardType;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
+import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.EndOfTurnEvent;
 import dominion.core.geb.event.GameEvent;
 import dominion.core.geb.event.PlayCardEvent;
@@ -52,6 +53,11 @@ public class Merchant extends Card implements GameEventListener<GameEvent> {
     @Override
     public String getIdentifier() {
         return String.format("%s's Merchant", player.getName());
+    }
+
+    @Override
+    public ListenScope getScope() {
+        return ListenScope.GAME;
     }
 
     /**

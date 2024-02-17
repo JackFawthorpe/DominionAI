@@ -9,7 +9,7 @@
 
     <center>
         <TabPane>
-            <Tab text="Win Percentage" fx:id="winsTab">
+            <Tab text="Wins" fx:id="winsTab">
             </Tab>
             <Tab text="Tab 2">
                 <BorderPane/>

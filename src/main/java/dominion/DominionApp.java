@@ -1,6 +1,8 @@
 package dominion;
 
 
+import dominion.core.geb.GameEventBus;
+import dominion.core.geb.event.SimulationCompleteEvent;
 import dominion.core.initialisation.DefaultConfigurationManager;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.initialisation.GameConfigurationManager;
@@ -39,8 +41,11 @@ public class DominionApp {
         if (manager.getConfiguration().isStatisticsEnabled()) {
             StatisticsApp.getInstance().enable();
         }
-        GameLoader gameLoader = new GameLoader();
-        gameLoader.loadGame(manager.getConfiguration());
-        gameLoader.startGame();
+        for (int i = 0; i < manager.getConfiguration().getGameCount(); i++) {
+            GameLoader gameLoader = new GameLoader();
+            gameLoader.loadGame(manager.getConfiguration());
+            gameLoader.startGame();
+        }
+        GameEventBus.getInstance().notifyListeners(new SimulationCompleteEvent());
     }
 }
