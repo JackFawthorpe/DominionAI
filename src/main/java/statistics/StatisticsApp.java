@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import statistics.collectors.PointsDatasetCollector;
 import statistics.collectors.WinDatasetCollector;
 
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class StatisticsApp extends Application implements GameEventListener<Simu
     public void enable() {
         GameEventBus.getInstance().addListener(SimulationCompleteEvent.class, this);
         WinDatasetCollector.getInstance().enable();
+        PointsDatasetCollector.getInstance().enable();
     }
 
     @Override

@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import statistics.collectors.PointsDatasetCollector;
 import statistics.collectors.WinDatasetCollector;
 
 
@@ -14,17 +15,28 @@ public class BaseController {
     @FXML
     private Tab winsTab;
 
+    @FXML
+    private Tab pointsTab;
+
     public void initialize() {
         initializeWinsTab();
+        initializePointsTab();
     }
 
     private void initializeWinsTab() {
-
         JFreeChart chart = ChartFactory.createBarChart(
                 "Wins",
                 "Player",
-                "Value", WinDatasetCollector.getInstance().getDataset());
+                "Wins", WinDatasetCollector.getInstance().getDataset());
         insertChartIntoPane(chart, winsTab);
+    }
+
+    private void initializePointsTab() {
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Average Points per Game",
+                "Player",
+                "Points", PointsDatasetCollector.getInstance().getDataset());
+        insertChartIntoPane(chart, pointsTab);
     }
 
     private void insertChartIntoPane(JFreeChart chart, Tab tab) {

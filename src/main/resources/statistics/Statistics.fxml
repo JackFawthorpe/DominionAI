@@ -11,7 +11,7 @@
         <TabPane>
             <Tab text="Wins" fx:id="winsTab">
             </Tab>
-            <Tab text="Tab 2">
+            <Tab text="Average Points" fx:id="pointsTab">
                 <BorderPane/>
             </Tab>
             <Tab text="Tab 3">

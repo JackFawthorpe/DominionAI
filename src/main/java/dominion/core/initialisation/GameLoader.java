@@ -41,7 +41,7 @@ public class GameLoader {
         for (int i = 0; i < configuration.getPlayerCount(); i++) {
             Player player = new Player("Player " + (i + 1));
             players.add(player);
-            PlayerController controller = i == 0 ? new ThoughtfulBuyerController(player) : new DefaultController(player);
+            PlayerController controller = i <= 1 ? new ThoughtfulBuyerController(player) : new DefaultController(player);
         }
         RoundRobinManager.getInstance().setPlayers(players);
     }
