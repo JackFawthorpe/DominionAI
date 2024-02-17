@@ -9,6 +9,7 @@ public class GameConfiguration {
     private int playerCount;
     private List<String> kingdomCards;
     private boolean statisticsEnabled;
+    private int gameCount;
 
     public int getPlayerCount() {
         return playerCount;
@@ -32,5 +33,13 @@ public class GameConfiguration {
 
     public void setStatisticsEnabled(boolean statisticsEnabled) {
         this.statisticsEnabled = statisticsEnabled;
+    }
+
+    public int getGameCount() {
+        return gameCount;
+    }
+
+    public void setGameCount(int gameCount) {
+        this.gameCount = gameCount;
     }
 }

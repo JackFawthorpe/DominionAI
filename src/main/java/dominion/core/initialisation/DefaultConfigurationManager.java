@@ -16,5 +16,6 @@ public class DefaultConfigurationManager extends GameConfigurationManager {
         configuration.setPlayerCount(4);
         configuration.setKingdomCards(List.of("First Card", "Second Card", "Third card"));
         configuration.setStatisticsEnabled(true);
+        configuration.setGameCount(100);
     }
 }

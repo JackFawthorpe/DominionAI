@@ -30,6 +30,8 @@ dependencies {
     implementation("org.openjfx:javafx-controls:23-ea+3")
     // https://mvnrepository.com/artifact/org.openjfx/javafx-fxml
     implementation("org.openjfx:javafx-fxml:23-ea+3")
+    // https://mvnrepository.com/artifact/org.openjfx/javafx-swing
+    implementation("org.openjfx:javafx-swing:23-ea+3")
 
 
     // Testing dependencies
@@ -40,7 +42,7 @@ dependencies {
 }
 
 javafx {
-    modules("javafx.controls", "javafx.fxml")
+    modules("javafx.controls", "javafx.fxml", "javafx.swing")
 }
 
 logging.captureStandardOutput(LogLevel.ERROR)
