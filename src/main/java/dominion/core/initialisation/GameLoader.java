@@ -27,10 +27,6 @@ public class GameLoader {
     public void loadGame(GameConfiguration configuration) {
         this.configuration = configuration;
         loadPlayers();
-
-        for (String cardName : configuration.getKingdomCards()) {
-            logger.info("Loading card {} into the game", cardName);
-        }
     }
 
     /**

@@ -3,10 +3,10 @@ package dominion;
 
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.event.SimulationCompleteEvent;
-import dominion.core.initialisation.DefaultConfigurationManager;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.initialisation.GameConfigurationManager;
 import dominion.core.initialisation.GameLoader;
+import dominion.core.initialisation.JSONLoadedConfigurationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import statistics.StatisticsApp;
@@ -26,7 +26,7 @@ public class DominionApp {
     public static void main(String[] args) {
         DominionApp app = new DominionApp();
         try {
-            app.initialiseGame();
+            app.initialiseSimulation();
         } catch (IllegalStateException e) {
             logger.error(e.getMessage());
         }
@@ -35,13 +35,17 @@ public class DominionApp {
     /**
      * Creates the initialization manager and starts the initialization process
      */
-    public void initialiseGame() {
-        GameConfigurationManager manager = new DefaultConfigurationManager(new GameConfiguration());
+    private void initialiseSimulation() {
+        GameConfigurationManager manager = new JSONLoadedConfigurationManager(new GameConfiguration());
         manager.initialiseGame();
         if (manager.getConfiguration().isStatisticsEnabled()) {
             StatisticsApp.getInstance().enable();
         }
-        for (int i = 0; i < manager.getConfiguration().getGameCount(); i++) {
+        runGames(manager);
+    }
+
+    private void runGames(GameConfigurationManager manager) {
+        for (int i = 0; i < manager.getConfiguration().getGames(); i++) {
             GameLoader gameLoader = new GameLoader();
             gameLoader.loadGame(manager.getConfiguration());
             gameLoader.startGame();

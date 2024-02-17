@@ -22,6 +22,10 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.22.1")
     implementation("org.jetbrains:annotations:24.0.0")
 
+    // Loading Configuration
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+
 
     // Graphing
     // https://mvnrepository.com/artifact/org.jfree/jfreechart
