@@ -119,7 +119,7 @@ public class KingdomManager {
         logger.info("Attempting to remove a {} from the card supply", card.getName());
         Integer cardCount = supply.get(card.getName());
         if (cardCount == null || cardCount <= 0) {
-            throw new IllegalMoveException("Attempted to remove a card that is not in the supply");
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
         supply.put(card.getName(), cardCount - 1);
         // If pile is depleted fire event

@@ -12,8 +12,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MoveCardRequest extends ControllerActionRequest<Void> {
 
-    private Card card;
-    private DeckPosition from;
+    private final Card card;
+    private final DeckPosition from;
+    private final DeckPosition to;
     /**
      * Overridden constructor for a request
      *
@@ -29,7 +30,6 @@ public class MoveCardRequest extends ControllerActionRequest<Void> {
         this.to = to;
     }
 
-    private DeckPosition to;
 
     public Card getCard() {
         return card;

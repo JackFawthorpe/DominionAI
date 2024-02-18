@@ -2,6 +2,7 @@ package dominion.core.player.controller;
 
 import dominion.card.Card;
 import dominion.core.player.Entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
@@ -28,7 +29,7 @@ public class DefaultController extends PlayerController {
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
     @Override
-    protected Card playActionCardHook(List<Card> actionOptions) {
+    protected Card playActionCardHook(@NotNull List<Card> actionOptions) {
         return actionOptions.isEmpty() ? null : getRandomCard(actionOptions);
     }
 
@@ -38,7 +39,7 @@ public class DefaultController extends PlayerController {
      * @return It will return the first action card in the hand (array-based) or null if there is no card
      */
     @Override
-    protected Card buyCardHook(List<Card> buyOptions) {
+    protected Card buyCardHook(@NotNull List<Card> buyOptions) {
         return buyOptions.isEmpty() ? null : getRandomCard(buyOptions);
     }
 
@@ -49,7 +50,7 @@ public class DefaultController extends PlayerController {
      * @return The card to discard
      */
     @Override
-    protected Card discardFromHandHook(List<Card> discardOptions, boolean isRequired) {
+    protected Card discardFromHandHook(@NotNull List<Card> discardOptions, boolean isRequired) {
         return discardOptions.isEmpty() || !isRequired ? null : getRandomCard(discardOptions);
     }
 
@@ -60,13 +61,18 @@ public class DefaultController extends PlayerController {
      * @return The card to gain
      */
     @Override
-    protected Card gainCardHook(List<Card> gainOptions) {
+    protected Card gainCardHook(@NotNull List<Card> gainOptions) {
         return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
     }
 
     @Override
-    protected Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
+    protected Card trashCardHook(@NotNull List<Card> trashOptions, boolean isRequired) {
         return trashOptions.isEmpty() || !isRequired ? null : getRandomCard(trashOptions);
+    }
+
+    @Override
+    protected Card chooseTopDeckHook(@NotNull List<Card> topDeckOptions, boolean required) {
+        return topDeckOptions.isEmpty() ? null : getRandomCard(topDeckOptions);
     }
 
     /**

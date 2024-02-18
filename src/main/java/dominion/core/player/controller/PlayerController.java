@@ -33,7 +33,7 @@ public abstract class PlayerController {
      *
      * @param player The player that this controller is responsible for controlling
      */
-    protected PlayerController(Player player) {
+    protected PlayerController(@NotNull Player player) {
         this.player = player;
         this.deck = player.getDeck();
         RequestForActionRouter.getInstance().addHandler(this, player);
@@ -44,7 +44,7 @@ public abstract class PlayerController {
      *
      * @param controllerActionRequest The request for the player to fulfill
      */
-    public final void handleAction(ControllerActionRequest<?> controllerActionRequest) {
+    public final void handleAction(@NotNull ControllerActionRequest<?> controllerActionRequest) {
         if (controllerActionRequest instanceof PlayActionRequest request) {
             request.setResponse(handlePlayActionCard());
         } else if (controllerActionRequest instanceof BuyCardRequest request) {
@@ -61,7 +61,34 @@ public abstract class PlayerController {
             request.setResponse(handleTrashCard(request));
         } else if (controllerActionRequest instanceof MoveCardRequest request) {
             handleMoveCard(request);
+        } else if (controllerActionRequest instanceof TopDeckRequest request) {
+            request.setResponse(handleTopDeckRequest(request));
         }
+    }
+
+    /**
+     * Handles the flow of top decking a card
+     * @param request The request to top deck a card
+     * @return The card that is top decked
+     */
+    private Card handleTopDeckRequest(@NotNull TopDeckRequest request) {
+        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(), request.getPosition());
+        List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
+        Card chosenCard = chooseTopDeckHook(options, request.isRequired());
+        if (chosenCard == null) {
+            if (request.isRequired() && !options.isEmpty()) {
+                logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
+                throw new IllegalMoveException("Illegal move detected. Exiting game");
+            }
+            logger.info("Player {} chose to not top-deck a card", player.getName());
+            return null;
+        }
+
+        if (!deck.moveCard(chosenCard, request.getPosition(), DeckPosition.DRAW)) {
+            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position", player.getName(),request.getPosition());
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
+        }
+        return chosenCard;
     }
 
     /**
@@ -70,7 +97,7 @@ public abstract class PlayerController {
      * @param request The request object
      */
     private void handleMoveCard(@NotNull MoveCardRequest request) {
-        logger.info("Player {} received a request ot move the {} card from {} to {}",
+        logger.info("Player {} received a request to move the {} card from {} to {}",
                 player.getName(),
                 request.getCard(),
                 request.getFrom(),
@@ -78,7 +105,7 @@ public abstract class PlayerController {
 
         if (!deck.moveCard(request.getCard(), request.getFrom(), request.getTo())) {
             logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(), player.getName());
-            throw new IllegalMoveException("Attempted to remove card that wasn't in requested place");
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
     }
 
@@ -140,7 +167,7 @@ public abstract class PlayerController {
      *
      * @return The card which the player purchased
      */
-    private Card handleDiscardFromHand(DiscardFromHandRequest request) {
+    private Card handleDiscardFromHand(@NotNull DiscardFromHandRequest request) {
         logger.info("Player {} received a request to discard a card", player.getName());
         List<Card> discardOptions = player.getDeck().getHand();
         Card card = discardFromHandHook(discardOptions, request.isRequired());
@@ -173,7 +200,7 @@ public abstract class PlayerController {
      *
      * @param request The request to execute
      */
-    private Card handleGainCardRequest(GainCardRequest request) {
+    private Card handleGainCardRequest(@NotNull GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
         List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
         Card card = gainCardHook(gainOptions);
@@ -195,7 +222,7 @@ public abstract class PlayerController {
      * @param request The trash card request
      * @return The card that the player chose to trash
      */
-    private Card handleTrashCard(TrashCardRequest request) {
+    private Card handleTrashCard(@NotNull TrashCardRequest request) {
         logger.info("Player {} received a request to trash a card", player.getName());
         List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
@@ -213,16 +240,6 @@ public abstract class PlayerController {
     }
 
     /**
-     * Hook to allow the player to choose which action they want to do
-     *
-     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
-     * @return The card the player wants to play
-     */
-    protected abstract Card playActionCardHook(List<Card> actionCardsInHand);
-
-    /// API Interface : These methods are to be extended for each controller of a player
-
-    /**
      * Handles playing the money in the player's hand
      */
     private void updateMoney() {
@@ -238,13 +255,23 @@ public abstract class PlayerController {
 
     }
 
+    /// API Interface : These methods are to be extended for each controller of a player
+
+    /**
+     * Hook to allow the player to choose which action they want to do
+     *
+     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
+     * @return The card the player wants to play
+     */
+    protected abstract Card playActionCardHook(@NotNull List<Card> actionCardsInHand);
+
     /**
      * Hook to allow for the player to choose which card they want to buy
      *
      * @param buyOptions The cards that the player can currently buy
      * @return The card the player wants to buy
      */
-    protected abstract Card buyCardHook(List<Card> buyOptions);
+    protected abstract Card buyCardHook(@NotNull List<Card> buyOptions);
 
     /**
      * Hook to allow for the player to choose which card they want to discard from their hand
@@ -252,7 +279,7 @@ public abstract class PlayerController {
      * @param discardOptions The cards in their hand
      * @return The card the player wants to discard
      */
-    protected abstract Card discardFromHandHook(List<Card> discardOptions, boolean isRequired);
+    protected abstract Card discardFromHandHook(@NotNull List<Card> discardOptions, boolean isRequired);
 
     /**
      * Hook to allow for the player to choose which card they want to gain
@@ -260,14 +287,22 @@ public abstract class PlayerController {
      * @param gainOptions The cards the play has to choose from
      * @return The card that the player chooses to gain
      */
-    protected abstract Card gainCardHook(List<Card> gainOptions);
+    protected abstract Card gainCardHook(@NotNull List<Card> gainOptions);
 
     /**
      * Hook to allow for the player to choose which card they want to trash
      *
-     * @param trashOptions The cards the play has to choose from
+     * @param trashOptions The cards the player has to choose from
      * @param isRequired   Tells the player if they have to trash or if its optional
      * @return The card that the player chooses to gain
      */
-    protected abstract Card trashCardHook(List<Card> trashOptions, boolean isRequired);
+    protected abstract Card trashCardHook(@NotNull List<Card> trashOptions, boolean isRequired);
+
+    /**
+     * Hook to allow for the player to choose which card they want to top-deck
+     * @param topDeckOptions The card that the player has to choose from
+     * @param required       Whether the top decking action is optional
+     * @return The card that the player chooses to top deck
+     */
+    protected abstract Card chooseTopDeckHook(@NotNull List<Card> topDeckOptions, boolean required);
 }

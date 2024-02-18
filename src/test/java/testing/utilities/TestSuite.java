@@ -1,6 +1,7 @@
 package testing.utilities;
 
 import dominion.card.Card;
+import dominion.card.CardSpecification;
 import dominion.core.geb.GameEventBus;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.Entity.PlayerDeck;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockedStatic;
 
+import java.util.ArrayList;
+
 import static org.mockito.Mockito.*;
 
 public class TestSuite {
@@ -28,6 +31,8 @@ public class TestSuite {
     public Player mockPlayer;
     public PlayerDeck mockPlayerDeck;
     public Card mockCard;
+
+    public CardSpecification mockCardSpecification;
 
     public PlayerController mockPlayerController;
 
@@ -81,6 +86,7 @@ public class TestSuite {
         mockRoundRobinManager = mock(RoundRobinManager.class);
         mockTurnManager = mock(TurnManager.class);
 
+        mockCardSpecification = mock(CardSpecification.class);
         mockPlayer = mock(Player.class);
         mockPlayerDeck = mock(PlayerDeck.class);
         mockPlayerController = mock(PlayerController.class);
@@ -89,9 +95,13 @@ public class TestSuite {
 
         when(mockPlayer.getDeck()).thenReturn(mockPlayerDeck);
 
+        when(mockPlayerDeck.getCards(any(), any())).thenReturn(new ArrayList<>());
+
         when(mockDrawCardRequest.getPlayer()).thenReturn(mockPlayer);
         when(mockDrawCardRequest.getDrawCount()).thenReturn(1);
         when(mockDrawCardRequest.isAttack()).thenReturn(false);
+
+        when(mockCardSpecification.filterCards(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
 }

@@ -98,7 +98,8 @@ public class PlayerDeck {
             GameEventBus.getInstance().notifyListeners(event);
         }
 
-        mapPosition(to).add(card);
+        // Inserts at Zero as only use case dependent on position is top-decking
+        mapPosition(to).add(0, card);
         return mapPosition(from).remove(card);
     }
 
