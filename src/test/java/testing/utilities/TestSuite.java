@@ -1,5 +1,6 @@
 package testing.utilities;
 
+import dominion.card.Card;
 import dominion.core.geb.GameEventBus;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.Entity.PlayerDeck;
@@ -26,6 +27,7 @@ public class TestSuite {
     public static TurnManager mockTurnManager;
     public Player mockPlayer;
     public PlayerDeck mockPlayerDeck;
+    public Card mockCard;
 
     public PlayerController mockPlayerController;
 
@@ -83,6 +85,7 @@ public class TestSuite {
         mockPlayerDeck = mock(PlayerDeck.class);
         mockPlayerController = mock(PlayerController.class);
         mockDrawCardRequest = mock(DrawCardRequest.class);
+        mockCard = mock(Card.class);
 
         when(mockPlayer.getDeck()).thenReturn(mockPlayerDeck);
 

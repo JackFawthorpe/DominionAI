@@ -13,6 +13,7 @@ import dominion.core.rfa.request.*;
 import dominion.core.state.KingdomManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -58,6 +59,26 @@ public abstract class PlayerController {
             request.setResponse(handleGainCardRequest(request));
         } else if (controllerActionRequest instanceof TrashCardRequest request) {
             request.setResponse(handleTrashCard(request));
+        } else if (controllerActionRequest instanceof MoveCardRequest request) {
+            handleMoveCard(request);
+        }
+    }
+
+    /**
+     * Handles when the player is asked to move a card from one place to another
+     *
+     * @param request The request object
+     */
+    private void handleMoveCard(@NotNull MoveCardRequest request) {
+        logger.info("Player {} received a request ot move the {} card from {} to {}",
+                player.getName(),
+                request.getCard(),
+                request.getFrom(),
+                request.getTo());
+
+        if (!deck.moveCard(request.getCard(), request.getFrom(), request.getTo())) {
+            logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(), player.getName());
+            throw new IllegalMoveException("Attempted to remove card that wasn't in requested place");
         }
     }
 
