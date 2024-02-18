@@ -410,4 +410,20 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(mockPlayer, card.getPlayer());
         Assertions.assertEquals(1, card.getDrawCount());
     }
+
+    @Test
+    void harbingerTest() {
+
+        Card card = new Harbinger(mockPlayer);
+
+        Assertions.assertEquals("Harbinger", card.getName());
+        Assertions.assertEquals(3, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(1, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(1, card.getDrawCount());
+    }
 }
