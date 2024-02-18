@@ -1,5 +1,6 @@
 package testing.utilities;
 
+import api.ai.ActionController;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.core.geb.GameEventBus;
@@ -31,7 +32,7 @@ public class TestSuite {
     public Player mockPlayer;
     public PlayerDeck mockPlayerDeck;
     public Card mockCard;
-
+    public ActionController mockActionController;
     public CardSpecification mockCardSpecification;
 
     public PlayerController mockPlayerController;
@@ -90,6 +91,7 @@ public class TestSuite {
         mockPlayer = mock(Player.class);
         mockPlayerDeck = mock(PlayerDeck.class);
         mockPlayerController = mock(PlayerController.class);
+        mockActionController = mock(ActionController.class);
         mockDrawCardRequest = mock(DrawCardRequest.class);
         mockCard = mock(Card.class);
 

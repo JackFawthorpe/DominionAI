@@ -17,13 +17,13 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class PlayerControllerTest extends TestSuite {
+class PlayerControllerTest extends TestSuite {
 
     PlayerController playerController;
 
     @BeforeEach
     void reset() {
-        playerController = spy(new DefaultController(mockPlayer));
+        playerController = spy(new PlayerController(mockPlayer, mockActionController));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PlayerControllerTest extends TestSuite {
                 DeckPosition.HAND,
                 mockCardSpecification
         );
-        doReturn(null).when(playerController).chooseTopDeckHook(any(), anyBoolean());
+        doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         playerController.handleAction(request);
         Assertions.assertNull(request.getResponse());
     }
@@ -87,7 +87,7 @@ public class PlayerControllerTest extends TestSuite {
                 DeckPosition.HAND,
                 mockCardSpecification
         );
-        doReturn(null).when(playerController).chooseTopDeckHook(any(), anyBoolean());
+        doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         Assertions.assertDoesNotThrow(() -> playerController.handleAction(request));
     }
 
@@ -100,7 +100,7 @@ public class PlayerControllerTest extends TestSuite {
                 mockCardSpecification
         );
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
-        doReturn(null).when(playerController).chooseTopDeckHook(any(), anyBoolean());
+        doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         Assertions.assertThrows(IllegalMoveException.class, () -> playerController.handleAction(request));
     }
 
@@ -113,7 +113,7 @@ public class PlayerControllerTest extends TestSuite {
                 mockCardSpecification
         );
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
-        doReturn(mockCard).when(playerController).chooseTopDeckHook(any(), anyBoolean());
+        doReturn(mockCard).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         doReturn(true).when(mockPlayerDeck).moveCard(any(), any(), any());
         playerController.handleAction(request);
         Assertions.assertEquals(mockCard, request.getResponse());
@@ -129,7 +129,7 @@ public class PlayerControllerTest extends TestSuite {
                 mockCardSpecification
         );
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
-        doReturn(mockCard).when(playerController).chooseTopDeckHook(any(), anyBoolean());
+        doReturn(mockCard).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         doReturn(false).when(mockPlayerDeck).moveCard(any(), any(), any());
         Assertions.assertThrows(IllegalMoveException.class, () -> playerController.handleAction(request));
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DRAW);

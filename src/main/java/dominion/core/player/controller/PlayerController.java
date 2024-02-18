@@ -1,5 +1,6 @@
 package dominion.core.player.controller;
 
+import api.ai.ActionController;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.CardType;
@@ -20,22 +21,24 @@ import java.util.List;
 /**
  * Represents the object that will control the player etc. AI, CLI player etc
  */
-public abstract class PlayerController {
+public class PlayerController {
 
     private static final Logger logger = LogManager.getLogger(PlayerController.class);
 
-    protected final Player player;
+    private final Player player;
+    private final PlayerDeck deck;
+    private final ActionController actionController;
 
-    protected final PlayerDeck deck;
 
     /**
      * Registers the player for within the RequestForActionRouter to receive actions for the player
      *
      * @param player The player that this controller is responsible for controlling
      */
-    protected PlayerController(@NotNull Player player) {
+    public PlayerController(@NotNull Player player, @NotNull ActionController actionController) {
         this.player = player;
         this.deck = player.getDeck();
+        this.actionController = actionController;
         RequestForActionRouter.getInstance().addHandler(this, player);
     }
 
@@ -73,7 +76,7 @@ public abstract class PlayerController {
      */
     private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-        Card chosenCard = playActionCardHook(deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
+        Card chosenCard = actionController.playActionCardHook(deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
         if (chosenCard == null) {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
@@ -102,7 +105,7 @@ public abstract class PlayerController {
         logger.info("Player {} received request to buy a card", player.getName());
         KingdomManager kingdomManager = KingdomManager.getInstance();
         List<Card> buyOptions = kingdomManager.getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
-        Card card = buyCardHook(buyOptions);
+        Card card = actionController.buyCardHook(buyOptions);
         logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
         kingdomManager.removeCard(card);
         deck.addCard(card, DeckPosition.DISCARD);
@@ -127,7 +130,7 @@ public abstract class PlayerController {
     private Card handleDiscardFromHand(@NotNull DiscardFromHandRequest request) {
         logger.info("Player {} received a request to discard a card", player.getName());
         List<Card> discardOptions = player.getDeck().getHand();
-        Card card = discardFromHandHook(discardOptions, request.isRequired());
+        Card card = actionController.discardFromHandHook(discardOptions, request.isRequired());
         if (card == null && request.isRequired() && !discardOptions.isEmpty()) {
             logger.error("Player {} failed to discard a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
@@ -161,7 +164,7 @@ public abstract class PlayerController {
     private Card handleGainCardRequest(@NotNull GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
         List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
-        Card card = gainCardHook(gainOptions);
+        Card card = actionController.gainCardHook(gainOptions);
         if (request.isRequired() && card == null && !(gainOptions.isEmpty())) {
             logger.error("Player {} failed to gain a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
@@ -184,7 +187,7 @@ public abstract class PlayerController {
         logger.info("Player {} received a request to trash a card", player.getName());
         List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
-        Card card = trashCardHook(trashOptions, request.isRequired());
+        Card card = actionController.trashCardHook(trashOptions, request.isRequired());
         if (request.isRequired() && card == null && !trashOptions.isEmpty()) {
             logger.error("Player {} failed to trash a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
@@ -224,7 +227,7 @@ public abstract class PlayerController {
     private Card handleTopDeckRequest(@NotNull TopDeckRequest request) {
         logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(), request.getPosition());
         List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
-        Card chosenCard = chooseTopDeckHook(options, request.isRequired());
+        Card chosenCard = actionController.chooseTopDeckHook(options, request.isRequired());
         if (chosenCard == null) {
             if (request.isRequired() && !options.isEmpty()) {
                 logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
@@ -241,15 +244,6 @@ public abstract class PlayerController {
         return chosenCard;
     }
 
-    /**
-     * Hook to allow the player to choose which action they want to do
-     *
-     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
-     * @return The card the player wants to play
-     */
-    protected abstract Card playActionCardHook(@NotNull List<Card> actionCardsInHand);
-
-    /// API Interface : These methods are to be extended for each controller of a player
 
     /**
      * Handles playing the money in the player's hand
@@ -267,45 +261,4 @@ public abstract class PlayerController {
 
     }
 
-    /**
-     * Hook to allow for the player to choose which card they want to buy
-     *
-     * @param buyOptions The cards that the player can currently buy
-     * @return The card the player wants to buy
-     */
-    protected abstract Card buyCardHook(@NotNull List<Card> buyOptions);
-
-    /**
-     * Hook to allow for the player to choose which card they want to discard from their hand
-     *
-     * @param discardOptions The cards in their hand
-     * @return The card the player wants to discard
-     */
-    protected abstract Card discardFromHandHook(@NotNull List<Card> discardOptions, boolean isRequired);
-
-    /**
-     * Hook to allow for the player to choose which card they want to gain
-     *
-     * @param gainOptions The cards the play has to choose from
-     * @return The card that the player chooses to gain
-     */
-    protected abstract Card gainCardHook(@NotNull List<Card> gainOptions);
-
-    /**
-     * Hook to allow for the player to choose which card they want to trash
-     *
-     * @param trashOptions The cards the player has to choose from
-     * @param isRequired   Tells the player if they have to trash or if its optional
-     * @return The card that the player chooses to gain
-     */
-    protected abstract Card trashCardHook(@NotNull List<Card> trashOptions, boolean isRequired);
-
-    /**
-     * Hook to allow for the player to choose which card they want to top-deck
-     *
-     * @param topDeckOptions The card that the player has to choose from
-     * @param required       Whether the top decking action is optional
-     * @return The card that the player chooses to top deck
-     */
-    protected abstract Card chooseTopDeckHook(@NotNull List<Card> topDeckOptions, boolean required);
 }
