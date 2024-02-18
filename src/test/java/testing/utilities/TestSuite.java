@@ -71,7 +71,7 @@ public class TestSuite {
     }
 
     @BeforeEach
-    void reset() {
+    void suite_reset() {
         mockGameEventBus = mock(GameEventBus.class);
         mockRequestForActionRouter = mock(RequestForActionRouter.class);
         mockEndGameObserver = mock(EndGameObserver.class);
