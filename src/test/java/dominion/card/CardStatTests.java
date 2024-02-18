@@ -442,4 +442,20 @@ class CardStatTests extends TestSuite {
         Assertions.assertEquals(mockPlayer, card.getPlayer());
         Assertions.assertEquals(0, card.getDrawCount());
     }
+
+    @Test
+    void artisanTest() {
+
+        Card card = new Artisan(mockPlayer);
+
+        Assertions.assertEquals("Artisan", card.getName());
+        Assertions.assertEquals(6, card.getCost());
+        Assertions.assertEquals(0, card.getMoney());
+        Assertions.assertEquals(0, card.getBuys());
+        Assertions.assertEquals(0, card.getActions());
+        Assertions.assertEquals(0, card.getVictoryPoints());
+        Assertions.assertTrue(card.isType(CardType.ACTION));
+        Assertions.assertEquals(mockPlayer, card.getPlayer());
+        Assertions.assertEquals(0, card.getDrawCount());
+    }
 }
