@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -30,6 +31,7 @@ public class TestSuite {
     public static RoundRobinManager mockRoundRobinManager;
     public static TurnManager mockTurnManager;
     public Player mockPlayer;
+    public Player mockPlayer2;
     public PlayerDeck mockPlayerDeck;
     public Card mockCard;
     public ActionController mockActionController;
@@ -89,6 +91,7 @@ public class TestSuite {
 
         mockCardSpecification = mock(CardSpecification.class);
         mockPlayer = mock(Player.class);
+        mockPlayer2 = mock(Player.class);
         mockPlayerDeck = mock(PlayerDeck.class);
         mockPlayerController = mock(PlayerController.class);
         mockActionController = mock(ActionController.class);
@@ -104,6 +107,8 @@ public class TestSuite {
         when(mockDrawCardRequest.isAttack()).thenReturn(false);
 
         when(mockCardSpecification.filterCards(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        when(mockRoundRobinManager.getPlayers()).thenReturn(List.of(mockPlayer, mockPlayer2));
     }
 
 }
