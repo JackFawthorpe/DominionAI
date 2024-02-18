@@ -54,7 +54,7 @@ public abstract class PlayerController {
         } else if (controllerActionRequest instanceof DiscardFromHandRequest request) {
             request.setResponse(handleDiscardFromHand(request));
         } else if (controllerActionRequest instanceof DrawCardRequest request) {
-            handleDrawCard(request.getDrawCount());
+            request.setResponse(handleDrawCard(request.getDrawCount()));
         } else if (controllerActionRequest instanceof GainCardRequest request) {
             request.setResponse(handleGainCardRequest(request));
         } else if (controllerActionRequest instanceof TrashCardRequest request) {
@@ -63,49 +63,6 @@ public abstract class PlayerController {
             handleMoveCard(request);
         } else if (controllerActionRequest instanceof TopDeckRequest request) {
             request.setResponse(handleTopDeckRequest(request));
-        }
-    }
-
-    /**
-     * Handles the flow of top decking a card
-     * @param request The request to top deck a card
-     * @return The card that is top decked
-     */
-    private Card handleTopDeckRequest(@NotNull TopDeckRequest request) {
-        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(), request.getPosition());
-        List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
-        Card chosenCard = chooseTopDeckHook(options, request.isRequired());
-        if (chosenCard == null) {
-            if (request.isRequired() && !options.isEmpty()) {
-                logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
-                throw new IllegalMoveException("Illegal move detected. Exiting game");
-            }
-            logger.info("Player {} chose to not top-deck a card", player.getName());
-            return null;
-        }
-
-        if (!deck.moveCard(chosenCard, request.getPosition(), DeckPosition.DRAW)) {
-            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position", player.getName(),request.getPosition());
-            throw new IllegalMoveException("Illegal move detected. Exiting game");
-        }
-        return chosenCard;
-    }
-
-    /**
-     * Handles when the player is asked to move a card from one place to another
-     *
-     * @param request The request object
-     */
-    private void handleMoveCard(@NotNull MoveCardRequest request) {
-        logger.info("Player {} received a request to move the {} card from {} to {}",
-                player.getName(),
-                request.getCard(),
-                request.getFrom(),
-                request.getTo());
-
-        if (!deck.moveCard(request.getCard(), request.getFrom(), request.getTo())) {
-            logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(), player.getName());
-            throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
     }
 
@@ -189,10 +146,11 @@ public abstract class PlayerController {
      * Processes a draw card request
      *
      * @param drawCount The amount of cards the player needs to draw
+     * @return An unmodifiable list of the cards that were drawn
      */
-    private void handleDrawCard(int drawCount) {
+    private List<Card> handleDrawCard(int drawCount) {
         logger.info("Player {} is drawing {} cards", player.getName(), drawCount);
-        deck.draw(drawCount);
+        return deck.draw(drawCount);
     }
 
     /**
@@ -240,6 +198,60 @@ public abstract class PlayerController {
     }
 
     /**
+     * Handles when the player is asked to move a card from one place to another
+     *
+     * @param request The request object
+     */
+    private void handleMoveCard(@NotNull MoveCardRequest request) {
+        logger.info("Player {} received a request to move the {} card from {} to {}",
+                player.getName(),
+                request.getCard(),
+                request.getFrom(),
+                request.getTo());
+
+        if (!deck.moveCard(request.getCard(), request.getFrom(), request.getTo())) {
+            logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(), player.getName());
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
+        }
+    }
+
+    /**
+     * Handles the flow of top decking a card
+     *
+     * @param request The request to top deck a card
+     * @return The card that is top decked
+     */
+    private Card handleTopDeckRequest(@NotNull TopDeckRequest request) {
+        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(), request.getPosition());
+        List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
+        Card chosenCard = chooseTopDeckHook(options, request.isRequired());
+        if (chosenCard == null) {
+            if (request.isRequired() && !options.isEmpty()) {
+                logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
+                throw new IllegalMoveException("Illegal move detected. Exiting game");
+            }
+            logger.info("Player {} chose to not top-deck a card", player.getName());
+            return null;
+        }
+
+        if (!deck.moveCard(chosenCard, request.getPosition(), DeckPosition.DRAW)) {
+            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position", player.getName(), request.getPosition());
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
+        }
+        return chosenCard;
+    }
+
+    /**
+     * Hook to allow the player to choose which action they want to do
+     *
+     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
+     * @return The card the player wants to play
+     */
+    protected abstract Card playActionCardHook(@NotNull List<Card> actionCardsInHand);
+
+    /// API Interface : These methods are to be extended for each controller of a player
+
+    /**
      * Handles playing the money in the player's hand
      */
     private void updateMoney() {
@@ -254,16 +266,6 @@ public abstract class PlayerController {
         }
 
     }
-
-    /// API Interface : These methods are to be extended for each controller of a player
-
-    /**
-     * Hook to allow the player to choose which action they want to do
-     *
-     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
-     * @return The card the player wants to play
-     */
-    protected abstract Card playActionCardHook(@NotNull List<Card> actionCardsInHand);
 
     /**
      * Hook to allow for the player to choose which card they want to buy
@@ -300,6 +302,7 @@ public abstract class PlayerController {
 
     /**
      * Hook to allow for the player to choose which card they want to top-deck
+     *
      * @param topDeckOptions The card that the player has to choose from
      * @param required       Whether the top decking action is optional
      * @return The card that the player chooses to top deck

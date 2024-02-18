@@ -4,6 +4,7 @@ import dominion.card.Card;
 import dominion.core.exception.IllegalMoveException;
 import dominion.core.player.Entity.DeckPosition;
 import dominion.core.rfa.ControllerActionRequest;
+import dominion.core.rfa.request.DrawCardRequest;
 import dominion.core.rfa.request.MoveCardRequest;
 import dominion.core.rfa.request.TopDeckRequest;
 import org.junit.jupiter.api.Assertions;
@@ -58,7 +59,7 @@ public class PlayerControllerTest extends TestSuite {
                 true,
                 DeckPosition.HAND,
                 mockCardSpecification
-                );
+        );
 
         playerController.handleAction(request);
 
@@ -132,5 +133,19 @@ public class PlayerControllerTest extends TestSuite {
         doReturn(false).when(mockPlayerDeck).moveCard(any(), any(), any());
         Assertions.assertThrows(IllegalMoveException.class, () -> playerController.handleAction(request));
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DRAW);
+    }
+
+    @Test
+    void drawRequest_Works() {
+        ControllerActionRequest<List<Card>> request = new DrawCardRequest(mockPlayer, 5);
+
+        List<Card> cards = List.of();
+
+        when(mockPlayerDeck.draw(5)).thenReturn(cards);
+
+        playerController.handleAction(request);
+
+        verify(mockPlayerDeck, times(1)).draw(5);
+        Assertions.assertSame(cards, request.getResponse());
     }
 }

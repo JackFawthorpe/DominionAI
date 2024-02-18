@@ -1,12 +1,15 @@
 package dominion.core.rfa.request;
 
+import dominion.card.Card;
 import dominion.core.player.Entity.Player;
 import dominion.core.rfa.ControllerActionRequest;
+
+import java.util.List;
 
 /**
  * Action to represent asking the player to draw a card
  */
-public class DrawCardRequest extends ControllerActionRequest<Void> {
+public class DrawCardRequest extends ControllerActionRequest<List<Card>> {
 
     private final int drawCount;
 

@@ -61,20 +61,27 @@ public class PlayerDeck {
      * <p>
      * In the event that the player doesn't have enough cards to draw then the discard will be shuffled and
      * replace the draw pile
+     *
+     * @return An unmodifiable list of the cards that were drawn
      */
-    public void draw(int count) {
+    public List<Card> draw(int count) {
+
+        ArrayList<Card> drawn = new ArrayList<>();
+
         while (count != 0) {
             if (draw.isEmpty()) {
                 draw = discard;
                 Collections.shuffle(draw);
                 discard = new ArrayList<>();
                 if (draw.isEmpty()) {
-                    return;
+                    return Collections.unmodifiableList(drawn);
                 }
             }
+            drawn.add(draw.get(0));
             moveCard(draw.get(0), DeckPosition.DRAW, DeckPosition.HAND);
             count--;
         }
+        return Collections.unmodifiableList(drawn);
     }
 
     /**
