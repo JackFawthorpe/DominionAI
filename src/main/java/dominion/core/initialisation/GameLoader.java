@@ -1,6 +1,7 @@
 package dominion.core.initialisation;
 
 import api.ai.DefaultController;
+import api.ai.LearningObjectiveAnalysis_1;
 import api.ai.ThoughtfulBuyerController;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerController;
@@ -35,9 +36,23 @@ public class GameLoader {
     private void loadPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < configuration.getPlayerCount(); i++) {
-            Player player = new Player("Player " + (i + 1));
+            Player player = null;
+            switch (i) {
+                case 0:
+                case 1:
+                    player = new Player("Default Controller " + (i + 1));
+                    new PlayerController(player, new DefaultController());
+                    break;
+                case 2:
+                    player = new Player("Thoughtful Buyer Controller " + (i + 1));
+                    new PlayerController(player, new ThoughtfulBuyerController());
+                    break;
+                case 3:
+                    player = new Player("Learning Objective Controller " + (i + 1));
+                    new PlayerController(player, new LearningObjectiveAnalysis_1());
+                    break;
+            }
             players.add(player);
-            new PlayerController(player, i <= 1 ? new ThoughtfulBuyerController() : new DefaultController());
         }
         RoundRobinManager.getInstance().setPlayers(players);
     }
