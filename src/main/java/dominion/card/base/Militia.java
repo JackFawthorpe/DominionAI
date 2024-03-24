@@ -38,7 +38,7 @@ public class Militia extends Card {
             request.asAttack();
             Card discarded = request.execute().getResponse();
 
-            // Is discarded is null it's assumed that it was blocked
+            // If discarded is null it's assumed that it was blocked
             if (discarded == null) {
                 break;
             }

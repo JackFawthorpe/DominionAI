@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class PlayerControllerTest extends TestSuite {
+class PlayerControllerTest extends BaseTestFixture {
 
     PlayerController playerController;
 

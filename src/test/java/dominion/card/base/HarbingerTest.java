@@ -7,11 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import static org.mockito.Mockito.verify;
 
-class HarbingerTest extends TestSuite {
+class HarbingerTest extends BaseTestFixture {
 
     Harbinger harbinger;
 

@@ -4,13 +4,13 @@ import dominion.card.base.*;
 import dominion.card.supply.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-class CardStatTests extends TestSuite {
+class CardStatTests extends BaseTestFixture {
 
     @Test
     void copperTest() {

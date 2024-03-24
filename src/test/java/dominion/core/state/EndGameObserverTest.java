@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
-class EndGameObserverTest extends TestSuite {
+class EndGameObserverTest extends BaseTestFixture {
 
 
     public EndGameObserver endGameObserver;

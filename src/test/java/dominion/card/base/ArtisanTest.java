@@ -8,11 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import static org.mockito.Mockito.times;
 
-class ArtisanTest extends TestSuite {
+class ArtisanTest extends BaseTestFixture {
 
     Artisan artisan;
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class TestSuite {
+public class BaseTestFixture {
 
     public static GameEventBus mockGameEventBus;
     public static RequestForActionRouter mockRequestForActionRouter;

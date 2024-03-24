@@ -1,8 +1,8 @@
 package dominion.core.geb;
 
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
-public class GameEventBusTest extends TestSuite {
+public class GameEventBusTest extends BaseTestFixture {
 
 
 }

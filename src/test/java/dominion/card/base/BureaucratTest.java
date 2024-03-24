@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import static org.mockito.Mockito.*;
 
-public class BureaucratTest extends TestSuite {
+public class BureaucratTest extends BaseTestFixture {
 
     Bureaucrat bureaucrat;
 

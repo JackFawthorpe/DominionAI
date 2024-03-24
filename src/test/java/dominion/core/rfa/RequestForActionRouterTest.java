@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
-class RequestForActionRouterTest extends TestSuite {
+class RequestForActionRouterTest extends BaseTestFixture {
 
     public RequestForActionRouter router;
 

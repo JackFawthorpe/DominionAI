@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import testing.utilities.TestSuite;
+import testing.utilities.BaseTestFixture;
 
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class VassalTest extends TestSuite {
+public class VassalTest extends BaseTestFixture {
 
     Vassal vassal;
 
