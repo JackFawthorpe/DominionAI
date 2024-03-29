@@ -51,7 +51,7 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
      * @param event The Supply Depletion event
      */
     @Override
-    public void handleEvent(@NotNull SupplyPileDepletedEvent event) {
+    public void handleEvent(SupplyPileDepletedEvent event) {
         this.depletionCounter++;
         gameFinished = depletionCounter >= 3 || event.getDepletedCard() instanceof Province;
     }
@@ -60,7 +60,6 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
     public String getIdentifier() {
         return "Game End Observer";
     }
-
 
     @Override
     public ListenScope getScope() {

@@ -1,6 +1,6 @@
 package testing.utilities;
 
-import api.ai.ActionController;
+import api.agent.ActionController;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.core.geb.GameEventBus;

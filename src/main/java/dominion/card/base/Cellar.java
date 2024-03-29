@@ -31,6 +31,7 @@ public class Cellar extends Card {
         int discardCount = 0;
         while (canDiscard) {
             DiscardFromHandRequest request = new DiscardFromHandRequest(player, false);
+            request.execute();
             boolean discardedCard = request.getResponse() != null;
             if (discardedCard) {
                 discardCount++;

@@ -14,6 +14,8 @@ public abstract class ControllerActionRequest<T> {
     private boolean isAttack;
     private T response;
 
+    private boolean executed;
+
     /**
      * Overridden constructor for a request
      *
@@ -24,6 +26,7 @@ public abstract class ControllerActionRequest<T> {
         this.response = null;
         this.required = required;
         this.isAttack = false;
+        this.executed = false;
     }
 
     /**
@@ -31,6 +34,7 @@ public abstract class ControllerActionRequest<T> {
      */
     public ControllerActionRequest<T> execute() {
         RequestForActionRouter.getInstance().requestAction(this);
+        this.executed = true;
         return this;
     }
 
@@ -39,6 +43,9 @@ public abstract class ControllerActionRequest<T> {
     }
 
     public T getResponse() {
+        if (!executed) {
+            throw new RuntimeException("getResponse called before request executed");
+        }
         return response;
     }
 

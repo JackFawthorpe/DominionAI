@@ -4,12 +4,12 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
-group = "personal.project"
-version = "1.0-SNAPSHOT"
+group = "mascompetition"
+version = "1.0"
 
 
 application {
-    mainClass.set("statistics.StatisticsApp.java")
+    mainClass.set("dominion.DominionApp")
 }
 
 repositories {
@@ -26,7 +26,11 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
 
+    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation("org.apiguardian:apiguardian-api:1.1.0")
 
+    // https://mvnrepository.com/artifact/com.google.errorprone/error_prone_annotations
+    implementation("com.google.errorprone:error_prone_annotations:2.10.0")
     // Graphing
     // https://mvnrepository.com/artifact/org.jfree/jfreechart
     implementation("org.jfree:jfreechart:1.5.4")
@@ -48,8 +52,6 @@ dependencies {
 javafx {
     modules("javafx.controls", "javafx.fxml", "javafx.swing")
 }
-
-logging.captureStandardOutput(LogLevel.ERROR)
 
 tasks.test {
     useJUnitPlatform()

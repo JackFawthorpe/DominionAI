@@ -1,40 +1,36 @@
-package api.ai;
+package api.agent;
 
 import dominion.card.Card;
-import dominion.card.supply.Province;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 /**
  * Placeholder controller for the actions that a player can take on their turn
  */
-public class LearningObjectiveAnalysis_1 implements ActionController {
+public class DefaultController implements ActionController {
+
     private final Random random = new Random();
 
     /**
      * Default Purchasing behaviour (This will buy a random card)
      *
-     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     * @return It will return the first action card in the hand (array-based) or
+     *         null if there is no card
      */
-    public Card buyCardHook(@NotNull List<Card> buyOptions) {
-        if (buyOptions.isEmpty()) {
-            return null;
-        }
-
-        Optional<Card> province = buyOptions.stream().filter(card -> card instanceof Province).findFirst();
-        return province.orElse(getRandomCard(buyOptions));
+    public Card buyCardHook(List<Card> buyOptions) {
+        return buyOptions.isEmpty() ? null : getRandomCard(buyOptions);
     }
 
     /**
-     * Default discarding behaviour (This will discard a random card only when its necessary to discard)
+     * Default discarding behaviour (This will discard a random card only when its
+     * necessary to discard)
      *
      * @param discardOptions The cards in their hand
      * @return The card to discard
      */
-    public Card discardFromHandHook(@NotNull List<Card> discardOptions, boolean isRequired) {
+    public Card discardFromHandHook(List<Card> discardOptions, boolean isRequired) {
         return discardOptions.isEmpty() || !isRequired ? null : getRandomCard(discardOptions);
     }
 
@@ -44,24 +40,25 @@ public class LearningObjectiveAnalysis_1 implements ActionController {
      * @param gainOptions The cards the play has to choose from
      * @return The card to gain
      */
-    public Card gainCardHook(@NotNull List<Card> gainOptions) {
+    public Card gainCardHook(List<Card> gainOptions) {
         return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
     }
 
-    public Card trashCardHook(@NotNull List<Card> trashOptions, boolean isRequired) {
+    public Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
         return trashOptions.isEmpty() || !isRequired ? null : getRandomCard(trashOptions);
     }
 
-    public Card chooseTopDeckHook(@NotNull List<Card> topDeckOptions, boolean required) {
+    public Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required) {
         return topDeckOptions.isEmpty() ? null : getRandomCard(topDeckOptions);
     }
 
     /**
      * Default Choose Action behaviour (This will action a random card)
      *
-     * @return It will return the first action card in the hand (array-based) or null if there is no card
+     * @return It will return the first action card in the hand (array-based) or
+     *         null if there is no card
      */
-    public Card playActionCardHook(@NotNull List<Card> actionOptions) {
+    public Card playActionCardHook(List<Card> actionOptions) {
         return actionOptions.isEmpty() ? null : getRandomCard(actionOptions);
     }
 

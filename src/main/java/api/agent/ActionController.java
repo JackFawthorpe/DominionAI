@@ -1,4 +1,4 @@
-package api.ai;
+package api.agent;
 
 import dominion.card.Card;
 import org.jetbrains.annotations.NotNull;
@@ -15,15 +15,16 @@ public interface ActionController {
      * @param buyOptions The cards that the player can currently buy
      * @return The card the player wants to buy
      */
-    Card buyCardHook(@NotNull List<Card> buyOptions);
+    Card buyCardHook(List<Card> buyOptions);
 
     /**
-     * Hook to allow for the player to choose which card they want to discard from their hand
+     * Hook to allow for the player to choose which card they want to discard from
+     * their hand
      *
      * @param discardOptions The cards in their hand
      * @return The card the player wants to discard
      */
-    Card discardFromHandHook(@NotNull List<Card> discardOptions, boolean isRequired);
+    Card discardFromHandHook(List<Card> discardOptions, boolean isRequired);
 
     /**
      * Hook to allow for the player to choose which card they want to gain
@@ -31,7 +32,7 @@ public interface ActionController {
      * @param gainOptions The cards the play has to choose from
      * @return The card that the player chooses to gain
      */
-    Card gainCardHook(@NotNull List<Card> gainOptions);
+    Card gainCardHook(List<Card> gainOptions);
 
     /**
      * Hook to allow for the player to choose which card they want to trash
@@ -40,7 +41,7 @@ public interface ActionController {
      * @param isRequired   Tells the player if they have to trash or if its optional
      * @return The card that the player chooses to gain
      */
-    Card trashCardHook(@NotNull List<Card> trashOptions, boolean isRequired);
+    Card trashCardHook(List<Card> trashOptions, boolean isRequired);
 
     /**
      * Hook to allow for the player to choose which card they want to top-deck
@@ -49,14 +50,14 @@ public interface ActionController {
      * @param required       Whether the top decking action is optional
      * @return The card that the player chooses to top deck
      */
-    Card chooseTopDeckHook(@NotNull List<Card> topDeckOptions, boolean required);
-
+    Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required);
 
     /**
      * Hook to allow the player to choose which action they want to do
      *
-     * @param actionCardsInHand The cards that are actionable. (The actions currently in their hand)
+     * @param actionCardsInHand The cards that are actionable. (The actions
+     *                          currently in their hand)
      * @return The card the player wants to play
      */
-    Card playActionCardHook(@NotNull List<Card> actionCardsInHand);
+    Card playActionCardHook(List<Card> actionCardsInHand);
 }

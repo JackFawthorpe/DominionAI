@@ -17,7 +17,7 @@ public class TopDeckRequest extends ControllerActionRequest<Card> {
     private DeckPosition position;
     private CardSpecification cardSpecification;
 
-    public TopDeckRequest(@NotNull Player player, boolean required, @NotNull DeckPosition position, @NotNull CardSpecification cardSpecification) {
+    public TopDeckRequest(Player player, boolean required, DeckPosition position, CardSpecification cardSpecification) {
         super(player, required);
         this.position = position;
         this.cardSpecification = cardSpecification;

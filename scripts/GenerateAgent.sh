@@ -7,7 +7,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 # Move to configuration directory
-pushd ./src/main/java/api/ai
+pushd ./src/main/java/api/agent
 
 file="$1_1.java"
 

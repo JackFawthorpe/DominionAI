@@ -1,27 +1,52 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Setting up an AI](#set-up-a-new-ai)
+- [Installation](#instalation)
+- [Create an agent](#create-an-agent)
 - [Configuring Simulation Environment](#configuring-game-simulation)
 - [Reporting a bug](#reporting-a-bug)
 - [Script Troubleshooting](#troubleshooting-scripts)
 
 ## Introduction
 
-Discord Link: [Redacted]
+## Installation
 
-## Set up a new AI
+To design an agent the following software needs to be installed.
+
+Java: Version 18 is supported however other versions are likely to work. To install Java
+follow [this guide](https://www.freecodecamp.org/news/install-openjdk-free-java-multi-os-guide/)
+
+With Java installed you need to decide where to put your source code that is easily accessible from the terminal. My
+personal suggestion is to have a dedicated development folder that is close to the root of your terminal. On a windows
+computer this might look like `C:\development\mas-engine`. All commands within this readme should be ran from this
+directory. If you aren't confident in the terminal yet read through the [Terminal Usage](#terminal-usage) section.
+
+To verify that the engine is working correctly run the following command in the projects root directory
+
+```
+./gradlew test
+```
+
+This runs the tests to ensure the software is working as expected. It may take a while on the first run as it
+initialises gradle. The expected outcome of this will be a `BUILD SUCCESSFUL` message.
+
+Now that you have verified everything is functional you can start creating agents. Read
+through [Create an agent](#create-an-agent) to start.
+
+## Create an Agent
 
 During the challenge you are likely to want to experiment with new strategies and improve upon old ones.
-To measure progress of how your AI's are developing it's important to have a wide range of AI to test against
-including the ones you've previously made. To support this a script is supplied for generating AI classes.
+To measure progress of how your agent is are developing it's important to have a wide range of agent to test against
+including the ones you've previously made. To support this a script is supplied for generating agent classes.
 
-```./scripts/GenerateAI.sh <AI Name>```
+```./scripts/GenerateAgent.sh <Agent Name>```
 
-Running the above command will do one of two things. Firstly, if it is a new AI name, it will make a copy
-of the default AI Controller and give it the name you provided. For instance JacksCoolAI would be created as
-JacksCoolAI_1.java within the ```src/main/java/api/ai``` package. Secondly, once you have your AI in a state you
-are happy with, you can run the same command with the same AI to version it. This would create a copy of the AI and
+Running the above command will do one of two things. Firstly, if it is a new agent name, it will make a copy
+of the default agent controller and give it the name you provided. For instance JacksCoolAgent would be created as
+JacksCoolAgent_1.java within the ```src/main/java/api/agent``` package. Secondly, once you have your agent in a state
+you
+are happy with, you can run the same command with the same agent to version it. This would create a copy of the agent
+and
 increment the version for you test your new improvements as they are made.
 
 ## Configuring Game Simulation
@@ -45,25 +70,29 @@ root directory of the project.
 
 Alternatively, you can manually load a configuration by copying the contents of your configuration file into
 ```loadedConfiguration.json```. It is still recommended to have multiple configuration files as you develop
-new versions of your AI strategies.
+new versions of your agent strategies.
 
 ## Reporting a Bug
 
-It is possible that within the AI development Challenge you will encounter bugs within the logic of the game. This can
+It is possible that within the agent development Challenge you will encounter bugs within the logic of the game. This
+can
 occur in one of two ways.
 
-1. A flaw within the AI you have made. Although the API is designed to minimise the amount of errors that a player can
+1. A flaw within the agent you have made. Although the API is designed to minimise the amount of errors that a player
+   can
    make when deciding what to do, it is not impossible to play an illegal move. An example of this would be refusing to
    discard when it is a required action. This will display as an IllegalMoveException and the game will exit. If you see
-   an ```IllegalMoveException``` then the error is likely caused by the logic within your AI controller.
+   an ```IllegalMoveException``` then the error is likely caused by the logic within your agent controller.
 2. Anything else. This could present as any other error, or, an unexpected behaviour that differs from the rules
    of dominion. If an error is present, please send a copy of the dominion.log for that game to me on Discord. If not,
    provide a description of the expected and actual behaviour of the game also through discord. This can be done within
    the bugs channel of the Discord Server
 
-## Troubleshooting Scripts
+### Terminal Usage
 
-- Windows Systems usually aren't able to run shell scripts out of the box. You will see something similar
-  to the following image in this case. My recommendation is to install bash, this gives you access to linux commands
-  on a Windows computer. Here's an example for Windows 10 (https://www.lifewire.com/install-bash-on-windows-10-4101773)
-  ![WindowsScriptFailure.PNG](Documentation%2FWindowsScriptFailure.PNG)
+Throughout this competition you are likely to use the terminal to run commands to generate Agent templates and to
+interact with the game engine. Linux and Mac machines will be able to run all of these commands immediately however
+Windows computers may have a little trouble when configured incorrectly. A commonly used tool to simplify this is
+the [gitbash ternminal](https://git-scm.com/downloads). This comes packaged with [git](https://git-scm.com/downloads),
+a [version control system](https://about.gitlab.com/topics/version-control/) that is widely used in the software
+industry. Once installed open gitbash and use this as your terminal.

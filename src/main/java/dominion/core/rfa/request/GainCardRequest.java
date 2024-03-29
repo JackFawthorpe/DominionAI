@@ -15,7 +15,7 @@ public class GainCardRequest extends ControllerActionRequest<Card> {
     private final CardSpecification cardSpecification;
     private final DeckPosition gainPosition;
 
-    public GainCardRequest(@NotNull Player player, @NotNull CardSpecification cardSpecification, @NotNull DeckPosition gainPosition) {
+    public GainCardRequest(Player player, CardSpecification cardSpecification, DeckPosition gainPosition) {
         super(player, true);
         this.cardSpecification = cardSpecification;
         this.gainPosition = gainPosition;

@@ -11,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 /**
- * Responsible for passing actions from systems within the game to the PlayerController responsible for executing the action
+ * Responsible for passing actions from systems within the game to the
+ * PlayerController responsible for executing the action
  */
 public class RequestForActionRouter {
 
@@ -45,10 +46,11 @@ public class RequestForActionRouter {
     /**
      * Registers a new handler to the routing. This must occur before the route
      *
-     * @param playerController The implementation responsible for handling a players actions
+     * @param playerController The implementation responsible for handling a players
+     *                         actions
      * @param player           The player the handler will be responsible for
      */
-    public void addHandler(@NotNull PlayerController playerController, @NotNull Player player) {
+    public void addHandler(PlayerController playerController, Player player) {
         logger.info("Adding handler for player {}", player.getName());
         routes.put(player, playerController);
     }
@@ -59,7 +61,7 @@ public class RequestForActionRouter {
      *
      * @param playerActionRequest The action to perform
      */
-    public void requestAction(@NotNull ControllerActionRequest<?> playerActionRequest) {
+    public void requestAction(ControllerActionRequest<?> playerActionRequest) {
         Player player = playerActionRequest.getPlayer();
         PlayerController playerController = routes.get(player);
         if (playerController == null) {

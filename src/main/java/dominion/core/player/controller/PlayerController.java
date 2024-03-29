@@ -1,6 +1,6 @@
 package dominion.core.player.controller;
 
-import api.ai.ActionController;
+import api.agent.ActionController;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.CardType;
@@ -29,13 +29,13 @@ public class PlayerController {
     private final PlayerDeck deck;
     private final ActionController actionController;
 
-
     /**
-     * Registers the player for within the RequestForActionRouter to receive actions for the player
+     * Registers the player for within the RequestForActionRouter to receive actions
+     * for the player
      *
      * @param player The player that this controller is responsible for controlling
      */
-    public PlayerController(@NotNull Player player, @NotNull ActionController actionController) {
+    public PlayerController(Player player, ActionController actionController) {
         this.player = player;
         this.deck = player.getDeck();
         this.actionController = actionController;
@@ -47,7 +47,7 @@ public class PlayerController {
      *
      * @param controllerActionRequest The request for the player to fulfill
      */
-    public final void handleAction(@NotNull ControllerActionRequest<?> controllerActionRequest) {
+    public final void handleAction(ControllerActionRequest<?> controllerActionRequest) {
         if (controllerActionRequest instanceof PlayActionRequest request) {
             request.setResponse(handlePlayActionCard());
         } else if (controllerActionRequest instanceof BuyCardRequest request) {
@@ -70,19 +70,23 @@ public class PlayerController {
     }
 
     /**
-     * Handles the process of calling the controller to pick a card to play and proceeds to play the card
+     * Handles the process of calling the controller to pick a card to play and
+     * proceeds to play the card
      *
-     * @return The action response to send back to RFA, null represents no card played otherwise, card played
+     * @return The action response to send back to RFA, null represents no card
+     *         played otherwise, card played
      */
     private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-        Card chosenCard = actionController.playActionCardHook(deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
+        Card chosenCard = actionController.playActionCardHook(
+                deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
         if (chosenCard == null) {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
         }
         if (!deck.moveCard(chosenCard, DeckPosition.HAND, DeckPosition.PLAYED)) {
-            logger.error("Player {} played {} when they did not have it within their hand", player.getName(), chosenCard.getName());
+            logger.error("Player {} played {} when they did not have it within their hand", player.getName(),
+                    chosenCard.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
             // Plays card after moving, when resolving effects,
@@ -95,7 +99,8 @@ public class PlayerController {
     }
 
     /**
-     * Processes a buy request, it first fetches the cards available to the player then prompts the implementation to
+     * Processes a buy request, it first fetches the cards available to the player
+     * then prompts the implementation to
      * pick one of those cards and then adds it to the players deck
      *
      * @return The card which the player purchased
@@ -104,7 +109,8 @@ public class PlayerController {
         updateMoney();
         logger.info("Player {} received request to buy a card", player.getName());
         KingdomManager kingdomManager = KingdomManager.getInstance();
-        List<Card> buyOptions = kingdomManager.getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
+        List<Card> buyOptions = kingdomManager
+                .getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
         Card card = actionController.buyCardHook(buyOptions);
         logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
         kingdomManager.removeCard(card);
@@ -122,12 +128,13 @@ public class PlayerController {
     }
 
     /**
-     * Processes a discard request, it first fetches the cards available to the player then prompts the implementation to
+     * Processes a discard request, it first fetches the cards available to the
+     * player then prompts the implementation to
      * pick one of those cards and then adds it to the players deck
      *
      * @return The card which the player purchased
      */
-    private Card handleDiscardFromHand(@NotNull DiscardFromHandRequest request) {
+    private Card handleDiscardFromHand(DiscardFromHandRequest request) {
         logger.info("Player {} received a request to discard a card", player.getName());
         List<Card> discardOptions = player.getDeck().getHand();
         Card card = actionController.discardFromHandHook(discardOptions, request.isRequired());
@@ -161,7 +168,7 @@ public class PlayerController {
      *
      * @param request The request to execute
      */
-    private Card handleGainCardRequest(@NotNull GainCardRequest request) {
+    private Card handleGainCardRequest(GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
         List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
         Card card = actionController.gainCardHook(gainOptions);
@@ -183,7 +190,7 @@ public class PlayerController {
      * @param request The trash card request
      * @return The card that the player chose to trash
      */
-    private Card handleTrashCard(@NotNull TrashCardRequest request) {
+    private Card handleTrashCard(TrashCardRequest request) {
         logger.info("Player {} received a request to trash a card", player.getName());
         List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
@@ -205,7 +212,7 @@ public class PlayerController {
      *
      * @param request The request object
      */
-    private void handleMoveCard(@NotNull MoveCardRequest request) {
+    private void handleMoveCard(MoveCardRequest request) {
         logger.info("Player {} received a request to move the {} card from {} to {}",
                 player.getName(),
                 request.getCard(),
@@ -213,7 +220,8 @@ public class PlayerController {
                 request.getTo());
 
         if (!deck.moveCard(request.getCard(), request.getFrom(), request.getTo())) {
-            logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(), player.getName());
+            logger.error("Card {} wasn't in the {} pile for player {}", request.getCard().getName(), request.getFrom(),
+                    player.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
     }
@@ -224,8 +232,9 @@ public class PlayerController {
      * @param request The request to top deck a card
      * @return The card that is top decked
      */
-    private Card handleTopDeckRequest(@NotNull TopDeckRequest request) {
-        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(), request.getPosition());
+    private Card handleTopDeckRequest(TopDeckRequest request) {
+        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(),
+                request.getPosition());
         List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
         Card chosenCard = actionController.chooseTopDeckHook(options, request.isRequired());
         if (chosenCard == null) {
@@ -238,19 +247,20 @@ public class PlayerController {
         }
 
         if (!deck.moveCard(chosenCard, request.getPosition(), DeckPosition.DRAW)) {
-            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position", player.getName(), request.getPosition());
+            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position",
+                    player.getName(), request.getPosition());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
         return chosenCard;
     }
-
 
     /**
      * Handles playing the money in the player's hand
      */
     private void updateMoney() {
         logger.info("Player {} is playing their treasure cards", player.getName());
-        List<Card> inHandTreasures = deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.TREASURE));
+        List<Card> inHandTreasures = deck.getCards(DeckPosition.HAND,
+                new CardSpecification().withType(CardType.TREASURE));
         for (Card card : inHandTreasures) {
             if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.PLAYED)) {
                 logger.error("Attempted to play money card that wasn't in hand");
