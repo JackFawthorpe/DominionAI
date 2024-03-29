@@ -1,0 +1,18 @@
+name: mas-competition-engine-deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Permissions
+        run: chmod u+x ./gradlew
+
+      - name: Run Backend Tests
+        run: ./gradlew test
