@@ -1,0 +1,21 @@
+name: mas-competition-engine-deployment
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Clear workspace
+        run: echo ${{ secrets.USERPWD }} | sudo rm -rf $GITHUB_WORKSPACE/*
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Permissions
+        run: chmod u+x ./gradlew
+
+      - name: Run Backend Tests
+        run: ./gradlew test
