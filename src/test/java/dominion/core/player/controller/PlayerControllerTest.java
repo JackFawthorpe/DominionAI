@@ -76,6 +76,7 @@ class PlayerControllerTest extends BaseTestFixture {
         );
         doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         playerController.handleAction(request);
+        request.setExecuted(true);
         Assertions.assertNull(request.getResponse());
     }
 
@@ -116,6 +117,7 @@ class PlayerControllerTest extends BaseTestFixture {
         doReturn(mockCard).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         doReturn(true).when(mockPlayerDeck).moveCard(any(), any(), any());
         playerController.handleAction(request);
+        request.setExecuted(true);
         Assertions.assertEquals(mockCard, request.getResponse());
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DRAW);
     }
@@ -145,6 +147,7 @@ class PlayerControllerTest extends BaseTestFixture {
 
         playerController.handleAction(request);
 
+        request.setExecuted(true);
         verify(mockPlayerDeck, times(1)).draw(5);
         Assertions.assertSame(cards, request.getResponse());
     }

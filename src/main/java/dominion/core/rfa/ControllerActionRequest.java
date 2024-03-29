@@ -13,7 +13,6 @@ public abstract class ControllerActionRequest<T> {
     private final boolean required;
     private boolean isAttack;
     private T response;
-
     private boolean executed;
 
     /**
@@ -27,6 +26,14 @@ public abstract class ControllerActionRequest<T> {
         this.required = required;
         this.isAttack = false;
         this.executed = false;
+    }
+
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
     }
 
     /**
