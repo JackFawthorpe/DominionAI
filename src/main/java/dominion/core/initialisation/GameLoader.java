@@ -1,14 +1,11 @@
 package dominion.core.initialisation;
 
-import api.agent.DefaultController;
-import dominion.core.player.Entity.Player;
-import dominion.core.player.controller.PlayerController;
+import dominion.core.player.loader.PlayerLoader;
 import dominion.core.state.ResetManager;
 import dominion.core.state.RoundRobinManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,29 +14,17 @@ import java.util.List;
 public class GameLoader {
 
     private static final Logger logger = LogManager.getLogger(GameLoader.class);
-    private GameConfiguration configuration;
+    PlayerLoader playerLoader;
 
-    /**
-     * Takes the configuration and runs the required setup to start the game
-     *
-     * @param configuration The configuration to load
-     */
-    public void loadGame(GameConfiguration configuration) {
-        this.configuration = configuration;
-        loadPlayers();
+    public GameLoader(PlayerLoader playerLoader) {
+        this.playerLoader = playerLoader;
     }
 
     /**
-     * Generates the players
+     * Takes the configuration and runs the required setup to start the game
      */
-    private void loadPlayers() {
-        ArrayList<Player> players = new ArrayList<>();
-        for (int i = 0; i < configuration.getPlayerCount(); i++) {
-            Player player = new Player("Default Controller " + (i + 1));
-            new PlayerController(player, new DefaultController());
-            players.add(player);
-        }
-        RoundRobinManager.getInstance().setPlayers(players);
+    public void loadGame() {
+        RoundRobinManager.getInstance().setPlayers(playerLoader.getPlayers());
     }
 
     /**

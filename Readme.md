@@ -55,11 +55,10 @@ increment the version for you test your new improvements as they are made.
 
 Below outlines each of the fields that are required within a configuration file
 
-| Field             | Explanation                                                     | Example                   |
-|-------------------|-----------------------------------------------------------------|---------------------------|
-| statisticsEnabled | Disables the end of game statistics screen (Debugging purposes) | ```true``` or ```false``` |
-| games             | The amount of games to simulate                                 | ```100```                 |
-| playerCount       | The amount of players to play against                           | ```2``` to ```4```        |
+| Field             | Explanation                                | Example                   |
+|-------------------|--------------------------------------------|---------------------------|
+| statisticsEnabled | Disables the end of game statistics screen | ```true``` or ```false``` |
+| games             | The amount of games to simulate            | ```100```                 |
 
 ### Loading Configuration file
 
@@ -71,6 +70,27 @@ root directory of the project.
 Alternatively, you can manually load a configuration by copying the contents of your configuration file into
 ```loadedConfiguration.json```. It is still recommended to have multiple configuration files as you develop
 new versions of your agent strategies.
+
+### Loading Agent into the game
+
+Once you have created a controller you need to set the player controller within the code. This can be done with the
+following steps.
+
+1. Open `src/main/java/dominion/core/player/loader/PlayerLoaderImpl.java`
+2. Within `controllersToLoad` you can replace any of these with your controller.
+
+As an example, If I wanted to load CoolAgent_1.java into the first and third slot it will look like
+
+```
+ private final List<ActionController> controllersToLoad = List.of(
+         new CoolAgent_1(),
+         new DefaultController(),
+         new CoolAgent_1(),
+         new DefaultController()
+ );
+```
+
+Make sure is imported as well and it will be good to go!
 
 ## Reporting a Bug
 

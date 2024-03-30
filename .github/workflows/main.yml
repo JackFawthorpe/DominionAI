@@ -16,3 +16,18 @@ jobs:
 
       - name: Run Backend Tests
         run: ./gradlew test
+
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Permissions
+        run: chmod u+x ./gradlew
+
+      - name: Build Jar
+        run: ./gradlew competitionJar
+
+      - name: Store Jar
+        run: cp ./build/libs/mas-engine-1.0.jar /home/jfa93/mas-engine

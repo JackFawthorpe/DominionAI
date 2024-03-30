@@ -7,6 +7,7 @@ import dominion.core.initialisation.GameConfiguration;
 import dominion.core.initialisation.GameConfigurationManager;
 import dominion.core.initialisation.GameLoader;
 import dominion.core.initialisation.JSONLoadedConfigurationManager;
+import dominion.core.player.loader.PlayerLoaderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import statistics.StatisticsApp;
@@ -46,8 +47,8 @@ public class DominionApp {
 
     private void runGames(GameConfigurationManager manager) {
         for (int i = 0; i < manager.getConfiguration().getGames(); i++) {
-            GameLoader gameLoader = new GameLoader();
-            gameLoader.loadGame(manager.getConfiguration());
+            GameLoader gameLoader = new GameLoader(new PlayerLoaderImpl(manager.getConfiguration()));
+            gameLoader.loadGame();
             gameLoader.startGame();
         }
         GameEventBus.getInstance().notifyListeners(new SimulationCompleteEvent());
