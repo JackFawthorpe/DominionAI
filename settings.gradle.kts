@@ -1,2 +1,2 @@
-rootProject.name = "DominionAI"
+rootProject.name = "mas-competition"
 

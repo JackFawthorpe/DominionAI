@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class responsible for taking the configuration and setting the game up
@@ -44,13 +45,15 @@ public class GameLoader {
     /**
      * Starts the game
      */
-    public void startGame() {
+    public List<Integer> startGame() {
         try {
-            RoundRobinManager.getInstance().startGame();
+            List<Integer> results = RoundRobinManager.getInstance().startGame();
             ResetManager.resetGame();
+            return results;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("An error occurred whilst playing the game: {}", e.getMessage());
+            return null;
         }
     }
 

@@ -42,7 +42,7 @@ public class RoundRobinManager {
     /**
      * Entry point for the game starting
      */
-    public void startGame() {
+    public List<Integer> startGame() {
         logger.info("Starting game");
         int currentPlayerIndex = 0;
         while (!EndGameObserver.getInstance().isGameFinished()) {
@@ -58,6 +58,7 @@ public class RoundRobinManager {
             logger.warn("Player {} scored {}", player.getName(), player.getPoints());
         }
         GameEventBus.getInstance().notifyListeners(new GameCompleteEvent(players));
+        return players.stream().map(Player::getPoints).toList();
     }
 
     public int getTurnCount() {

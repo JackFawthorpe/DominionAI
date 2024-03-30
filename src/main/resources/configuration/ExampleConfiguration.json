@@ -1,5 +1,11 @@
 {
   "statisticsEnabled": "true",
   "games": 100,
-  "playerCount": 4
+  "playerCount": 4,
+  "playerControllers": [
+    "DefaultController",
+    "DefaultController",
+    "DefaultController",
+    "DefaultController"
+  ]
 }

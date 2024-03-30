@@ -57,3 +57,13 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.register<Jar>("competitionJar") {
+    group = "mascompetition"
+    manifest {
+        attributes["Main-Class"] = "competition.CompetitionLauncher"
+    }
+    archiveBaseName.set("mas-engine")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks.jar.get())
+}
