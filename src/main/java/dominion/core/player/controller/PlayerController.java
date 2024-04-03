@@ -14,7 +14,6 @@ import dominion.core.rfa.request.*;
 import dominion.core.state.KingdomManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class PlayerController {
      * proceeds to play the card
      *
      * @return The action response to send back to RFA, null represents no card
-     *         played otherwise, card played
+     * played otherwise, card played
      */
     private Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
@@ -112,6 +111,10 @@ public class PlayerController {
         List<Card> buyOptions = kingdomManager
                 .getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
         Card card = actionController.buyCardHook(buyOptions);
+        if (card == null) {
+            logger.info("Player {} has chosen not to buy a card", player.getName());
+            return null;
+        }
         logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
         kingdomManager.removeCard(card);
         deck.addCard(card, DeckPosition.DISCARD);

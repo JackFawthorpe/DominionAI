@@ -8,9 +8,7 @@ import dominion.core.player.loader.PlayerLoader;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class CompetitionPlayerLoader implements PlayerLoader {
 
     GameConfiguration configuration;
 
-    String path;
+    List<String> paths;
 
     List<String> controllerNames;
 
@@ -29,11 +27,11 @@ public class CompetitionPlayerLoader implements PlayerLoader {
      * Default Constructor
      *
      * @param configuration   The configuration file of the game
-     * @param path            The storage path of the agents
+     * @param paths           The storage paths of the agents
      * @param controllerNames The names of the controllers to compile
      */
-    public CompetitionPlayerLoader(GameConfiguration configuration, String path, List<String> controllerNames) {
-        this.path = path;
+    public CompetitionPlayerLoader(GameConfiguration configuration, List<String> paths, List<String> controllerNames) {
+        this.paths = paths;
         this.configuration = configuration;
         this.controllerNames = controllerNames;
     }
@@ -48,7 +46,7 @@ public class CompetitionPlayerLoader implements PlayerLoader {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             Player player = new Player(controllerNames.get(i));
-            new PlayerController(player, loadController(controllerNames.get(i)));
+            new PlayerController(player, loadController(paths.get(i), controllerNames.get(i)));
             players.add(player);
         }
         return players;
@@ -57,21 +55,55 @@ public class CompetitionPlayerLoader implements PlayerLoader {
     /**
      * Compiles the controllers of the players
      *
+     * @param pathString     The location of the class to load
      * @param controllerName The name of the controller to compile
      * @return The Compiled ActionController
      */
-    public ActionController loadController(String controllerName) {
+    public ActionController loadController(String pathString, String controllerName) {
         try {
+
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int result = compiler.run(null, null, null, String.format("%s%s.java", path, controllerName));
-            if (result != 0) {
-                throw new RuntimeException(String.format("Failed to load Player Controller %s", controllerName));
-            }
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(path).toURI().toURL()});
-            Class<?> clazz = Class.forName("api.agent.DefaultController", true, classLoader);
-            return (ActionController) clazz.getDeclaredConstructor().newInstance();
+            compiler.run(null, null, null, pathString);
+
+            CustomClassLoader classLoader = new CustomClassLoader();
+            String modifiedClassName = String.format("api.agent.%s", controllerName); // Modified package and class name
+            String classPathString = pathString.replace(".java", ".class"); // Path to the modified .class file
+
+            // Load the modified class
+            Class<?> modifiedClass = classLoader.loadClassFromFile(modifiedClassName, classPathString);
+
+            // Instantiate the modified class
+            return (ActionController) modifiedClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Hello");
+            System.out.println(e.getMessage());
             throw new RuntimeException(String.format("Failed to load Player Controller %s: %s", controllerName, e.getMessage()));
+        }
+    }
+}
+
+/**
+ * Custom implementaiton of {@link ClassLoader} to load the classes from the .class files
+ */
+class CustomClassLoader extends ClassLoader {
+
+    public Class<?> loadClassFromFile(String className, String filePath) throws IOException {
+        File file = new File(filePath);
+        byte[] bytes = loadFileBytes(file);
+        return defineClass(className, bytes, 0, bytes.length);
+    }
+
+    private byte[] loadFileBytes(File file) throws IOException {
+        try (FileInputStream fis = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                bos.write(buffer, 0, bytesRead);
+            }
+            return bos.toByteArray();
         }
     }
 }
