@@ -46,7 +46,7 @@ public class CompetitionPlayerLoader implements PlayerLoader {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             Player player = new Player(controllerNames.get(i));
-            new PlayerController(player, loadController(paths.get(i), controllerNames.get(i)));
+            new PlayerController(player, loadController(paths.get(i), controllerNames.get(i), i));
             players.add(player);
         }
         return players;
@@ -59,26 +59,24 @@ public class CompetitionPlayerLoader implements PlayerLoader {
      * @param controllerName The name of the controller to compile
      * @return The Compiled ActionController
      */
-    public ActionController loadController(String pathString, String controllerName) {
+    public ActionController loadController(String pathString, String controllerName, int playerIndex) {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        int compilationExitCode = compiler.run(null, null, null, pathString);
+
+        if (compilationExitCode != 0) {
+            throw new CompetitionException(String.format("Failed to load player %s", playerIndex), playerIndex + 4);
+        }
+
+        CustomClassLoader classLoader = new CustomClassLoader();
+        String modifiedClassName = String.format("api.agent.%s", controllerName); // Modified package and class name
+        String classPathString = pathString.replace(".java", ".class"); // Path to the modified .class file
+
+        // Load the modified class
         try {
-
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            compiler.run(null, null, null, pathString);
-
-            CustomClassLoader classLoader = new CustomClassLoader();
-            String modifiedClassName = String.format("api.agent.%s", controllerName); // Modified package and class name
-            String classPathString = pathString.replace(".java", ".class"); // Path to the modified .class file
-
-            // Load the modified class
             Class<?> modifiedClass = classLoader.loadClassFromFile(modifiedClassName, classPathString);
-
-            // Instantiate the modified class
             return (ActionController) modifiedClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Hello");
-            System.out.println(e.getMessage());
-            throw new RuntimeException(String.format("Failed to load Player Controller %s: %s", controllerName, e.getMessage()));
+            throw new CompetitionException(String.format("Failed to load class for player %s", playerIndex), playerIndex + 8);
         }
     }
 }

@@ -35,13 +35,13 @@ public class CompetitionLauncher {
         List<String> controllerNames = paths.stream().map(CompetitionLauncher::extractFileName).toList();
 
         CompetitionLauncher competitionLauncher = new CompetitionLauncher();
-        List<Integer> results = competitionLauncher.run(paths, controllerNames);
-        if (results == null) {
-            System.out.println("Oopsies");
-        } else {
+        try {
+            List<Integer> results = competitionLauncher.run(paths, controllerNames);
             for (Integer points : results) {
                 System.out.println(points);
             }
+        } catch (CompetitionException e) {
+            System.exit(e.getExitCode());
         }
     }
 
