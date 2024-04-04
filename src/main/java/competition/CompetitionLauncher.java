@@ -42,6 +42,8 @@ public class CompetitionLauncher {
             }
         } catch (CompetitionException e) {
             System.exit(e.getExitCode());
+        } catch (Exception e) {
+            System.exit(3);
         }
     }
 

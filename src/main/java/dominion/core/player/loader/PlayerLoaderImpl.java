@@ -1,7 +1,6 @@
 package dominion.core.player.loader;
 
-import api.agent.ActionController;
-import api.agent.DefaultController;
+import api.agent.*;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerController;
@@ -15,10 +14,10 @@ import java.util.List;
 public class PlayerLoaderImpl implements PlayerLoader {
 
     private final List<ActionController> controllersToLoad = List.of(
-            new DefaultController(),
-            new DefaultController(),
-            new DefaultController(),
-            new DefaultController()
+            new DefaultController_1(),
+            new ProvincePursuer_1(),
+            new ThoughtfulBuyer_1(),
+            new UnthoughtfulBuyer_1()
     );
 
 

@@ -4,6 +4,9 @@ package competition;
  * Exception to be thrown when a player fails to load
  * <p>
  * Exit code mapping:
+ * <p>
+ * - 03 - An error has occured but the code is bad enough that we don't know what it is
+ * <p>
  * - 04 - Player 1 failed to compile
  * - 05 - Player 2 failed to compile
  * - 06 - Player 3 failed to compile
@@ -15,7 +18,7 @@ package competition;
  */
 public class CompetitionException extends RuntimeException {
 
-    int exitCode;
+    final int exitCode;
 
     public CompetitionException(String message, int exitCode) {
         super(message);
