@@ -28,14 +28,14 @@ public class CompetitionLauncher {
     public static void main(String[] args) {
         if (args.length != 4) {
             System.out.println("Provide the paths of the 4 agents that are playing the game");
-            return;
+            System.exit(2);
         }
 
-        List<String> paths = List.of(args[0], args[1], args[2], args[3]);
-        List<String> controllerNames = paths.stream().map(CompetitionLauncher::extractFileName).toList();
-
-        CompetitionLauncher competitionLauncher = new CompetitionLauncher();
         try {
+            List<String> paths = List.of(args[0], args[1], args[2], args[3]);
+            List<String> controllerNames = paths.stream().map(CompetitionLauncher::extractFileName).toList();
+
+            CompetitionLauncher competitionLauncher = new CompetitionLauncher();
             List<Integer> results = competitionLauncher.run(paths, controllerNames);
             for (Integer points : results) {
                 System.out.println(points);

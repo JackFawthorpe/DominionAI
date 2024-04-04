@@ -5,6 +5,7 @@ package competition;
  * <p>
  * Exit code mapping:
  * <p>
+ * - 02 - Failed to load arguments
  * - 03 - An error has occured but the code is bad enough that we don't know what it is
  * <p>
  * - 04 - Player 1 failed to compile
