@@ -1,9 +1,12 @@
 package dominion.core.player.loader;
 
-import api.agent.*;
+import api.agent.ActionController;
+import api.agent.ProvincePursuer_1;
+import api.agent.ThoughtfulBuyer_1;
+import api.agent.UnthoughtfulBuyer_1;
+import competition.SecurePlayerController;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.player.Entity.Player;
-import dominion.core.player.controller.PlayerController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.List;
 public class PlayerLoaderImpl implements PlayerLoader {
 
     private final List<ActionController> controllersToLoad = List.of(
-            new DefaultController_1(),
+            new ProvincePursuer_1(),
             new ProvincePursuer_1(),
             new ThoughtfulBuyer_1(),
             new UnthoughtfulBuyer_1()
@@ -31,8 +34,8 @@ public class PlayerLoaderImpl implements PlayerLoader {
     public List<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            Player player = new Player(controllersToLoad.get(i).getClass().getSimpleName() + ' ' + (i + 1));
-            new PlayerController(player, controllersToLoad.get(i));
+            Player player = new Player(controllersToLoad.get(i).getClass().getSimpleName() + ' ' + (i + 1), i + 1);
+            new SecurePlayerController(player, controllersToLoad.get(i));
             players.add(player);
         }
         return players;

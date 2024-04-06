@@ -41,6 +41,7 @@ public class CompetitionLauncher {
                 System.out.println(points);
             }
         } catch (CompetitionException e) {
+            System.out.println(e.getMessage());
             System.exit(e.getExitCode());
         } catch (Exception e) {
             System.exit(3);

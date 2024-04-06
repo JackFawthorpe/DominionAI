@@ -3,12 +3,10 @@ package competition;
 import api.agent.ActionController;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.player.Entity.Player;
-import dominion.core.player.controller.PlayerController;
 import dominion.core.player.loader.PlayerLoader;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +43,8 @@ public class CompetitionPlayerLoader implements PlayerLoader {
     public List<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            Player player = new Player(controllerNames.get(i));
-            new PlayerController(player, loadController(paths.get(i), controllerNames.get(i), i));
+            Player player = new Player(controllerNames.get(i), i);
+            new SecurePlayerController(player, loadController(paths.get(i), controllerNames.get(i), i + 1));
             players.add(player);
         }
         return players;
@@ -67,7 +65,7 @@ public class CompetitionPlayerLoader implements PlayerLoader {
             throw new CompetitionException(String.format("Failed to load player %s", playerIndex), playerIndex + 4);
         }
 
-        CustomClassLoader classLoader = new CustomClassLoader();
+        PlayerClassLoader classLoader = new PlayerClassLoader();
         String modifiedClassName = String.format("api.agent.%s", controllerName); // Modified package and class name
         String classPathString = pathString.replace(".java", ".class"); // Path to the modified .class file
 
@@ -75,33 +73,13 @@ public class CompetitionPlayerLoader implements PlayerLoader {
         try {
             Class<?> modifiedClass = classLoader.loadClassFromFile(modifiedClassName, classPathString);
             return (ActionController) modifiedClass.getDeclaredConstructor().newInstance();
+        } catch (CompetitionException e) {
+            throw e;
+        } catch (ClassCastException e) {
+            throw new CompetitionException(String.format("Player %s doesnt implement ActionController", playerIndex), 16 + playerIndex);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new CompetitionException(String.format("Failed to load class for player %s", playerIndex), playerIndex + 8);
-        }
-    }
-}
-
-/**
- * Custom implementaiton of {@link ClassLoader} to load the classes from the .class files
- */
-class CustomClassLoader extends ClassLoader {
-
-    public Class<?> loadClassFromFile(String className, String filePath) throws IOException {
-        File file = new File(filePath);
-        byte[] bytes = loadFileBytes(file);
-        return defineClass(className, bytes, 0, bytes.length);
-    }
-
-    private byte[] loadFileBytes(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file);
-             BufferedInputStream bis = new BufferedInputStream(fis);
-             ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = bis.read(buffer)) != -1) {
-                bos.write(buffer, 0, bytesRead);
-            }
-            return bos.toByteArray();
         }
     }
 }

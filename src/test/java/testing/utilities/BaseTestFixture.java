@@ -7,6 +7,7 @@ import dominion.core.geb.GameEventBus;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.Entity.PlayerDeck;
 import dominion.core.player.controller.PlayerController;
+import dominion.core.player.controller.PlayerControllerImpl;
 import dominion.core.rfa.RequestForActionRouter;
 import dominion.core.rfa.request.DrawCardRequest;
 import dominion.core.state.EndGameObserver;
@@ -93,7 +94,7 @@ public class BaseTestFixture {
         mockPlayer = mock(Player.class);
         mockPlayer2 = mock(Player.class);
         mockPlayerDeck = mock(PlayerDeck.class);
-        mockPlayerController = mock(PlayerController.class);
+        mockPlayerController = mock(PlayerControllerImpl.class);
         mockActionController = mock(ActionController.class);
         mockDrawCardRequest = mock(DrawCardRequest.class);
         mockCard = mock(Card.class);

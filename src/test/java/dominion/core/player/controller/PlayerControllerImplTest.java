@@ -17,13 +17,13 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class PlayerControllerTest extends BaseTestFixture {
+class PlayerControllerImplTest extends BaseTestFixture {
 
-    PlayerController playerController;
+    PlayerController playerControllerImpl;
 
     @BeforeEach
     void reset() {
-        playerController = spy(new PlayerController(mockPlayer, mockActionController));
+        playerControllerImpl = spy(new PlayerControllerImpl(mockPlayer, mockActionController));
     }
 
     @Test
@@ -34,7 +34,7 @@ class PlayerControllerTest extends BaseTestFixture {
                 mockCard,
                 DeckPosition.HAND,
                 DeckPosition.DISCARD);
-        playerController.handleAction(request);
+        playerControllerImpl.handleAction(request);
 
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DISCARD);
     }
@@ -47,7 +47,7 @@ class PlayerControllerTest extends BaseTestFixture {
                 mockCard,
                 DeckPosition.HAND,
                 DeckPosition.DISCARD);
-        Assertions.assertThrows(RuntimeException.class, () -> playerController.handleAction(request));
+        Assertions.assertThrows(RuntimeException.class, () -> playerControllerImpl.handleAction(request));
 
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DISCARD);
     }
@@ -61,7 +61,7 @@ class PlayerControllerTest extends BaseTestFixture {
                 mockCardSpecification
         );
 
-        playerController.handleAction(request);
+        playerControllerImpl.handleAction(request);
 
         verify(mockPlayerDeck, Mockito.times(1)).getCards(DeckPosition.HAND, mockCardSpecification);
     }
@@ -75,7 +75,7 @@ class PlayerControllerTest extends BaseTestFixture {
                 mockCardSpecification
         );
         doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
-        playerController.handleAction(request);
+        playerControllerImpl.handleAction(request);
         request.setExecuted(true);
         Assertions.assertNull(request.getResponse());
     }
@@ -89,7 +89,7 @@ class PlayerControllerTest extends BaseTestFixture {
                 mockCardSpecification
         );
         doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
-        Assertions.assertDoesNotThrow(() -> playerController.handleAction(request));
+        Assertions.assertDoesNotThrow(() -> playerControllerImpl.handleAction(request));
     }
 
     @Test
@@ -102,7 +102,7 @@ class PlayerControllerTest extends BaseTestFixture {
         );
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
         doReturn(null).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
-        Assertions.assertThrows(IllegalMoveException.class, () -> playerController.handleAction(request));
+        Assertions.assertThrows(IllegalMoveException.class, () -> playerControllerImpl.handleAction(request));
     }
 
     @Test
@@ -116,7 +116,7 @@ class PlayerControllerTest extends BaseTestFixture {
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
         doReturn(mockCard).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         doReturn(true).when(mockPlayerDeck).moveCard(any(), any(), any());
-        playerController.handleAction(request);
+        playerControllerImpl.handleAction(request);
         request.setExecuted(true);
         Assertions.assertEquals(mockCard, request.getResponse());
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DRAW);
@@ -133,7 +133,7 @@ class PlayerControllerTest extends BaseTestFixture {
         doReturn(List.of(mockCard)).when(mockPlayerDeck).getCards(any(), any());
         doReturn(mockCard).when(mockActionController).chooseTopDeckHook(any(), anyBoolean());
         doReturn(false).when(mockPlayerDeck).moveCard(any(), any(), any());
-        Assertions.assertThrows(IllegalMoveException.class, () -> playerController.handleAction(request));
+        Assertions.assertThrows(IllegalMoveException.class, () -> playerControllerImpl.handleAction(request));
         verify(mockPlayerDeck, Mockito.times(1)).moveCard(mockCard, DeckPosition.HAND, DeckPosition.DRAW);
     }
 
@@ -145,7 +145,7 @@ class PlayerControllerTest extends BaseTestFixture {
 
         when(mockPlayerDeck.draw(5)).thenReturn(cards);
 
-        playerController.handleAction(request);
+        playerControllerImpl.handleAction(request);
 
         request.setExecuted(true);
         verify(mockPlayerDeck, times(1)).draw(5);
