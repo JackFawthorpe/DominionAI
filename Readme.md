@@ -37,39 +37,12 @@ through [Create an agent](#create-an-agent) to start.
 
 During the challenge you are likely to want to experiment with new strategies and improve upon old ones.
 To measure progress of how your agent is are developing it's important to have a wide range of agent to test against
-including the ones you've previously made. To support this a script is supplied for generating agent classes.
+including the ones you've previously made.
 
-```./scripts/GenerateAgent.sh <Agent Name>```
-
-Running the above command will do one of two things. Firstly, if it is a new agent name, it will make a copy
-of the default agent controller and give it the name you provided. For instance JacksCoolAgent would be created as
-JacksCoolAgent_1.java within the ```src/main/java/api/agent``` package. Secondly, once you have your agent in a state
-you
-are happy with, you can run the same command with the same agent to version it. This would create a copy of the agent
-and
-increment the version for you test your new improvements as they are made.
-
-## Configuring Game Simulation
-
-### Configuration Options
-
-Below outlines each of the fields that are required within a configuration file
-
-| Field             | Explanation                                | Example                   |
-|-------------------|--------------------------------------------|---------------------------|
-| statisticsEnabled | Disables the end of game statistics screen | ```true``` or ```false``` |
-| games             | The amount of games to simulate            | ```100```                 |
-
-### Loading Configuration file
-
-Whenever you make changes to configuration you should run the following command at the
-root directory of the project.
-
-```./scripts/LoadConfiguration.sh <ConfigFileName>```
-
-Alternatively, you can manually load a configuration by copying the contents of your configuration file into
-```loadedConfiguration.json```. It is still recommended to have multiple configuration files as you develop
-new versions of your agent strategies.
+To do this you should do the following steps.
+1. Copy the Agent that you want to make an interation of. Agents can be found in ```src/main/java/api/agent``` .
+2. Paste the file and when prompted to change the name either by iterating the version number or writing a completely new name with the format {AgentName}_{VerionNumber}
+3. Make sure that the class name in the file matches the file name (Otherwise the server will reject the agent)
 
 ### Loading Agent into the game
 
@@ -107,12 +80,3 @@ occur in one of two ways.
    of dominion. If an error is present, please send a copy of the dominion.log for that game to me on Discord. If not,
    provide a description of the expected and actual behaviour of the game also through discord. This can be done within
    the bugs channel of the Discord Server
-
-### Terminal Usage
-
-Throughout this competition you are likely to use the terminal to run commands to generate Agent templates and to
-interact with the game engine. Linux and Mac machines will be able to run all of these commands immediately however
-Windows computers may have a little trouble when configured incorrectly. A commonly used tool to simplify this is
-the [gitbash ternminal](https://git-scm.com/downloads). This comes packaged with [git](https://git-scm.com/downloads),
-a [version control system](https://about.gitlab.com/topics/version-control/) that is widely used in the software
-industry. Once installed open gitbash and use this as your terminal.

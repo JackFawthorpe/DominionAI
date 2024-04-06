@@ -17,9 +17,9 @@ import java.util.List;
 public class PlayerLoaderImpl implements PlayerLoader {
 
     private final List<ActionController> controllersToLoad = List.of(
-            new ProvincePursuer_1(),
-            new ProvincePursuer_1(),
-            new ThoughtfulBuyer_1(),
+            new UnthoughtfulBuyer_1(),
+            new UnthoughtfulBuyer_1(),
+            new UnthoughtfulBuyer_1(),
             new UnthoughtfulBuyer_1()
     );
 

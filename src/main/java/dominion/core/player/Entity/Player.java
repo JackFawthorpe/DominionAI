@@ -15,12 +15,19 @@ public class Player {
     private int actions;
     private int buys;
 
-    public Player(String name) {
+    private int id;
+
+    public Player(String name, int id) {
+        this.id = id;
         this.name = name;
         this.money = 0;
         this.actions = 0;
         this.buys = 0;
         this.deck = new PlayerDeck(this);
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**

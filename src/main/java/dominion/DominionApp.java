@@ -10,7 +10,6 @@ import dominion.core.initialisation.JSONLoadedConfigurationManager;
 import dominion.core.player.loader.PlayerLoaderImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import statistics.StatisticsApp;
 
 /**
  * Entry point for the game
@@ -39,9 +38,6 @@ public class DominionApp {
     private void initialiseSimulation() {
         GameConfigurationManager manager = new JSONLoadedConfigurationManager(new GameConfiguration());
         manager.initialiseGame();
-        if (manager.getConfiguration().isStatisticsEnabled()) {
-            StatisticsApp.getInstance().enable();
-        }
         runGames(manager);
     }
 
@@ -49,7 +45,7 @@ public class DominionApp {
         for (int i = 0; i < manager.getConfiguration().getGames(); i++) {
             GameLoader gameLoader = new GameLoader(new PlayerLoaderImpl(manager.getConfiguration()));
             gameLoader.loadGame();
-            gameLoader.startGame();
+            System.out.println(gameLoader.startGame());
         }
         GameEventBus.getInstance().notifyListeners(new SimulationCompleteEvent());
     }
