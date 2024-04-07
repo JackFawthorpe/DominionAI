@@ -73,12 +73,9 @@ public class CompetitionPlayerLoader implements PlayerLoader {
         try {
             Class<?> modifiedClass = classLoader.loadClassFromFile(modifiedClassName, classPathString);
             return (ActionController) modifiedClass.getDeclaredConstructor().newInstance();
-        } catch (CompetitionException e) {
-            throw e;
         } catch (ClassCastException e) {
             throw new CompetitionException(String.format("Player %s doesnt implement ActionController", playerIndex), 16 + playerIndex);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new CompetitionException(String.format("Failed to load class for player %s", playerIndex), playerIndex + 8);
         }
     }

@@ -31,15 +31,9 @@ public class GameLoader {
      * Starts the game
      */
     public List<Integer> startGame() {
-        try {
-            List<Integer> results = RoundRobinManager.getInstance().startGame();
-            ResetManager.resetGame();
-            return results;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("An error occurred whilst playing the game: {}", e.getMessage());
-            return null;
-        }
+        List<Integer> results = RoundRobinManager.getInstance().startGame();
+        ResetManager.resetGame();
+        return results;
     }
 
 }
