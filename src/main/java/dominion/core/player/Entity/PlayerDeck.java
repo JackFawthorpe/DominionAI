@@ -1,5 +1,6 @@
 package dominion.core.player.Entity;
 
+import api.data.DeckData;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.supply.Copper;
@@ -195,6 +196,13 @@ public class PlayerDeck {
      */
     public boolean trashCard(Card toRemove, DeckPosition position) {
         return mapPosition(position).remove(toRemove);
+    }
+
+    /**
+     * Turns the deck into a readonly version of the deck
+     */
+    public DeckData toDeckData() {
+        return new DeckData(getAllCards().stream().map(Card::toCardData).toList());
     }
 
     /**

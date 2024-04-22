@@ -1,5 +1,6 @@
 package dominion.core.rfa;
 
+import api.agent.ActionController;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.event.AttackReactionEvent;
 import dominion.core.player.Entity.Player;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Responsible for passing actions from systems within the game to the
@@ -80,5 +82,21 @@ public class RequestForActionRouter {
         }
 
         playerController.handleAction(playerActionRequest);
+    }
+
+    /**
+     * Finds the player that belongs to the action controller
+     *
+     * @return The player that belongs to the controller, if none exists then null
+     */
+    public Player getPlayer(ActionController actionController) {
+        for (Map.Entry<Player, PlayerController> entry : routes.entrySet()) {
+            Player player = entry.getKey();
+            PlayerController controller = entry.getValue();
+            if (controller.getActionController().equals(actionController)) {
+                return player;
+            }
+        }
+        return null;
     }
 }

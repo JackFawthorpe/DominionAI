@@ -1,5 +1,6 @@
 package dominion.core.player.Entity;
 
+import api.data.PlayerData;
 import dominion.card.Card;
 
 import java.util.List;
@@ -11,11 +12,14 @@ public class Player {
 
     private final String name;
     private final PlayerDeck deck;
+
+    /**
+     * Represents where the player sits within the turn order
+     */
+    private final int id;
     private int money;
     private int actions;
     private int buys;
-
-    private int id;
 
     public Player(String name, int id) {
         this.id = id;
@@ -98,6 +102,22 @@ public class Player {
     }
 
     /**
+     * Accessor method for getting all the cards belonging to a player
+     *
+     * @return The list of cards in the players deck
+     */
+    public List<Card> getCards() {
+        return deck.getAllCards();
+    }
+
+    /**
+     * Converts the player into a read only object usable within the agent
+     */
+    public PlayerData toPlayerData() {
+        return new PlayerData(id, deck.toDeckData());
+    }
+
+    /**
      * Gets the total amount of points the player has
      *
      * @return The number of victory points in the deck
@@ -106,14 +126,5 @@ public class Player {
         return deck.getAllCards().stream()
                 .map(Card::getVictoryPoints)
                 .reduce(Integer::sum).orElse(0);
-    }
-
-    /**
-     * Accessor method for getting all the cards belonging to a player
-     *
-     * @return The list of cards in the players deck
-     */
-    public List<Card> getCards() {
-        return deck.getAllCards();
     }
 }

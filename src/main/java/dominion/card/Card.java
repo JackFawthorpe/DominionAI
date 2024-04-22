@@ -1,5 +1,7 @@
 package dominion.card;
 
+import api.data.CardData;
+import api.data.CardName;
 import dominion.core.geb.GameEventBus;
 import dominion.core.geb.event.PlayCardEvent;
 import dominion.core.player.Entity.Player;
@@ -178,5 +180,23 @@ public abstract class Card implements Cloneable {
 
     protected void withSimpleDraw(int drawCount) {
         this.drawCount = drawCount;
+    }
+
+    /**
+     * Turns the interactive card to a read only object
+     *
+     * @return The readonly version of the card
+     */
+    public CardData toCardData() {
+        return new CardData(
+                this.cardType,
+                this.actions,
+                this.buys,
+                this.money,
+                this.victoryPoints,
+                CardName.valueOf(this.name.toUpperCase().replace(" ", "")),
+                this.cost,
+                this.drawCount
+        );
     }
 }
