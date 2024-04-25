@@ -199,4 +199,13 @@ public abstract class Card implements Cloneable {
                 this.drawCount
         );
     }
+
+    /**
+     * Turns the string representation of the card name and switch it to the enum
+     *
+     * @return The enum representation of the card name
+     */
+    public CardName getCardName() {
+        return CardName.valueOf(this.name.toUpperCase().replace(" ", ""));
+    }
 }

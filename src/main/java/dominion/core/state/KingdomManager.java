@@ -1,5 +1,6 @@
 package dominion.core.state;
 
+import api.data.CardName;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.base.*;
@@ -129,7 +130,7 @@ public class KingdomManager {
     }
 
     /**
-     * Returns the amount of supply piles that have ran out since the start of the game
+     * Returns the amount of supply piles that have run out since the start of the game
      *
      * @return The count
      */
@@ -137,4 +138,13 @@ public class KingdomManager {
         return (int) cardReferences.stream().filter(card -> supply.get(card.getName()) == 0).count();
     }
 
+    /**
+     * Returns the amount of cards left in the pile for a given card
+     *
+     * @param cardName The cardName to check
+     * @return The amount of cards left
+     */
+    public int getCardCountRemaining(CardName cardName) {
+        return supply.get(cardName.getDisplayName());
+    }
 }

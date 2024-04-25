@@ -5,37 +5,47 @@ package api.data;
  * card.getCardName().equals(CardName.COPPER)
  */
 public enum CardName {
-    COPPER,
-    CURSE,
-    ESTATE,
-    SILVER,
-    DUCHY,
-    GOLD,
-    PROVINCE,
-    CELLAR,
-    CHAPEL,
-    MOAT,
-    HARBINGER,
-    MERCHANT,
-    VASSAL,
-    VILLAGE,
-    WORKSHOP,
-    BUREAUCRAT,
-    GARDENS,
-    MILITIA,
-    MONEYLENDER,
-    POACHER,
-    REMODEL,
-    SMITHY,
-    THRONEROOM,
-    BANDIT,
-    COUNCILROOM,
-    FESTIVAL,
-    LABORATORY,
-    LIBRARY,
-    MARKET,
-    MINE,
-    SENTRY,
-    WITCH,
-    ARTISAN,
+    COPPER("Copper"),
+    CURSE("Curse"),
+    ESTATE("Estate"),
+    SILVER("Silver"),
+    DUCHY("Duchy"),
+    GOLD("Gold"),
+    PROVINCE("Province"),
+    CELLAR("Cellar"),
+    CHAPEL("Chapel"),
+    MOAT("Moat"),
+    HARBINGER("Harbinger"),
+    MERCHANT("Merchant"),
+    VASSAL("Vassal"),
+    VILLAGE("Village"),
+    WORKSHOP("Workshop"),
+    BUREAUCRAT("Bureaucrat"),
+    GARDENS("Gardens"),
+    MILITIA("Militia"),
+    MONEYLENDER("Moneylender"),
+    POACHER("Poacher"),
+    REMODEL("Remodel"),
+    SMITHY("Smithy"),
+    THRONEROOM("Throneroom"),
+    BANDIT("Bandit"),
+    COUNCILROOM("Councilroom"),
+    FESTIVAL("Festival"),
+    LABORATORY("Laboratory"),
+    LIBRARY("Library"),
+    MARKET("Market"),
+    MINE("Mine"),
+    SENTRY("Sentry"),
+    WITCH("Witch"),
+    ARTISAN("Artisan");
+
+    private final String displayName;
+
+    CardName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }
