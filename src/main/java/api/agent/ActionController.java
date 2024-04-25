@@ -1,63 +1,62 @@
 package api.agent;
 
-import dominion.card.Card;
-import org.jetbrains.annotations.NotNull;
+import api.data.CardData;
 
 import java.util.List;
 
 /**
- * Interface that has to be implemented by an AI
+ * This is the starting point of your controller.
+ * <p>
+ * You must implement each of these methods using your own unique strategy!
+ * <p>
+ * Rules of thumb:
+ * - You can always assume there is at least one option within the list
+ * - You can do nothing by returning null
+ * - You must do something when the isRequired boolean is true
  */
 public interface ActionController {
     /**
-     * Hook to allow for the player to choose which card they want to buy
-     *
-     * @param buyOptions The cards that the player can currently buy
-     * @return The card the player wants to buy
+     * Buying a card is spending the cost of the card (card.getCost()) to buy the card
+     * <p>
+     * Return the card that you want your agent to buy or null if you don't want a new card
      */
-    Card buyCardHook(List<Card> buyOptions);
+    CardData buyCardHook(List<CardData> buyOptions);
 
     /**
-     * Hook to allow for the player to choose which card they want to discard from
-     * their hand
-     *
-     * @param discardOptions The cards in their hand
-     * @return The card the player wants to discard
+     * Discarding is taking a card from your hand and putting it into the discard pile\
+     * <p>
+     * 1. Check if you are required to discard
+     * 2. Decide if you want to discard a card from your hand
+     * 3. Return null if you dont want to discard or return the card that you want to discard
      */
-    Card discardFromHandHook(List<Card> discardOptions, boolean isRequired);
+    CardData discardFromHandHook(List<CardData> discardOptions, boolean isRequired);
 
     /**
-     * Hook to allow for the player to choose which card they want to gain
-     *
-     * @param gainOptions The cards the play has to choose from
-     * @return The card that the player chooses to gain
+     * Gaining is taking a card from the kingdom without paying for it
+     * <p>
+     * Return the card that you want to gain from the list or null if you don't want a new card
      */
-    Card gainCardHook(List<Card> gainOptions);
+    CardData gainCardHook(List<CardData> gainOptions);
 
     /**
-     * Hook to allow for the player to choose which card they want to trash
-     *
-     * @param trashOptions The cards the player has to choose from
-     * @param isRequired   Tells the player if they have to trash or if its optional
-     * @return The card that the player chooses to gain
+     * Trashing a card is removing the card from your deck permanently
+     * <p>
+     * Return the card that you want to trash from the list or null if you don't want a new card
      */
-    Card trashCardHook(List<Card> trashOptions, boolean isRequired);
+    CardData trashCardHook(List<CardData> trashOptions, boolean isRequired);
 
     /**
-     * Hook to allow for the player to choose which card they want to top-deck
-     *
-     * @param topDeckOptions The card that the player has to choose from
-     * @param required       Whether the top decking action is optional
-     * @return The card that the player chooses to top deck
+     * Topdeck a card is taking a card from your hand and putting it at the top of your deck. This means you
+     * will draw it next turn
+     * <p>
+     * Return the card that you want to topdeck from the list or null if you don't want a new card
      */
-    Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required);
+    CardData chooseTopDeckHook(List<CardData> topDeckOptions, boolean required);
 
     /**
-     * Hook to allow the player to choose which action they want to do
-     *
-     * @param actionCardsInHand The cards that are actionable. (The actions
-     *                          currently in their hand)
-     * @return The card the player wants to play
+     * Gets a random card from the list
+     * <p>
+     * This should be used as a placeholder method as it performs quite poorly against simple ideas
      */
-    Card playActionCardHook(List<Card> actionCardsInHand);
+    CardData playActionCardHook(List<CardData> actionCardsInHand);
 }

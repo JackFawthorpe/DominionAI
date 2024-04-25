@@ -1,6 +1,6 @@
 package api.agent;
 
-import dominion.card.Card;
+import api.data.CardData;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +24,7 @@ public class DefaultController implements ActionController {
      * <p>
      * Return the card that you want your agent to buy or null if you don't want a new card
      */
-    public Card buyCardHook(List<Card> buyOptions) {
+    public CardData buyCardHook(List<CardData> buyOptions) {
         return getRandomCard(buyOptions);
     }
 
@@ -35,7 +35,7 @@ public class DefaultController implements ActionController {
      * 2. Decide if you want to discard a card from your hand
      * 3. Return null if you dont want to discard or return the card that you want to discard
      */
-    public Card discardFromHandHook(List<Card> discardOptions, boolean isRequired) {
+    public CardData discardFromHandHook(List<CardData> discardOptions, boolean isRequired) {
         return !isRequired ? null : getRandomCard(discardOptions);
     }
 
@@ -44,7 +44,7 @@ public class DefaultController implements ActionController {
      * <p>
      * Return the card that you want to gain from the list or null if you don't want a new card
      */
-    public Card gainCardHook(List<Card> gainOptions) {
+    public CardData gainCardHook(List<CardData> gainOptions) {
         return getRandomCard(gainOptions);
     }
 
@@ -53,7 +53,7 @@ public class DefaultController implements ActionController {
      * <p>
      * Return the card that you want to trash from the list or null if you don't want a new card
      */
-    public Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
+    public CardData trashCardHook(List<CardData> trashOptions, boolean isRequired) {
         return !isRequired ? null : getRandomCard(trashOptions);
     }
 
@@ -63,7 +63,7 @@ public class DefaultController implements ActionController {
      * <p>
      * Return the card that you want to topdeck from the list or null if you don't want a new card
      */
-    public Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required) {
+    public CardData chooseTopDeckHook(List<CardData> topDeckOptions, boolean required) {
         return getRandomCard(topDeckOptions);
     }
 
@@ -73,7 +73,7 @@ public class DefaultController implements ActionController {
      * <p>
      * Return the card that you want to play this turn or null if you don't want to play a card
      */
-    public Card playActionCardHook(List<Card> actionOptions) {
+    public CardData playActionCardHook(List<CardData> actionOptions) {
         return getRandomCard(actionOptions);
     }
 
@@ -82,7 +82,7 @@ public class DefaultController implements ActionController {
      * <p>
      * This should be used as a placeholder method as it performs quite poorly against simple ideas
      */
-    private Card getRandomCard(List<Card> cards) {
+    private CardData getRandomCard(List<CardData> cards) {
         return cards.get(random.nextInt(cards.size()));
     }
 }

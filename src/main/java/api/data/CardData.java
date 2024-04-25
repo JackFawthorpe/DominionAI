@@ -1,12 +1,14 @@
 package api.data;
 
 import dominion.card.CardType;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * This class represents the data that is about a card such as how much it costs or what card it is
  */
+@EqualsAndHashCode
 public class CardData {
     private final List<CardType> cardType;
     private final int actions;

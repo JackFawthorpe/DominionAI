@@ -1,6 +1,7 @@
 package dominion.core.player.controller;
 
 import api.agent.ActionController;
+import api.data.CardData;
 import dominion.card.Card;
 import dominion.card.CardSpecification;
 import dominion.card.CardType;
@@ -16,6 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Represents the object that will control the player etc. AI, CLI player etc
@@ -69,6 +73,13 @@ public class PlayerControllerImpl implements PlayerController {
     }
 
     /**
+     * Returns the action controller responsible for agent decisions
+     */
+    public ActionController getActionController() {
+        return this.actionController;
+    }
+
+    /**
      * Handles the process of calling the controller to pick a card to play and
      * proceeds to play the card
      *
@@ -77,28 +88,29 @@ public class PlayerControllerImpl implements PlayerController {
      */
     protected Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-        List<Card> playActionOptions = deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION));
-        if (playActionOptions.isEmpty()) {
-            logger.info("Player {} could not play an action", player.getName());
-            return null;
-        }
-        Card chosenCard = actionController.playActionCardHook(playActionOptions);
-        if (chosenCard == null) {
+
+        Card card = getPickedCard(
+                () -> deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)),
+                actionController::playActionCardHook,
+                "play an action");
+
+        if (card == null) {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
         }
-        if (!deck.moveCard(chosenCard, DeckPosition.HAND, DeckPosition.PLAYED)) {
+
+        if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.PLAYED)) {
             logger.error("Player {} played {} when they did not have it within their hand", player.getName(),
-                    chosenCard.getName());
+                    card.getName());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         } else {
             // Plays card after moving, when resolving effects,
             // the played card is treated as though its in the played pile, not the deck
-            logger.info("Player {} is playing the card {}", player.getName(), chosenCard.getName());
-            chosenCard.playCard();
+            logger.info("Player {} is playing the card {}", player.getName(), card.getName());
+            card.playCard();
             player.updateTurnResources(-1, 0, 0);
         }
-        return chosenCard;
+        return card;
     }
 
     /**
@@ -109,22 +121,20 @@ public class PlayerControllerImpl implements PlayerController {
      * @return The card which the player purchased
      */
     protected Card handleBuyCard() {
-        updateMoney();
         logger.info("Player {} received request to buy a card", player.getName());
-        KingdomManager kingdomManager = KingdomManager.getInstance();
-        List<Card> buyOptions = kingdomManager
-                .getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
-        if (buyOptions.isEmpty()) {
-            logger.info("Player {} could not buy a card", player.getName());
-            return null;
-        }
-        Card card = actionController.buyCardHook(buyOptions);
+        updateMoney();
+
+        Card card = getPickedCard(
+                () -> KingdomManager.getInstance().getAvailableCards(new CardSpecification().withMaxCost(player.getMoney())),
+                actionController::buyCardHook,
+                "buy a card");
+
         if (card == null) {
             logger.info("Player {} has chosen not to buy a card", player.getName());
             return null;
         }
         logger.info("Player {} has chosen to buy a {}", player.getName(), card.getName());
-        kingdomManager.removeCard(card);
+        KingdomManager.getInstance().removeCard(card);
         deck.addCard(card, DeckPosition.DISCARD);
         player.updateTurnResources(0, -1, -card.getCost());
         return card;
@@ -147,12 +157,20 @@ public class PlayerControllerImpl implements PlayerController {
      */
     protected Card handleDiscardFromHand(DiscardFromHandRequest request) {
         logger.info("Player {} received a request to discard a card", player.getName());
-        List<Card> discardOptions = player.getDeck().getHand();
-        if (discardOptions.isEmpty()) {
+
+        List<Card> options = player.getDeck().getHand();
+
+        Card card = getPickedCard(
+                () -> options,
+                (List<CardData> cards) -> actionController.discardFromHandHook(cards, request.isRequired()),
+                "discard a card"
+        );
+
+        if (options.isEmpty()) {
             logger.info("Player {} could not discard a card", player.getName());
             return null;
         }
-        Card card = actionController.discardFromHandHook(discardOptions, request.isRequired());
+
         if (card == null && request.isRequired()) {
             logger.error("Player {} failed to discard a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
@@ -185,13 +203,15 @@ public class PlayerControllerImpl implements PlayerController {
      */
     protected Card handleGainCardRequest(GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
-        List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
-        if (gainOptions.isEmpty()) {
-            logger.info("Player {} could not gain a card", player.getName());
-            return null;
-        }
-        Card card = actionController.gainCardHook(gainOptions);
-        if (request.isRequired() && card == null && !(gainOptions.isEmpty())) {
+
+        List<Card> options = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
+        Card card = getPickedCard(
+                () -> options,
+                actionController::gainCardHook,
+                "gain a card"
+        );
+
+        if (request.isRequired() && card == null && !(options.isEmpty())) {
             logger.error("Player {} failed to gain a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
         } else if (card == null) {
@@ -213,11 +233,13 @@ public class PlayerControllerImpl implements PlayerController {
         logger.info("Player {} received a request to trash a card", player.getName());
         List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
-        if (trashOptions.isEmpty()) {
-            logger.info("Player {} could not trash a card", player.getName());
-            return null;
-        }
-        Card card = actionController.trashCardHook(trashOptions, request.isRequired());
+
+        Card card = getPickedCard(
+                () -> trashOptions,
+                (List<CardData> cards) -> actionController.trashCardHook(cards, request.isRequired()),
+                "trash a card"
+        );
+
         if (request.isRequired() && card == null && !trashOptions.isEmpty()) {
             logger.error("Player {} failed to trash a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
@@ -259,12 +281,18 @@ public class PlayerControllerImpl implements PlayerController {
         logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(),
                 request.getPosition());
         List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
+
+        Card card = getPickedCard(
+                () -> options,
+                (List<CardData> cards) -> actionController.chooseTopDeckHook(cards, request.isRequired()),
+                "top deck a card"
+        );
+
         if (options.isEmpty()) {
             logger.info("Player {} could not top deck a card", player.getName());
             return null;
         }
-        Card chosenCard = actionController.chooseTopDeckHook(options, request.isRequired());
-        if (chosenCard == null) {
+        if (card == null) {
             if (request.isRequired() && !options.isEmpty()) {
                 logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
                 throw new IllegalMoveException("Illegal move detected. Exiting game");
@@ -273,12 +301,32 @@ public class PlayerControllerImpl implements PlayerController {
             return null;
         }
 
-        if (!deck.moveCard(chosenCard, request.getPosition(), DeckPosition.DRAW)) {
+        if (!deck.moveCard(card, request.getPosition(), DeckPosition.DRAW)) {
             logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position",
                     player.getName(), request.getPosition());
             throw new IllegalMoveException("Illegal move detected. Exiting game");
         }
-        return chosenCard;
+        return card;
+    }
+
+    /**
+     * Handles the proxying of converting the options to the card data and back
+     * Alongside this, it will handle returning early given there is no options to provide to the player
+     *
+     * @param getOptions      Supplier to fetch the list of options the agent can choose
+     * @param getPickedOption Method reference of the function to call on the agent
+     * @param action          String representation of the action that is being completed
+     * @return The card that is chosen by the agent
+     */
+    protected Card getPickedCard(Supplier<List<Card>> getOptions, Function<List<CardData>, CardData> getPickedOption, String action) {
+        List<Card> options = getOptions.get();
+        if (options.isEmpty()) {
+            logger.info("Player {} did not have an option when asked to {}", player.getName(), action);
+            return null;
+        }
+        List<CardData> proxiedOptions = hookCardToDataProxy(options);
+        Optional<CardData> pickedOption = Optional.ofNullable(getPickedOption.apply(proxiedOptions));
+        return pickedOption.map(option -> hookCardToDataReverseProxy(option, options)).orElse(null);
     }
 
     /**
@@ -289,19 +337,33 @@ public class PlayerControllerImpl implements PlayerController {
         List<Card> inHandTreasures = deck.getCards(DeckPosition.HAND,
                 new CardSpecification().withType(CardType.TREASURE));
         for (Card card : inHandTreasures) {
-            if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.PLAYED)) {
-                logger.error("Attempted to play money card that wasn't in hand");
-                throw new RuntimeException("This shouldn't happen");
-            }
+            deck.moveCard(card, DeckPosition.HAND, DeckPosition.PLAYED);
             card.playCard();
         }
 
     }
 
     /**
-     * Returns the action controller responsible for agent decisions
+     * Converts the list of options that are provided to the readonly API object {@link CardData}
+     *
+     * @param cards The list of cards to convert
+     * @return The API representation of the list of cards
      */
-    public ActionController getActionController() {
-        return this.actionController;
+    private List<CardData> hookCardToDataProxy(List<Card> cards) {
+        return cards.stream().map(Card::toCardData).toList();
+    }
+
+    /**
+     * Takes the response from the agent and feeds it back through the card data proxy to find the original card
+     *
+     * @param chosenCard the card the agent chose
+     * @param cards      the list of cards the chosen card data should have derived from
+     * @return The card the player chose
+     * @throws IllegalMoveException Thrown if the card data is fabricated by the player and doesnt derive from the original list
+     */
+    private Card hookCardToDataReverseProxy(CardData chosenCard, List<Card> cards) throws IllegalMoveException {
+        return cards.stream().filter(card -> card.toCardData().equals(chosenCard)).findAny().orElseThrow(() -> {
+            throw new IllegalMoveException("Illegal move detected. Exiting game");
+        });
     }
 }
