@@ -20,7 +20,7 @@ public class RoundRobinManager {
 
     private List<Player> players;
 
-    private int turnCount;
+    private int roundNumber;
 
     /**
      * Singleton Implementation of RoundRobinManager
@@ -47,8 +47,8 @@ public class RoundRobinManager {
         int currentPlayerIndex = 0;
         while (!EndGameObserver.getInstance().isGameFinished()) {
             if (currentPlayerIndex == 0) {
-                turnCount++;
-                logger.info("Starting round {}", turnCount);
+                roundNumber++;
+                logger.info("Starting round {}", roundNumber);
             }
             TurnManager.getInstance().playTurn(players.get(currentPlayerIndex));
             currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -61,8 +61,8 @@ public class RoundRobinManager {
         return players.stream().map(Player::getPoints).toList();
     }
 
-    public int getTurnCount() {
-        return turnCount;
+    public int getRoundNumber() {
+        return roundNumber;
     }
 
     public int getPlayerCount() {

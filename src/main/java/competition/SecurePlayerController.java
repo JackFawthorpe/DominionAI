@@ -73,7 +73,7 @@ public class SecurePlayerController extends PlayerControllerImpl {
     protected <T> T secureAction(Supplier<T> supplier, String actionName) {
         CompletableFuture<T> future = CompletableFuture.supplyAsync(supplier);
         try {
-            return future.get(250, TimeUnit.MILLISECONDS);
+            return future.get(500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             throw new CompetitionException("Thread was interrupted", 3);
         } catch (ExecutionException e) {
