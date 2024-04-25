@@ -46,14 +46,6 @@ public interface ActionController {
     CardData trashCardHook(List<CardData> trashOptions, boolean isRequired);
 
     /**
-     * Topdeck a card is taking a card from your hand and putting it at the top of your deck. This means you
-     * will draw it next turn
-     * <p>
-     * Return the card that you want to topdeck from the list or null if you don't want a new card
-     */
-    CardData chooseTopDeckHook(List<CardData> topDeckOptions, boolean required);
-
-    /**
      * Gets a random card from the list
      * <p>
      * This should be used as a placeholder method as it performs quite poorly against simple ideas

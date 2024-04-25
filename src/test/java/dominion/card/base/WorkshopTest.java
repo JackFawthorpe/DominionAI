@@ -40,7 +40,7 @@ class WorkshopTest extends BaseTestFixture {
 
         CardSpecification cardSpec = request.getCardSpecification();
         Card affordable = new Remodel(mockPlayer); // costs 4
-        Card tooexpensive = new Festival(mockPlayer); // costs 5
+        Card tooexpensive = new Market(mockPlayer); // costs 5
         List<Card> toTest = List.of(affordable, tooexpensive);
         List<Card> expected = List.of(affordable);
         Assertions.assertEquals(expected, cardSpec.filterCards(toTest));

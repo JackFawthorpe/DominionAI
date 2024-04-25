@@ -13,31 +13,15 @@ public enum CardName {
     GOLD("Gold"),
     PROVINCE("Province"),
     CELLAR("Cellar"),
-    CHAPEL("Chapel"),
     MOAT("Moat"),
-    HARBINGER("Harbinger"),
     MERCHANT("Merchant"),
-    VASSAL("Vassal"),
     VILLAGE("Village"),
     WORKSHOP("Workshop"),
-    BUREAUCRAT("Bureaucrat"),
-    GARDENS("Gardens"),
     MILITIA("Militia"),
-    MONEYLENDER("Moneylender"),
-    POACHER("Poacher"),
     REMODEL("Remodel"),
     SMITHY("Smithy"),
-    THRONEROOM("Throneroom"),
-    BANDIT("Bandit"),
-    COUNCILROOM("Councilroom"),
-    FESTIVAL("Festival"),
-    LABORATORY("Laboratory"),
-    LIBRARY("Library"),
     MARKET("Market"),
-    MINE("Mine"),
-    SENTRY("Sentry"),
-    WITCH("Witch"),
-    ARTISAN("Artisan");
+    MINE("Mine");
 
     private final String displayName;
 

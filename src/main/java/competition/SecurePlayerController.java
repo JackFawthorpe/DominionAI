@@ -7,7 +7,6 @@ import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerControllerImpl;
 import dominion.core.rfa.request.DiscardFromHandRequest;
 import dominion.core.rfa.request.GainCardRequest;
-import dominion.core.rfa.request.TopDeckRequest;
 import dominion.core.rfa.request.TrashCardRequest;
 
 import java.util.List;
@@ -62,11 +61,6 @@ public class SecurePlayerController extends PlayerControllerImpl {
     @Override
     protected Card handleTrashCard(TrashCardRequest request) {
         return secureAction(() -> super.handleTrashCard(request), "handleTrashCard");
-    }
-
-    @Override
-    protected Card handleTopDeckRequest(TopDeckRequest request) {
-        return secureAction(() -> super.handleTopDeckRequest(request), "handleTopDeckRequest");
     }
 
 

@@ -58,16 +58,6 @@ public class DefaultController implements ActionController {
     }
 
     /**
-     * Topdeck a card is taking a card from your hand and putting it at the top of your deck. This means you
-     * will draw it next turn
-     * <p>
-     * Return the card that you want to topdeck from the list or null if you don't want a new card
-     */
-    public CardData chooseTopDeckHook(List<CardData> topDeckOptions, boolean required) {
-        return getRandomCard(topDeckOptions);
-    }
-
-    /**
      * Playing an action card means moving it to the play area and gaining its active effects such as drawing more cards,
      * having more money or being allowed to buy or play more cards this turn
      * <p>

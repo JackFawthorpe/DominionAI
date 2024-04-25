@@ -55,7 +55,7 @@ class RemodelTest extends BaseTestFixture {
         GainCardRequest request = (GainCardRequest) requests.get(1);
         CardSpecification cardSpec = request.getCardSpecification();
         Card affordable = new Cellar(mockPlayer); // costs 2
-        Card tooexpensive = new Vassal(mockPlayer); // costs 3
+        Card tooexpensive = new Merchant(mockPlayer); // costs 3
         List<Card> toTest = List.of(affordable, tooexpensive);
         List<Card> expected = List.of(affordable);
         Assertions.assertEquals(expected, cardSpec.filterCards(toTest));

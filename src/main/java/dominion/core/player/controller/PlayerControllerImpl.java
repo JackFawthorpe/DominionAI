@@ -67,8 +67,6 @@ public class PlayerControllerImpl implements PlayerController {
             request.setResponse(handleTrashCard(request));
         } else if (controllerActionRequest instanceof MoveCardRequest request) {
             handleMoveCard(request);
-        } else if (controllerActionRequest instanceof TopDeckRequest request) {
-            request.setResponse(handleTopDeckRequest(request));
         }
     }
 
@@ -271,43 +269,6 @@ public class PlayerControllerImpl implements PlayerController {
         }
     }
 
-    /**
-     * Handles the flow of top decking a card
-     *
-     * @param request The request to top deck a card
-     * @return The card that is top decked
-     */
-    protected Card handleTopDeckRequest(TopDeckRequest request) {
-        logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(),
-                request.getPosition());
-        List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
-
-        Card card = getPickedCard(
-                () -> options,
-                (List<CardData> cards) -> actionController.chooseTopDeckHook(cards, request.isRequired()),
-                "top deck a card"
-        );
-
-        if (options.isEmpty()) {
-            logger.info("Player {} could not top deck a card", player.getName());
-            return null;
-        }
-        if (card == null) {
-            if (request.isRequired() && !options.isEmpty()) {
-                logger.error("Player {} attempted to refuse a top-deck when it was required", player.getName());
-                throw new IllegalMoveException("Illegal move detected. Exiting game");
-            }
-            logger.info("Player {} chose to not top-deck a card", player.getName());
-            return null;
-        }
-
-        if (!deck.moveCard(card, request.getPosition(), DeckPosition.DRAW)) {
-            logger.error("Player {} attempted to top deck a card from {} when that card wasn't in the position",
-                    player.getName(), request.getPosition());
-            throw new IllegalMoveException("Illegal move detected. Exiting game");
-        }
-        return card;
-    }
 
     /**
      * Handles the proxying of converting the options to the card data and back

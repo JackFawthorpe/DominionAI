@@ -5,7 +5,6 @@
 - [Create an agent](#create-an-agent)
 - [Configuring Simulation Environment](#configuring-game-simulation)
 - [Reporting a bug](#reporting-a-bug)
-- [Script Troubleshooting](#troubleshooting-scripts)
 
 ## Introduction
 
@@ -18,8 +17,7 @@ follow [this guide](https://www.freecodecamp.org/news/install-openjdk-free-java-
 
 With Java installed you need to decide where to put your source code that is easily accessible from the terminal. My
 personal suggestion is to have a dedicated development folder that is close to the root of your terminal. On a windows
-computer this might look like `C:\development\mas-engine`. All commands within this readme should be ran from this
-directory. If you aren't confident in the terminal yet read through the [Terminal Usage](#terminal-usage) section.
+computer this might look like `C:\development\mas-engine`.
 
 To verify that the engine is working correctly run the following command in the projects root directory
 
@@ -40,8 +38,11 @@ To measure progress of how your agent is are developing it's important to have a
 including the ones you've previously made.
 
 To do this you should do the following steps.
-1. Copy the Agent that you want to make an interation of. Agents can be found in ```src/main/java/api/agent``` .
-2. Paste the file and when prompted to change the name either by iterating the version number or writing a completely new name with the format {AgentName}_{VerionNumber}
+
+1. Copy the Agent that you want to make an iteration of or DefaultController if its the first iteration.
+   Agents can be found in ```src/main/java/api/agent``` .
+2. Paste the file and when prompted to change the name either by iterating the version number or writing a completely
+   new name with the format {AgentName}_{VerionNumber}
 3. Make sure that the class name in the file matches the file name (Otherwise the server will reject the agent)
 
 ### Loading Agent into the game
@@ -64,19 +65,3 @@ As an example, If I wanted to load CoolAgent_1.java into the first and third slo
 ```
 
 Make sure is imported as well and it will be good to go!
-
-## Reporting a Bug
-
-It is possible that within the agent development Challenge you will encounter bugs within the logic of the game. This
-can
-occur in one of two ways.
-
-1. A flaw within the agent you have made. Although the API is designed to minimise the amount of errors that a player
-   can
-   make when deciding what to do, it is not impossible to play an illegal move. An example of this would be refusing to
-   discard when it is a required action. This will display as an IllegalMoveException and the game will exit. If you see
-   an ```IllegalMoveException``` then the error is likely caused by the logic within your agent controller.
-2. Anything else. This could present as any other error, or, an unexpected behaviour that differs from the rules
-   of dominion. If an error is present, please send a copy of the dominion.log for that game to me on Discord. If not,
-   provide a description of the expected and actual behaviour of the game also through discord. This can be done within
-   the bugs channel of the Discord Server
