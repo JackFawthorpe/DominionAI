@@ -77,8 +77,12 @@ public class PlayerControllerImpl implements PlayerController {
      */
     protected Card handlePlayActionCard() {
         logger.info("Player {} received request to choose an action card", player.getName());
-        Card chosenCard = actionController.playActionCardHook(
-                deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION)));
+        List<Card> playActionOptions = deck.getCards(DeckPosition.HAND, new CardSpecification().withType(CardType.ACTION));
+        if (playActionOptions.isEmpty()) {
+            logger.info("Player {} could not play an action", player.getName());
+            return null;
+        }
+        Card chosenCard = actionController.playActionCardHook(playActionOptions);
         if (chosenCard == null) {
             logger.info("Player {} chose to not play a card", player.getName());
             return null;
@@ -110,6 +114,10 @@ public class PlayerControllerImpl implements PlayerController {
         KingdomManager kingdomManager = KingdomManager.getInstance();
         List<Card> buyOptions = kingdomManager
                 .getAvailableCards(new CardSpecification().withMaxCost(player.getMoney()));
+        if (buyOptions.isEmpty()) {
+            logger.info("Player {} could not buy a card", player.getName());
+            return null;
+        }
         Card card = actionController.buyCardHook(buyOptions);
         if (card == null) {
             logger.info("Player {} has chosen not to buy a card", player.getName());
@@ -140,15 +148,19 @@ public class PlayerControllerImpl implements PlayerController {
     protected Card handleDiscardFromHand(DiscardFromHandRequest request) {
         logger.info("Player {} received a request to discard a card", player.getName());
         List<Card> discardOptions = player.getDeck().getHand();
+        if (discardOptions.isEmpty()) {
+            logger.info("Player {} could not discard a card", player.getName());
+            return null;
+        }
         Card card = actionController.discardFromHandHook(discardOptions, request.isRequired());
-        if (card == null && request.isRequired() && !discardOptions.isEmpty()) {
+        if (card == null && request.isRequired()) {
             logger.error("Player {} failed to discard a card when it was both required and possible", player.getName());
             throw new IllegalMoveException("Illegal move detected, exiting game");
         } else if (card == null) {
             logger.info("Player {} chose not to discard a card", player.getName());
         } else if (!deck.moveCard(card, DeckPosition.HAND, DeckPosition.DISCARD)) {
             logger.error("Attempted to discard {} from players hand but it wasn't in their hand", player.getName());
-            throw new IllegalMoveException("Illegal move detected, exitting game");
+            throw new IllegalMoveException("Illegal move detected, exiting game");
         } else {
             logger.info("Player {} has chosen to discard {}", player.getName(), card.getName());
         }
@@ -174,6 +186,10 @@ public class PlayerControllerImpl implements PlayerController {
     protected Card handleGainCardRequest(GainCardRequest request) {
         logger.info("Player {} received a request to gain a card", player.getName());
         List<Card> gainOptions = KingdomManager.getInstance().getAvailableCards(request.getCardSpecification());
+        if (gainOptions.isEmpty()) {
+            logger.info("Player {} could not gain a card", player.getName());
+            return null;
+        }
         Card card = actionController.gainCardHook(gainOptions);
         if (request.isRequired() && card == null && !(gainOptions.isEmpty())) {
             logger.error("Player {} failed to gain a card when it was both required and possible", player.getName());
@@ -197,6 +213,10 @@ public class PlayerControllerImpl implements PlayerController {
         logger.info("Player {} received a request to trash a card", player.getName());
         List<Card> cardsInPosition = deck.getCards(request.getDeckPosition());
         List<Card> trashOptions = request.getCardSpecification().filterCards(cardsInPosition);
+        if (trashOptions.isEmpty()) {
+            logger.info("Player {} could not trash a card", player.getName());
+            return null;
+        }
         Card card = actionController.trashCardHook(trashOptions, request.isRequired());
         if (request.isRequired() && card == null && !trashOptions.isEmpty()) {
             logger.error("Player {} failed to trash a card when it was both required and possible", player.getName());
@@ -239,6 +259,10 @@ public class PlayerControllerImpl implements PlayerController {
         logger.info("Player {} received a request to put a card from {} onto the top of their deck", player.getName(),
                 request.getPosition());
         List<Card> options = deck.getCards(request.getPosition(), request.getCardSpecification());
+        if (options.isEmpty()) {
+            logger.info("Player {} could not top deck a card", player.getName());
+            return null;
+        }
         Card chosenCard = actionController.chooseTopDeckHook(options, request.isRequired());
         if (chosenCard == null) {
             if (request.isRequired() && !options.isEmpty()) {

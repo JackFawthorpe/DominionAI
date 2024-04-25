@@ -1,72 +1,86 @@
 package api.agent;
 
 import dominion.card.Card;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
 
 /**
- * Placeholder controller for the actions that a player can take on their turn
+ * This is the starting point of your controller.
+ * <p>
+ * You must implement each of these methods using your own unique strategy!
+ * <p>
+ * Rules of thumb:
+ * - You can always assume there is at least one option within the list
+ * - You can do nothing by returning null
+ * - You must do something when the isRequired boolean is true
  */
 public class DefaultController implements ActionController {
 
     private final Random random = new Random();
 
     /**
-     * Default Purchasing behaviour (This will buy a random card)
-     *
-     * @return It will return the first action card in the hand (array-based) or
-     *         null if there is no card
+     * Buying a card is spending the cost of the card (card.getCost()) to buy the card
+     * <p>
+     * Return the card that you want your agent to buy or null if you don't want a new card
      */
     public Card buyCardHook(List<Card> buyOptions) {
-        return buyOptions.isEmpty() ? null : getRandomCard(buyOptions);
+        return getRandomCard(buyOptions);
     }
 
     /**
-     * Default discarding behaviour (This will discard a random card only when its
-     * necessary to discard)
-     *
-     * @param discardOptions The cards in their hand
-     * @return The card to discard
+     * Discarding is taking a card from your hand and putting it into the discard pile\
+     * <p>
+     * 1. Check if you are required to discard
+     * 2. Decide if you want to discard a card from your hand
+     * 3. Return null if you dont want to discard or return the card that you want to discard
      */
     public Card discardFromHandHook(List<Card> discardOptions, boolean isRequired) {
-        return discardOptions.isEmpty() || !isRequired ? null : getRandomCard(discardOptions);
+        return !isRequired ? null : getRandomCard(discardOptions);
     }
 
     /**
-     * Default gain card behaviour (This will gain a random card)
-     *
-     * @param gainOptions The cards the play has to choose from
-     * @return The card to gain
+     * Gaining is taking a card from the kingdom without paying for it
+     * <p>
+     * Return the card that you want to gain from the list or null if you don't want a new card
      */
     public Card gainCardHook(List<Card> gainOptions) {
-        return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
-    }
-
-    public Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
-        return trashOptions.isEmpty() || !isRequired ? null : getRandomCard(trashOptions);
-    }
-
-    public Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required) {
-        return topDeckOptions.isEmpty() ? null : getRandomCard(topDeckOptions);
+        return getRandomCard(gainOptions);
     }
 
     /**
-     * Default Choose Action behaviour (This will action a random card)
-     *
-     * @return It will return the first action card in the hand (array-based) or
-     *         null if there is no card
+     * Trashing a card is removing the card from your deck permanently
+     * <p>
+     * Return the card that you want to trash from the list or null if you don't want a new card
+     */
+    public Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
+        return !isRequired ? null : getRandomCard(trashOptions);
+    }
+
+    /**
+     * Topdeck a card is taking a card from your hand and putting it at the top of your deck. This means you
+     * will draw it next turn
+     * <p>
+     * Return the card that you want to topdeck from the list or null if you don't want a new card
+     */
+    public Card chooseTopDeckHook(List<Card> topDeckOptions, boolean required) {
+        return getRandomCard(topDeckOptions);
+    }
+
+    /**
+     * Playing an action card means moving it to the play area and gaining its active effects such as drawing more cards,
+     * having more money or being allowed to buy or play more cards this turn
+     * <p>
+     * Return the card that you want to play this turn or null if you don't want to play a card
      */
     public Card playActionCardHook(List<Card> actionOptions) {
-        return actionOptions.isEmpty() ? null : getRandomCard(actionOptions);
+        return getRandomCard(actionOptions);
     }
 
     /**
      * Gets a random card from the list
-     *
-     * @param cards The cards to get from
-     * @return A random card from the above list
+     * <p>
+     * This should be used as a placeholder method as it performs quite poorly against simple ideas
      */
     private Card getRandomCard(List<Card> cards) {
         return cards.get(random.nextInt(cards.size()));

@@ -1,15 +1,15 @@
-package api.agent;
+package agent.security;
 
+import api.agent.ActionController;
 import dominion.card.Card;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Placeholder controller for the actions that a player can take on their turn
  */
-public class ThoughtfulBuyer_1 implements ActionController {
+public class TimeoutAgent_2 implements ActionController {
 
     private final Random random = new Random();
 
@@ -20,11 +20,12 @@ public class ThoughtfulBuyer_1 implements ActionController {
      * null if there is no card
      */
     public Card buyCardHook(List<Card> buyOptions) {
-        if (buyOptions.isEmpty()) return null;
-
-        List<Card> orderedByPrice = buyOptions.stream().sorted(Comparator.comparingInt(Card::getCost)).toList();
-
-        return buyOptions.isEmpty() ? null : orderedByPrice.get(0);
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            System.out.println("Doesnt work");
+        }
+        return buyOptions.isEmpty() ? null : getRandomCard(buyOptions);
     }
 
     /**

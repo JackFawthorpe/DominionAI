@@ -1,5 +1,6 @@
-package api.agent;
+package agent.examples;
 
+import api.agent.ActionController;
 import dominion.card.Card;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class DefaultController_1 implements ActionController {
      * Default Purchasing behaviour (This will buy a random card)
      *
      * @return It will return the first action card in the hand (array-based) or
-     *         null if there is no card
+     * null if there is no card
      */
     public Card buyCardHook(List<Card> buyOptions) {
         return buyOptions.isEmpty() ? null : getRandomCard(buyOptions);
@@ -55,7 +56,7 @@ public class DefaultController_1 implements ActionController {
      * Default Choose Action behaviour (This will action a random card)
      *
      * @return It will return the first action card in the hand (array-based) or
-     *         null if there is no card
+     * null if there is no card
      */
     public Card playActionCardHook(List<Card> actionOptions) {
         return actionOptions.isEmpty() ? null : getRandomCard(actionOptions);

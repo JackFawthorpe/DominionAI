@@ -1,6 +1,8 @@
-package api.agent;
+package agent.examples;
 
+import api.agent.ActionController;
 import dominion.card.Card;
+import dominion.card.supply.Province;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Random;
 /**
  * Placeholder controller for the actions that a player can take on their turn
  */
-public class UnthoughtfulBuyer_1 implements ActionController {
+public class ProvincePursuer_1 implements ActionController {
 
     private final Random random = new Random();
 
@@ -22,7 +24,7 @@ public class UnthoughtfulBuyer_1 implements ActionController {
     public Card buyCardHook(List<Card> buyOptions) {
         if (buyOptions.isEmpty()) return null;
 
-        List<Card> orderedByPrice = buyOptions.stream().sorted(Comparator.comparingInt(Card::getCost).reversed()).toList();
+        List<Card> orderedByPrice = buyOptions.stream().sorted(Comparator.comparingInt(Card::getCost)).toList();
 
         return buyOptions.isEmpty() ? null : orderedByPrice.get(0);
     }
@@ -45,7 +47,13 @@ public class UnthoughtfulBuyer_1 implements ActionController {
      * @return The card to gain
      */
     public Card gainCardHook(List<Card> gainOptions) {
-        return gainOptions.isEmpty() ? null : getRandomCard(gainOptions);
+        if (gainOptions.isEmpty()) return null;
+        for (Card card : gainOptions) {
+            if (card instanceof Province) {
+                return card;
+            }
+        }
+        return getRandomCard(gainOptions);
     }
 
     public Card trashCardHook(List<Card> trashOptions, boolean isRequired) {
