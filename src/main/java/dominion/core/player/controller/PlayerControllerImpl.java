@@ -274,4 +274,10 @@ public class PlayerControllerImpl implements PlayerController {
 
     }
 
+    /**
+     * Returns the action controller responsible for agent decisions
+     */
+    public ActionController getActionController() {
+        return this.actionController;
+    }
 }
