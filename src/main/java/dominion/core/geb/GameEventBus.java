@@ -19,12 +19,19 @@ public class GameEventBus {
 
     private static GameEventBus instance;
 
+    /**
+     * A mapping of a game event to the list of listeners that are listening on its firings
+     */
     private final Map<Class<? extends GameEvent>, List<GameEventListener>> listenersMap;
 
     private GameEventBus() {
         this.listenersMap = new HashMap<>();
     }
 
+    /**
+     * Triggered when the game ends, it iterates through the different listener lists and filters out all the
+     * game scoped {@link ListenScope} event listeners
+     */
     public static void gameReset() {
         getInstance().listenersMap.replaceAll((event, listeners) ->
                 listeners.stream().filter(listener -> listener.getScope() == ListenScope.SIMULATION)
@@ -46,7 +53,7 @@ public class GameEventBus {
     }
 
     /**
-     * Adds a listener to listen in on future events
+     * Adds a listener to listen in on future events only if it is not already added
      *
      * @param eventClass The class of event that the listener wants to listen to
      * @param listener   The object that will be listening
@@ -55,11 +62,14 @@ public class GameEventBus {
     public <T extends GameEvent> void addListener(Class<T> eventClass, GameEventListener<T> listener) {
         logger.info("Adding listener to {} with the identifier {}", eventClass, listener.getIdentifier());
         List<GameEventListener> listeners = listenersMap.computeIfAbsent(eventClass, k -> new ArrayList<>());
-        listeners.add(listener);
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
     }
 
     /**
      * Removes a given listener from the event bus if they are actively listening
+     * If they are not listening then this function silently does nothing
      *
      * @param eventClass The event type to remove the listener from
      * @param listener   The listener of the event
@@ -70,6 +80,11 @@ public class GameEventBus {
         listenersMap.getOrDefault(eventClass, new ArrayList<>()).remove(listener);
     }
 
+    /**
+     * Method for notifying the listeners that a given event has occurred
+     * @param event  The event to be propogated to the listeners
+     * @param <T> The type of event
+     */
     public <T extends GameEvent> void notifyListeners(T event) {
         logger.info("Event of type {} has hit the event bus", event.getClass());
         Class<? extends GameEvent> eventClass = event.getClass();
