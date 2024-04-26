@@ -5,7 +5,6 @@ import dominion.core.geb.GameEventBus;
 import dominion.core.geb.GameEventListener;
 import dominion.core.geb.ListenScope;
 import dominion.core.geb.event.SupplyPileDepletedEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Class responsible for the monitoring of the end of the game
@@ -53,7 +52,7 @@ public class EndGameObserver implements GameEventListener<SupplyPileDepletedEven
     @Override
     public void handleEvent(SupplyPileDepletedEvent event) {
         this.depletionCounter++;
-        gameFinished = depletionCounter >= 3 || event.getDepletedCard() instanceof Province;
+        gameFinished = depletionCounter >= 3 || event.getCard() instanceof Province;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package dominion;
 
 
-import dominion.core.geb.GameEventBus;
-import dominion.core.geb.event.SimulationCompleteEvent;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.initialisation.GameConfigurationManager;
 import dominion.core.initialisation.GameLoader;
@@ -47,6 +45,5 @@ public class DominionApp {
             gameLoader.loadGame();
             System.out.println(gameLoader.startGame());
         }
-        GameEventBus.getInstance().notifyListeners(new SimulationCompleteEvent());
     }
 }

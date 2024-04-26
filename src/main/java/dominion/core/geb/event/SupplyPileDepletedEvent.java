@@ -1,19 +1,20 @@
 package dominion.core.geb.event;
 
 import dominion.card.Card;
+import lombok.Getter;
 
 /**
- * Event triggered when a supply pile from the kingdom is finished (No cards left)
+ * Event triggered when a supply pile from the kingdom is depleted (No cards left)
  */
+@Getter
 public class SupplyPileDepletedEvent implements GameEvent {
 
-    private final Card depletedCard;
+    /**
+     * The card within the {@link dominion.core.state.KingdomManager} that was depleted
+     */
+    private final Card card;
 
-    public SupplyPileDepletedEvent(Card depletedCard) {
-        this.depletedCard = depletedCard;
-    }
-
-    public Card getDepletedCard() {
-        return depletedCard;
+    public SupplyPileDepletedEvent(Card card) {
+        this.card = card;
     }
 }
