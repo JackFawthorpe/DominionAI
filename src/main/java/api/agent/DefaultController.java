@@ -1,6 +1,10 @@
 package api.agent;
 
+import api.PlayerAPI;
 import api.data.CardData;
+import api.data.CardName;
+import api.data.DeckData;
+import api.data.PlayerData;
 
 import java.util.List;
 import java.util.Random;
@@ -25,6 +29,31 @@ public class DefaultController implements ActionController {
      * Return the card that you want your agent to buy or null if you don't want a new card
      */
     public CardData buyCardHook(List<CardData> buyOptions) {
+
+        // This retrieves my deck of cards
+        PlayerData myData = PlayerAPI.getMe(this);
+        DeckData myDeck = myData.getDeckData();
+
+        // This uses a for loop to iterate over my cards and count how much gold I have
+        int currentGoldCount = 0;
+        for (CardData card : myDeck.getCardList()) {
+            if (card.getName().equals(CardName.GOLD)) {
+                currentGoldCount++;
+            }
+        }
+
+        // This determines if I should buy gold
+        // I can then iterate through my buying options and if it is gold then I return the card to buy it
+        boolean shouldBuyGold = currentGoldCount < 5;
+        if (shouldBuyGold) {
+            for (CardData cardData : buyOptions) {
+                if (cardData.getName().equals(CardName.GOLD)) {
+                    return cardData;
+                }
+            }
+        }
+
+        // If I couldn't find any gold to buy, or I already have enough then I Just select a random card
         return getRandomCard(buyOptions);
     }
 

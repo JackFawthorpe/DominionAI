@@ -2,6 +2,7 @@ package dominion.core.player.loader;
 
 import api.agent.ActionController;
 import api.agent.DefaultController;
+import api.agent.MyCoolAgent_1;
 import dominion.core.initialisation.GameConfiguration;
 import dominion.core.player.Entity.Player;
 import dominion.core.player.controller.PlayerControllerImpl;
@@ -14,8 +15,8 @@ import java.util.List;
  */
 public class PlayerLoaderImpl implements PlayerLoader {
 
-    private final List<ActionController> controllersToLoad = List.of(
-            new DefaultController(),
+    private final List<ActionController> agentsToLoad = List.of(
+            new MyCoolAgent_1(),
             new DefaultController(),
             new DefaultController(),
             new DefaultController()
@@ -32,8 +33,8 @@ public class PlayerLoaderImpl implements PlayerLoader {
     public List<Player> getPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            Player player = new Player(controllersToLoad.get(i).getClass().getSimpleName() + ' ' + (i + 1), i + 1);
-            new PlayerControllerImpl(player, controllersToLoad.get(i));
+            Player player = new Player(agentsToLoad.get(i).getClass().getSimpleName() + ' ' + (i + 1), i + 1);
+            new PlayerControllerImpl(player, agentsToLoad.get(i));
             players.add(player);
         }
         return players;

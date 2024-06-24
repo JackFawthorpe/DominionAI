@@ -46,9 +46,10 @@ public interface ActionController {
     CardData trashCardHook(List<CardData> trashOptions, boolean isRequired);
 
     /**
-     * Gets a random card from the list
+     * Playing an action card means moving it to the play area and gaining its active effects such as drawing more cards,
+     * having more money or being allowed to buy or play more cards this turn
      * <p>
-     * This should be used as a placeholder method as it performs quite poorly against simple ideas
+     * Return the card that you want to play this turn or null if you don't want to play a card
      */
     CardData playActionCardHook(List<CardData> actionCardsInHand);
 }
