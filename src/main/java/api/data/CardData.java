@@ -10,7 +10,7 @@ import java.util.List;
  */
 @EqualsAndHashCode
 public class CardData {
-    private final List<CardType> cardType;
+    private final List<CardTypeData> cardType;
     private final int actions;
     private final int buys;
     private final int money;
@@ -20,8 +20,8 @@ public class CardData {
 
     private final int drawCount;
 
-    public CardData(List<CardType> cardType, int actions, int buys, int money, int victoryPoints, CardName name, int cost, int drawCount) {
-        this.cardType = cardType;
+    public CardData(List<CardType> cardTypes, int actions, int buys, int money, int victoryPoints, CardName name, int cost, int drawCount) {
+        this.cardType = cardTypes.stream().map(CardType::toData).toList();
         this.actions = actions;
         this.buys = buys;
         this.money = money;
@@ -34,7 +34,7 @@ public class CardData {
     /**
      * returns a list of all the applicable card types of a card. Includes types such as action, attack and victory
      */
-    public List<CardType> getCardType() {
+    public List<CardTypeData> getCardTypes() {
         return cardType;
     }
 

@@ -67,8 +67,8 @@ Now that you are familiar with the rules you can play the game for free online w
 ### Playing
 
 To start the game simply click the start button  
-![StartGame.PNG](Images%2FStartGame.PNG)
-The good news is once the game is started it will instruct what you need to do as shown below.  
+![StartGame.PNG](Images%2FStartGame.PNG)  
+The good news is once the game is started it will instruct what you need to do as shown below.   
 ![Instruction.PNG](Images%2FInstruction.PNG)  
 On your first two turns all you can do is buy cards. This is done by playing your coppers and then clicking a card that
 you want to buy. Cards that can be bought will be indicated with a blue plus icon, their costs shown in the bottom left

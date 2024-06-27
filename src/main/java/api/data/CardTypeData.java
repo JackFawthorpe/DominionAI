@@ -1,11 +1,9 @@
-package dominion.card;
-
-import api.data.CardTypeData;
+package api.data;
 
 /**
  * Enum to represent the different types of cards in the game
  */
-public enum CardType {
+public enum CardTypeData {
     ACTION("Action"),
     TREASURE("Treasure"),
     VICTORY("Victory"),
@@ -15,12 +13,8 @@ public enum CardType {
 
     private final String displayName;
 
-    CardType(String displayName) {
+    CardTypeData(String displayName) {
         this.displayName = displayName;
-    }
-
-    public CardTypeData toData() {
-        return CardTypeData.valueOf(this.toString());
     }
 
     @Override
