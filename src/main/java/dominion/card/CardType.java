@@ -20,7 +20,27 @@ public enum CardType {
     }
 
     public CardTypeData toData() {
-        return CardTypeData.valueOf(this.toString());
+        switch (this.displayName) {
+            case "Action" -> {
+                return CardTypeData.ACTION;
+            }
+            case "Treasure" -> {
+                return CardTypeData.TREASURE;
+            }
+            case "Victory" -> {
+                return CardTypeData.VICTORY;
+            }
+            case "Curse" -> {
+                return CardTypeData.CURSE;
+            }
+            case "Reaction" -> {
+                return CardTypeData.REACTION;
+            }
+            case "Attack" -> {
+                return CardTypeData.ATTACK;
+            }
+        }
+        return null;
     }
 
     @Override
